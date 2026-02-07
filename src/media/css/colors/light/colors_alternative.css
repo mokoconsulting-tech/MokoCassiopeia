@@ -98,8 +98,8 @@ color-scheme: light;
 --highlight-bg: #fde68a;
 
 /* ===== LAYOUT & SPACING ===== */
---padding-x: 1rem;
---padding-y: 1rem;
+--padding-x: 0.15rem;
+--padding-y: 0.15rem;
 --bg-opacity: 1;
 --nav-toggle-size: 3rem;
 --gradient: linear-gradient(180deg, #ffffff26, #fff0);
