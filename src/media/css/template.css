@@ -18357,3 +18357,201 @@ nav[data-toggle=toc] .nav-link.active+ul{
 .icon-check::before  { content: "\f00c"; }
 .icon-plus::before   { content: "\f067"; }
 .icon-minus::before  { content: "\f068"; }
+
+/* ===== BOOTSTRAP & JOOMLA BUTTONS ===== */
+.btn-primary {
+  --btn-color: white;
+  --btn-bg: var(--color-primary);
+  --btn-border-color: var(--color-primary);
+  --btn-hover-bg: color-mix(in srgb, var(--color-primary) 85%, black);
+  --btn-hover-border-color: color-mix(in srgb, var(--color-primary) 85%, black);
+}
+
+.btn-secondary {
+  --btn-color: var(--body-bg);
+  --btn-bg: var(--secondary);
+  --btn-border-color: var(--secondary);
+  --btn-hover-bg: color-mix(in srgb, var(--secondary) 85%, black);
+  --btn-hover-border-color: color-mix(in srgb, var(--secondary) 85%, black);
+}
+
+.btn-success {
+  --btn-color: white;
+  --btn-bg: var(--success);
+  --btn-border-color: var(--success);
+  --btn-hover-bg: color-mix(in srgb, var(--success) 85%, black);
+  --btn-hover-border-color: color-mix(in srgb, var(--success) 85%, black);
+}
+
+.btn-info {
+  --btn-color: white;
+  --btn-bg: var(--info);
+  --btn-border-color: var(--info);
+  --btn-hover-bg: color-mix(in srgb, var(--info) 85%, black);
+  --btn-hover-border-color: color-mix(in srgb, var(--info) 85%, black);
+}
+
+.btn-warning {
+  --btn-color: white;
+  --btn-bg: var(--warning);
+  --btn-border-color: var(--warning);
+  --btn-hover-bg: color-mix(in srgb, var(--warning) 85%, black);
+  --btn-hover-border-color: color-mix(in srgb, var(--warning) 85%, black);
+}
+
+.btn-danger {
+  --btn-color: white;
+  --btn-bg: var(--danger);
+  --btn-border-color: var(--danger);
+  --btn-hover-bg: color-mix(in srgb, var(--danger) 85%, black);
+  --btn-hover-border-color: color-mix(in srgb, var(--danger) 85%, black);
+}
+
+.btn-light {
+  --btn-color: var(--body-color);
+  --btn-bg: var(--light);
+  --btn-border-color: var(--light);
+  --btn-hover-bg: color-mix(in srgb, var(--light) 90%, black);
+  --btn-hover-border-color: color-mix(in srgb, var(--light) 90%, black);
+}
+
+.btn-dark {
+  --btn-color: white;
+  --btn-bg: var(--dark);
+  --btn-border-color: var(--dark);
+  --btn-hover-bg: color-mix(in srgb, var(--dark) 85%, black);
+  --btn-hover-border-color: color-mix(in srgb, var(--dark) 85%, black);
+}
+
+/* Outline button variants */
+.btn-outline-primary {
+  --btn-color: var(--color-primary);
+  --btn-border-color: var(--color-primary);
+  --btn-hover-color: white;
+  --btn-hover-bg: var(--color-primary);
+  --btn-hover-border-color: var(--color-primary);
+}
+
+.btn-outline-secondary {
+  --btn-color: var(--secondary);
+  --btn-border-color: var(--secondary);
+  --btn-hover-color: white;
+  --btn-hover-bg: var(--secondary);
+  --btn-hover-border-color: var(--secondary);
+}
+
+.btn-outline-success {
+  --btn-color: var(--success);
+  --btn-border-color: var(--success);
+  --btn-hover-color: white;
+  --btn-hover-bg: var(--success);
+  --btn-hover-border-color: var(--success);
+}
+
+.btn-outline-info {
+  --btn-color: var(--info);
+  --btn-border-color: var(--info);
+  --btn-hover-color: white;
+  --btn-hover-bg: var(--info);
+  --btn-hover-border-color: var(--info);
+}
+
+.btn-outline-warning {
+  --btn-color: var(--warning);
+  --btn-border-color: var(--warning);
+  --btn-hover-color: white;
+  --btn-hover-bg: var(--warning);
+  --btn-hover-border-color: var(--warning);
+}
+
+.btn-outline-danger {
+  --btn-color: var(--danger);
+  --btn-border-color: var(--danger);
+  --btn-hover-color: white;
+  --btn-hover-bg: var(--danger);
+  --btn-hover-border-color: var(--danger);
+}
+
+.btn-outline-light {
+  --btn-color: var(--light);
+  --btn-border-color: var(--light);
+  --btn-hover-color: var(--body-color);
+  --btn-hover-bg: var(--light);
+  --btn-hover-border-color: var(--light);
+}
+
+.btn-outline-dark {
+  --btn-color: var(--dark);
+  --btn-border-color: var(--dark);
+  --btn-hover-color: white;
+  --btn-hover-bg: var(--dark);
+  --btn-hover-border-color: var(--dark);
+}
+
+/* ===== BOOTSTRAP & JOOMLA ALERTS ===== */
+.alert-primary {
+  --alert-bg: color-mix(in srgb, var(--primary) 10%, var(--body-bg));
+  --alert-color: color-mix(in srgb, var(--primary) 90%, black);
+  --alert-border-color: color-mix(in srgb, var(--primary) 20%, var(--body-bg));
+}
+
+.alert-secondary {
+  --alert-bg: color-mix(in srgb, var(--secondary) 10%, var(--body-bg));
+  --alert-color: color-mix(in srgb, var(--secondary) 90%, black);
+  --alert-border-color: color-mix(in srgb, var(--secondary) 20%, var(--body-bg));
+}
+
+.alert-success {
+  --alert-bg: color-mix(in srgb, var(--success) 10%, var(--body-bg));
+  --alert-color: color-mix(in srgb, var(--success) 90%, black);
+  --alert-border-color: color-mix(in srgb, var(--success) 20%, var(--body-bg));
+}
+
+.alert-info {
+  --alert-bg: color-mix(in srgb, var(--info) 10%, var(--body-bg));
+  --alert-color: color-mix(in srgb, var(--info) 90%, black);
+  --alert-border-color: color-mix(in srgb, var(--info) 20%, var(--body-bg));
+}
+
+.alert-warning {
+  --alert-bg: color-mix(in srgb, var(--warning) 10%, var(--body-bg));
+  --alert-color: color-mix(in srgb, var(--warning) 90%, black);
+  --alert-border-color: color-mix(in srgb, var(--warning) 20%, var(--body-bg));
+}
+
+.alert-danger {
+  --alert-bg: color-mix(in srgb, var(--danger) 10%, var(--body-bg));
+  --alert-color: color-mix(in srgb, var(--danger) 90%, black);
+  --alert-border-color: color-mix(in srgb, var(--danger) 20%, var(--body-bg));
+}
+
+.alert-light {
+  --alert-bg: var(--light);
+  --alert-color: var(--body-color);
+  --alert-border-color: color-mix(in srgb, var(--light) 85%, black);
+}
+
+.alert-dark {
+  --alert-bg: var(--dark);
+  --alert-color: white;
+  --alert-border-color: var(--dark);
+}
+
+/* Joomla-specific alert mappings */
+.alert-message {
+  --alert-bg: var(--alert-info, color-mix(in srgb, var(--info) 10%, var(--body-bg)));
+  --alert-color: color-mix(in srgb, var(--info) 90%, black);
+  --alert-border-color: color-mix(in srgb, var(--info) 20%, var(--body-bg));
+}
+
+.alert-error {
+  --alert-bg: var(--alert-danger, color-mix(in srgb, var(--danger) 10%, var(--body-bg)));
+  --alert-color: color-mix(in srgb, var(--danger) 90%, black);
+  --alert-border-color: color-mix(in srgb, var(--danger) 20%, var(--body-bg));
+}
+
+.alert-notice {
+  --alert-bg: var(--alert-warning, color-mix(in srgb, var(--warning) 10%, var(--body-bg)));
+  --alert-color: color-mix(in srgb, var(--warning) 90%, black);
+  --alert-border-color: color-mix(in srgb, var(--warning) 20%, var(--body-bg));
+}
