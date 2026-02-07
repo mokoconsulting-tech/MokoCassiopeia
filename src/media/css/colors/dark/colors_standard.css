@@ -260,6 +260,162 @@
 	--form-valid-border-color: #78d694;
 	--form-invalid-color: #ff8e86;
 	--form-invalid-border-color: #ff8e86;
+
+	/* Offcanvas (moved from template.css) */
+	--offcanvas-color: var(--body-color);
+	--offcanvas-padding-x: 1rem;
+	--offcanvas-padding-y: 1rem;
+
+	/* Navbar */
+	--navbar-padding-x: 1rem;
+	--navbar-padding-y: 0.5rem;
+	--navbar-color: var(--nav-text-color);
+	--navbar-active-color: var(--mainmenu-nav-link-color);
+	--navbar-disabled-color: #6c757d;
+	--navbar-brand-padding-y: 0.3125rem;
+	--navbar-brand-margin-end: 1rem;
+	--navbar-brand-font-size: 1.25rem;
+	--navbar-brand-color: var(--nav-text-color);
+	--navbar-brand-active-color: var(--mainmenu-nav-link-color);
+	--navbar-nav-link-padding-x: 0.5rem;
+	--navbar-toggler-padding-y: 0.25rem;
+	--navbar-toggler-padding-x: 0.75rem;
+	--navbar-toggler-font-size: 1.25rem;
+	--navbar-toggler-border-color: rgba(255, 255, 255, 0.1);
+	--navbar-toggler-border-radius: 0.25rem;
+	--navbar-toggler-focus-width: 0.25rem;
+	--navbar-toggler-transition: box-shadow 0.15s ease-in-out;
+	--nav-link-padding-x: 1rem;
+	--nav-link-padding-y: 0.5rem;
+	--nav-link-font-weight: 400;
+	--nav-link-color: var(--nav-text-color);
+	--nav-link-active-color: var(--mainmenu-nav-link-color);
+	--nav-link-disabled-color: #6c757d;
+
+	/* Responsive tokens */
+	--nav-toggle-size: 3rem;
+	--bp-xs: 0;
+	--bp-sm: 576px;
+	--bp-md: 768px;
+	--bp-lg: 992px;
+	--bp-xl: 1200px;
+
+	/* Utility opacity defaults */
+	--bg-opacity: 1;
+
+	/* Layout padding */
+	--padding-x: 1rem;
+	--padding-y: 1rem;
+
+	/* Button utilities */
+	--btn-border-radius: var(--border-radius);
+	--btn-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 1px 1px rgba(0, 0, 0, 0.3);
+
+	/* Card variables */
+	--card-spacer-y: 1rem;
+	--card-spacer-x: 1rem;
+	--card-title-spacer-y: 0.5rem;
+	--card-border-width: 1px;
+	--card-border-color: var(--border-color);
+	--card-border-radius: var(--border-radius);
+	--card-box-shadow: none;
+	--card-inner-border-radius: calc(var(--border-radius) - 1px);
+	--card-cap-padding-y: 0.5rem;
+	--card-cap-padding-x: 1rem;
+	--card-cap-bg: rgba(255, 255, 255, 0.03);
+	--card-cap-color: var(--body-color);
+	--card-height: auto;
+	--card-color: var(--body-color);
+	--card-bg: var(--secondary-bg);
+	--card-img-overlay-padding: 1rem;
+	--card-group-margin: 0.75rem;
+
+	/* VirtueMart surfaces */
+	--vm-surface: var(--secondary-bg);
+	--vm-surface-2: var(--tertiary-bg);
+	--vm-text: var(--body-color);
+	--vm-text-strong: #ffffff;
+	--vm-text-muted: var(--gray-700);
+	--vm-border: var(--border-color);
+	--vm-price-color: var(--success);
+
+	/* VM layout and density */
+	--vm-container-max-width: 1200px;
+	--vm-section-gap: 2rem;
+	--vm-block-radius: var(--border-radius);
+	--vm-block-shadow: var(--box-shadow-sm);
+
+	/* VM typography */
+	--vm-category-title-size: 2rem;
+	--vm-subcategory-title-size: 1.5rem;
+	--vm-page-title-size: 1.75rem;
+	--vm-products-type-title-size: 1.25rem;
+	--vm-product-title-size: 1.125rem;
+	--vm-product-title-weight: 500;
+	--vm-products-type-title-weight: 600;
+	--vm-price-size: 1.5rem;
+	--vm-price-detail-size: 1.125rem;
+	--vm-price-desc-size: 0.875rem;
+
+	/* VM controls */
+	--vm-input-radius: var(--border-radius);
+	--vm-input-shadow: var(--box-shadow-sm);
+	--vm-qty-width: 80px;
+	--vm-cart-dropdown-min-width: 300px;
+
+	/* VM alerts */
+	--vm-alert-radius: var(--border-radius);
+	--vm-alert-shadow: var(--box-shadow-sm);
+	--vm-availability-bg: var(--success-bg-subtle);
+	--vm-availability-text: var(--success);
+
+	/* VM buttons */
+	--vm-btn-padding-x: 1rem;
+	--vm-btn-padding-y: 0.5rem;
+	--vm-btn-radius: var(--border-radius);
+	--vm-btn-shadow: var(--box-shadow-sm);
+	--vm-btn-primary-bg: var(--primary);
+	--vm-btn-primary-text: #ffffff;
+	--vm-btn-primary-border: var(--primary);
+	--vm-btn-secondary-bg: var(--secondary);
+	--vm-btn-secondary-text: #ffffff;
+	--vm-btn-secondary-border: var(--secondary);
+
+	/* VM image overlay controls */
+	--vm-image-overlay-gap-x: 0.5rem;
+	--vm-image-overlay-gap-y: 0.5rem;
+	--vm-image-overlay-raise: 0.25rem;
+	--vm-image-overlay-btn-size: 2.5rem;
+	--vm-image-overlay-btn-radius: 50%;
+	--vm-image-overlay-btn-bg: rgba(0, 0, 0, 0.7);
+	--vm-image-overlay-btn-bg-hover: rgba(0, 0, 0, 0.85);
+	--vm-image-overlay-btn-border-color: rgba(255, 255, 255, 0.2);
+	--vm-image-overlay-btn-border-width: 1px;
+	--vm-image-overlay-btn-color: var(--body-color);
+	--vm-image-overlay-btn-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+
+	/* VM vendor menu tokens */
+	--vm-vendor-menu-bg: var(--secondary-bg);
+	--vm-vendor-menu-border: var(--border-color);
+	--vm-vendor-menu-radius: var(--border-radius);
+	--vm-vendor-menu-shadow: var(--box-shadow-sm);
+	--vm-vendor-menu-item-gap: 0.25rem;
+	--vm-vendor-menu-item-padding-x: 1rem;
+	--vm-vendor-menu-item-padding-y: 0.5rem;
+	--vm-vendor-menu-pill-radius: 50rem;
+	--vm-vendor-menu-link: var(--link-color);
+	--vm-vendor-menu-link-hover: var(--link-hover-color);
+	--vm-vendor-menu-link-active: var(--primary);
+	--vm-vendor-menu-hover-bg: var(--tertiary-bg);
+
+	/* Gable colors */
+	--gab-blue: #4d9fff;
+	--gab-green: #5cb85c;
+	--gab-red: #ff6b6b;
+	--gab-orange: #ff9f5a;
+	--gab-gray1: #868e96;
+	--gab-gray2: #adb5bd;
+	--gab-gray3: #ced4da;
 }
 
 .btn {
