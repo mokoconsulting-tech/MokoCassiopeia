@@ -77,18 +77,6 @@
 			"attributes": {"media": "all"}
 		},
 		{
-			"name": "template.light.colors_alternative",
-			"type": "style",
-			"uri": "media/templates/site/mokocassiopeia/css/colors/light/colors_alternative.css",
-			"attributes": {"media": "all"}
-		},
-		{
-			"name": "template.light.colors_alternative.min",
-			"type": "style",
-			"uri": "media/templates/site/mokocassiopeia/css/colors/light/colors_alternative.min.css",
-			"attributes": {"media": "all"}
-		},
-		{
 			"name": "template.light.colors_custom",
 			"type": "style",
 			"uri": "media/templates/site/mokocassiopeia/css/colors/light/colors_custom.css",
