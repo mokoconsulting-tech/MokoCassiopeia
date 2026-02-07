@@ -35,7 +35,7 @@
 	    https://mokoconsulting.tech/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;format=xml&amp;id=1
 	  </server>
 	</updateservers>
-	<name>mokocassiopeia</name>
+	<name>MokoCassiopeia</name>
 	<version>03.06.03</version>
 	<creationDate>2026-01-30</creationDate>
 	<author>Jonathan Miller || Moko Consulting</author>
@@ -189,12 +189,12 @@
 
 				<!-- Variables & Palettes -->
 				<field name="theme_sep_vars" type="spacer" label="Variables &amp; Palettes" hr="false" class="text fw-bold" />
-				<field name="colorLightName" type="list" label="TPL_MOKOCASSIOPEIA_COLOR_LIGHT_NAME_LABEL" default="colors_standard">
+				<field name="colorLightName" type="list" label="TPL_MOKOCASSIOPEIA_COLOR_LIGHT_NAME_LABEL" description="TPL_MOKOCASSIOPEIA_COLOR_LIGHT_NAME_DESC" default="colors_standard">
 					<option value="colors_standard">TPL_MOKOCASSIOPEIA_COLOR_NAME_STANDARD</option>
 					<option value="colors_alternative">TPL_MOKOCASSIOPEIA_COLOR_NAME_ALTERNATIVE</option>
 					<option value="colors_custom">TPL_MOKOCASSIOPEIA_COLOR_NAME_CUSTOM</option>
 				</field>
-				<field name="colorDarkName" type="list" label="TPL_MOKOCASSIOPEIA_COLOR_DARK_NAME_LABEL" default="colors_standard">
+				<field name="colorDarkName" type="list" label="TPL_MOKOCASSIOPEIA_COLOR_DARK_NAME_LABEL" description="TPL_MOKOCASSIOPEIA_COLOR_DARK_NAME_DESC" default="colors_standard">
 					<option value="colors_standard">TPL_MOKOCASSIOPEIA_COLOR_NAME_STANDARD</option>
 					<option value="colors_alternative">TPL_MOKOCASSIOPEIA_COLOR_NAME_ALTERNATIVE</option>
 					<option value="colors_custom">TPL_MOKOCASSIOPEIA_COLOR_NAME_CUSTOM</option>
