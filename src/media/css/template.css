@@ -14393,6 +14393,9 @@ fieldset>* {
 
 .navbar-brand img {
 	max-width: 250px;
+	max-height: 100px;
+  width: auto;
+  height: auto;
 }
 
 .container-header .navbar-brand:active,
