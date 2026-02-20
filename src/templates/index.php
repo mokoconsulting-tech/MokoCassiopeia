@@ -124,8 +124,13 @@ $customColorCSS = '';
 /**
  * Helper function to sanitize color values for CSS
  * Accepts hex, rgb, rgba, hsl, hsla, and named colors
+ * 
+ * Note: This function validates format but not value ranges (e.g., RGB 0-255).
+ * CSS will automatically clamp out-of-range values, so strict range validation
+ * is not necessary for security purposes.
+ * 
  * @param string $color The color value to sanitize
- * @return string|null Sanitized color or null if invalid
+ * @return string|null Sanitized color or null if invalid format
  */
 $sanitizeColor = function($color) {
 	$color = trim($color);
@@ -149,8 +154,12 @@ $sanitizeColor = function($color) {
 	}
 	
 	// Allow named colors (common CSS color names)
-	$namedColors = ['transparent', 'black', 'white', 'red', 'green', 'blue', 'yellow', 'cyan', 'magenta', 
-	                'gray', 'grey', 'silver', 'navy', 'teal', 'aqua', 'lime', 'olive', 'maroon', 'purple', 'fuchsia'];
+	$namedColors = [
+		'transparent', 'black', 'white', 'red', 'green', 'blue', 'yellow', 'cyan', 'magenta',
+		'gray', 'grey', 'silver', 'navy', 'teal', 'aqua', 'lime', 'olive', 'maroon', 'purple', 'fuchsia',
+		'orange', 'pink', 'brown', 'gold', 'coral', 'crimson', 'indigo', 'violet', 'tan', 'khaki',
+		'salmon', 'tomato', 'orchid', 'plum', 'lavender', 'ivory', 'beige', 'wheat', 'azure', 'snow'
+	];
 	if (in_array(strtolower($color), $namedColors, true)) {
 		return strtolower($color);
 	}
