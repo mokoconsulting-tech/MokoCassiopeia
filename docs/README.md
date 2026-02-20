@@ -92,10 +92,15 @@ moko-cassiopeia/
 │   └── ROADMAP.md          # Version-specific roadmap
 ├── src/                     # Template source code
 │   ├── templates/          # Joomla template files
-│   └── media/              # Assets (CSS, JS, images)
+│   ├── media/              # Assets (CSS, JS, images)
+│   │   └── css/colors/     # Color schemes (light/dark subdirectories)
+│   │       ├── light/      # Light mode color files (colors_custom.css)
+│   │       └── dark/       # Dark mode color files (colors_custom.css)
+│   └── language/           # Translation files
 ├── templates/               # Template files for customization
-│   ├── colors_custom.css       # Custom color palette template
-│   └── CLIENT_FORK_README_TEMPLATE.md # Template for client fork docs
+│   ├── colors_custom.css       # Custom color palette template (copy to src/media/css/colors/)
+│   ├── CLIENT_FORK_README_TEMPLATE.md # Template for client fork docs
+│   └── README.md               # Guide to using templates
 ├── tests/                   # Automated tests
 ├── CLIENT_FORK_README.md    # Client fork guide
 └── .github/                # GitHub configuration and workflows
