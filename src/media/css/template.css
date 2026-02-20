@@ -16887,7 +16887,8 @@ form .form-select {
 	background: var(--muted-color);
 	box-shadow: var(--box-shadow);
 	font: inherit;
-	color: var(--white);
+	color: var(--body-bg);
+	font-weight: 600px;
 }
 
 #mokoThemeFab.pos-br {
@@ -16952,7 +16953,7 @@ button#mokoThemeSwitch {
 }
 
 #mokoThemeFab button {
-	color: var(--white);
+	color: var(--body-bg);
 }
 
 body.site.error-page {
