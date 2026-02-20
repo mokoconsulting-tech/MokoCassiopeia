@@ -118,6 +118,64 @@ try {
 	$wa->registerAndUseStyle('template.dark.dynamic', $templatePath . '/css/colors/dark/' . $colorDarkKey . '.css');
 }
 
+// Custom color parameters - generate inline CSS for color overrides
+$customColorCSS = '';
+
+// Light mode custom colors
+$lightColors = [
+	'light_color_primary' => '--color-primary',
+	'light_accent_primary' => '--accent-color-primary',
+	'light_nav_bg' => '--nav-bg-color',
+	'light_nav_link' => '--mainmenu-nav-link-color',
+	'light_body_bg' => '--body-bg',
+	'light_body_color' => '--body-color',
+	'light_link_color' => '--link-color',
+	'light_link_hover' => '--link-hover-color',
+	'light_bootstrap_primary' => '--primary',
+];
+
+$lightOverrides = [];
+foreach ($lightColors as $param => $cssVar) {
+	$value = $this->params->get($param, '');
+	if (!empty($value)) {
+		$lightOverrides[] = $cssVar . ': ' . $value . ';';
+	}
+}
+
+if (!empty($lightOverrides)) {
+	$customColorCSS .= ":root[data-bs-theme='light'] {\n" . implode("\n", $lightOverrides) . "\n}\n";
+}
+
+// Dark mode custom colors
+$darkColors = [
+	'dark_color_primary' => '--color-primary',
+	'dark_accent_primary' => '--accent-color-primary',
+	'dark_nav_bg' => '--nav-bg-color',
+	'dark_nav_link' => '--mainmenu-nav-link-color',
+	'dark_body_bg' => '--body-bg',
+	'dark_body_color' => '--body-color',
+	'dark_link_color' => '--link-color',
+	'dark_link_hover' => '--link-hover-color',
+	'dark_bootstrap_primary' => '--primary',
+];
+
+$darkOverrides = [];
+foreach ($darkColors as $param => $cssVar) {
+	$value = $this->params->get($param, '');
+	if (!empty($value)) {
+		$darkOverrides[] = $cssVar . ': ' . $value . ';';
+	}
+}
+
+if (!empty($darkOverrides)) {
+	$customColorCSS .= ":root[data-bs-theme='dark'] {\n" . implode("\n", $darkOverrides) . "\n}\n";
+}
+
+// Add custom color CSS to document if any overrides are defined
+if (!empty($customColorCSS)) {
+	$wa->addInlineStyle($customColorCSS);
+}
+
 // Scripts
 $wa->useScript('template.js');
 
