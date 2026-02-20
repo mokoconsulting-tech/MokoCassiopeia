@@ -23,6 +23,8 @@ jobs:
   create-fork:
     name: Setup Client Fork
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Validate confirmation
