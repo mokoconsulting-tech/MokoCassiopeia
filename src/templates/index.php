@@ -121,7 +121,67 @@ try {
 // Custom color parameters - generate inline CSS for color overrides
 $customColorCSS = '';
 
-// Light mode custom colors
+/**
+ * Helper function to sanitize color values for CSS
+ * Accepts hex, rgb, rgba, hsl, hsla, and named colors
+ * @param string $color The color value to sanitize
+ * @return string|null Sanitized color or null if invalid
+ */
+$sanitizeColor = function($color) {
+	$color = trim($color);
+	if (empty($color)) {
+		return null;
+	}
+	
+	// Allow hex colors (#fff, #ffffff, #ffffffff)
+	if (preg_match('/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/', $color)) {
+		return strtolower($color);
+	}
+	
+	// Allow rgb/rgba
+	if (preg_match('/^rgba?\s*\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}(\s*,\s*[\d.]+)?\s*\)$/i', $color)) {
+		return strtolower($color);
+	}
+	
+	// Allow hsl/hsla
+	if (preg_match('/^hsla?\s*\(\s*\d{1,3}\s*,\s*\d{1,3}%\s*,\s*\d{1,3}%(\s*,\s*[\d.]+)?\s*\)$/i', $color)) {
+		return strtolower($color);
+	}
+	
+	// Allow named colors (common CSS color names)
+	$namedColors = ['transparent', 'black', 'white', 'red', 'green', 'blue', 'yellow', 'cyan', 'magenta', 
+	                'gray', 'grey', 'silver', 'navy', 'teal', 'aqua', 'lime', 'olive', 'maroon', 'purple', 'fuchsia'];
+	if (in_array(strtolower($color), $namedColors, true)) {
+		return strtolower($color);
+	}
+	
+	return null;
+};
+
+/**
+ * Helper function to generate CSS overrides for a theme
+ * @param array $colorMap Array mapping parameter names to CSS variables
+ * @param string $theme Theme name ('light' or 'dark')
+ * @return string CSS rules or empty string
+ */
+$generateThemeCSS = function($colorMap, $theme) use ($sanitizeColor) {
+	$overrides = [];
+	foreach ($colorMap as $param => $cssVar) {
+		$value = $this->params->get($param, '');
+		$sanitized = $sanitizeColor($value);
+		if ($sanitized !== null) {
+			$overrides[] = $cssVar . ': ' . $sanitized . ';';
+		}
+	}
+	
+	if (!empty($overrides)) {
+		return ":root[data-bs-theme='" . $theme . "'] {\n" . implode("\n", $overrides) . "\n}\n";
+	}
+	
+	return '';
+};
+
+// Define color mappings for light and dark modes
 $lightColors = [
 	'light_color_primary' => '--color-primary',
 	'light_accent_primary' => '--accent-color-primary',
@@ -134,19 +194,6 @@ $lightColors = [
 	'light_bootstrap_primary' => '--primary',
 ];
 
-$lightOverrides = [];
-foreach ($lightColors as $param => $cssVar) {
-	$value = $this->params->get($param, '');
-	if (!empty($value)) {
-		$lightOverrides[] = $cssVar . ': ' . $value . ';';
-	}
-}
-
-if (!empty($lightOverrides)) {
-	$customColorCSS .= ":root[data-bs-theme='light'] {\n" . implode("\n", $lightOverrides) . "\n}\n";
-}
-
-// Dark mode custom colors
 $darkColors = [
 	'dark_color_primary' => '--color-primary',
 	'dark_accent_primary' => '--accent-color-primary',
@@ -159,17 +206,9 @@ $darkColors = [
 	'dark_bootstrap_primary' => '--primary',
 ];
 
-$darkOverrides = [];
-foreach ($darkColors as $param => $cssVar) {
-	$value = $this->params->get($param, '');
-	if (!empty($value)) {
-		$darkOverrides[] = $cssVar . ': ' . $value . ';';
-	}
-}
-
-if (!empty($darkOverrides)) {
-	$customColorCSS .= ":root[data-bs-theme='dark'] {\n" . implode("\n", $darkOverrides) . "\n}\n";
-}
+// Generate CSS for both themes
+$customColorCSS .= $generateThemeCSS($lightColors, 'light');
+$customColorCSS .= $generateThemeCSS($darkColors, 'dark');
 
 // Add custom color CSS to document if any overrides are defined
 if (!empty($customColorCSS)) {
