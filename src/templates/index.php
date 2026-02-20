@@ -118,6 +118,112 @@ try {
 	$wa->registerAndUseStyle('template.dark.dynamic', $templatePath . '/css/colors/dark/' . $colorDarkKey . '.css');
 }
 
+// Custom color parameters - generate inline CSS for color overrides
+$customColorCSS = '';
+
+/**
+ * Helper function to sanitize color values for CSS
+ * Accepts hex, rgb, rgba, hsl, hsla, and named colors
+ * 
+ * Note: This function validates format but not value ranges (e.g., RGB 0-255).
+ * CSS will automatically clamp out-of-range values, so strict range validation
+ * is not necessary for security purposes.
+ * 
+ * @param string $color The color value to sanitize
+ * @return string|null Sanitized color or null if invalid format
+ */
+$sanitizeColor = function($color) {
+	$color = trim($color);
+	if (empty($color)) {
+		return null;
+	}
+	
+	// Allow hex colors (#fff, #ffffff, #ffffffff)
+	if (preg_match('/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/', $color)) {
+		return strtolower($color);
+	}
+	
+	// Allow rgb/rgba
+	if (preg_match('/^rgba?\s*\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}(\s*,\s*[\d.]+)?\s*\)$/i', $color)) {
+		return strtolower($color);
+	}
+	
+	// Allow hsl/hsla
+	if (preg_match('/^hsla?\s*\(\s*\d{1,3}\s*,\s*\d{1,3}%\s*,\s*\d{1,3}%(\s*,\s*[\d.]+)?\s*\)$/i', $color)) {
+		return strtolower($color);
+	}
+	
+	// Allow named colors (common CSS color names)
+	$namedColors = [
+		'transparent', 'black', 'white', 'red', 'green', 'blue', 'yellow', 'cyan', 'magenta',
+		'gray', 'grey', 'silver', 'navy', 'teal', 'aqua', 'lime', 'olive', 'maroon', 'purple', 'fuchsia',
+		'orange', 'pink', 'brown', 'gold', 'coral', 'crimson', 'indigo', 'violet', 'tan', 'khaki',
+		'salmon', 'tomato', 'orchid', 'plum', 'lavender', 'ivory', 'beige', 'wheat', 'azure', 'snow'
+	];
+	if (in_array(strtolower($color), $namedColors, true)) {
+		return strtolower($color);
+	}
+	
+	return null;
+};
+
+/**
+ * Helper function to generate CSS overrides for a theme
+ * @param array $colorMap Array mapping parameter names to CSS variables
+ * @param string $theme Theme name ('light' or 'dark')
+ * @return string CSS rules or empty string
+ */
+$generateThemeCSS = function($colorMap, $theme) use ($sanitizeColor) {
+	$overrides = [];
+	foreach ($colorMap as $param => $cssVar) {
+		$value = $this->params->get($param, '');
+		$sanitized = $sanitizeColor($value);
+		if ($sanitized !== null) {
+			$overrides[] = "\t" . $cssVar . ': ' . $sanitized . ';';
+		}
+	}
+	
+	if (!empty($overrides)) {
+		return ":root[data-bs-theme='" . $theme . "'] {\n" . implode("\n", $overrides) . "\n}\n";
+	}
+	
+	return '';
+};
+
+// Define color mappings for light and dark modes
+$lightColors = [
+	'light_color_primary' => '--color-primary',
+	'light_accent_primary' => '--accent-color-primary',
+	'light_nav_bg' => '--nav-bg-color',
+	'light_nav_link' => '--mainmenu-nav-link-color',
+	'light_body_bg' => '--body-bg',
+	'light_body_color' => '--body-color',
+	'light_link_color' => '--link-color',
+	'light_link_hover' => '--link-hover-color',
+	'light_bootstrap_primary' => '--primary',
+];
+
+$darkColors = [
+	'dark_color_primary' => '--color-primary',
+	'dark_accent_primary' => '--accent-color-primary',
+	'dark_nav_bg' => '--nav-bg-color',
+	'dark_nav_link' => '--mainmenu-nav-link-color',
+	'dark_body_bg' => '--body-bg',
+	'dark_body_color' => '--body-color',
+	'dark_link_color' => '--link-color',
+	'dark_link_hover' => '--link-hover-color',
+	'dark_bootstrap_primary' => '--primary',
+];
+
+// Generate CSS for both themes
+$customColorCSS .= $generateThemeCSS($lightColors, 'light');
+$customColorCSS .= $generateThemeCSS($darkColors, 'dark');
+
+// Add custom color CSS to document if any overrides are defined
+if (!empty($customColorCSS)) {
+	$wa->addInlineStyle($customColorCSS);
+}
+
 // Scripts
 $wa->useScript('template.js');
 

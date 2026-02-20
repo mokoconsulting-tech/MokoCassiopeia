@@ -195,6 +195,58 @@ After running the workflow or script, you should:
 
 ---
 
+## Color Customization Methods
+
+You now have **two ways** to customize colors for your client fork:
+
+### Method 1: Parameter-Based Customization (Recommended for Simple Branding)
+
+**Best for**: Quick brand color changes without editing CSS files
+
+1. Log into Joomla admin
+2. Navigate to System → Site Templates → MokoCassiopeia
+3. Click on the template name to edit
+4. Go to the "Theme" tab
+5. Scroll to "Custom Colours - Light Mode" and "Custom Colours - Dark Mode" sections
+6. Use the color pickers to set:
+   - Brand Primary Color
+   - Accent Primary Color
+   - Navigation Background & Link Color
+   - Body Background & Text Color
+   - Link & Link Hover Colors
+   - Bootstrap Primary Color
+7. Save the template
+
+**Advantages**:
+- ✅ No CSS files to edit
+- ✅ Visual color picker interface
+- ✅ Changes apply immediately
+- ✅ Easy to revert by clearing the fields
+- ✅ No file management required
+
+**Limitations**:
+- Only 9 essential colors per theme can be customized
+- For advanced customization, use Method 2
+
+### Method 2: CSS File Customization (Advanced)
+
+**Best for**: Complete control over all 400+ CSS variables
+
+1. Edit `src/media/css/colors/light/colors_custom.css`
+2. Edit `src/media/css/colors/dark/colors_custom.css`
+3. Update any of the 400+ CSS variables
+4. Commit and deploy the changes
+
+**Advantages**:
+- ✅ Complete control over all variables
+- ✅ Can customize spacing, borders, shadows, etc.
+- ✅ Supports complex color schemes
+- ✅ Version controlled with your fork
+
+**Note**: Parameter-based colors (Method 1) will override CSS file colors (Method 2) if both are set.
+
+---
+
 ## Troubleshooting
 
 ### Workflow Fails with "CONFIRM" Error

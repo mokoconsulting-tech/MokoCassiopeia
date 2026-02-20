@@ -198,6 +198,51 @@
 					<option value="colors_custom">TPL_MOKOCASSIOPEIA_COLOR_NAME_CUSTOM</option>
 				</field>
 
+				<!-- Custom Colors (Light Mode) -->
+				<field name="theme_sep_custom_light" type="spacer" label="TPL_MOKOCASSIOPEIA_CUSTOM_COLORS_LIGHT_LABEL" hr="false" class="text fw-bold" />
+				<field name="customColorNote" type="note" description="TPL_MOKOCASSIOPEIA_CUSTOM_COLORS_DESC" class="alert alert-info" />
+				
+				<field name="light_color_primary" type="color" label="TPL_MOKOCASSIOPEIA_LIGHT_COLOR_PRIMARY_LABEL" 
+					description="TPL_MOKOCASSIOPEIA_LIGHT_COLOR_PRIMARY_DESC" default="" />
+				<field name="light_accent_primary" type="color" label="TPL_MOKOCASSIOPEIA_LIGHT_ACCENT_PRIMARY_LABEL" 
+					description="TPL_MOKOCASSIOPEIA_LIGHT_ACCENT_PRIMARY_DESC" default="" />
+				<field name="light_nav_bg" type="color" label="TPL_MOKOCASSIOPEIA_LIGHT_NAV_BG_LABEL" 
+					description="TPL_MOKOCASSIOPEIA_LIGHT_NAV_BG_DESC" default="" />
+				<field name="light_nav_link" type="color" label="TPL_MOKOCASSIOPEIA_LIGHT_NAV_LINK_LABEL" 
+					description="TPL_MOKOCASSIOPEIA_LIGHT_NAV_LINK_DESC" default="" />
+				<field name="light_body_bg" type="color" label="TPL_MOKOCASSIOPEIA_LIGHT_BODY_BG_LABEL" 
+					description="TPL_MOKOCASSIOPEIA_LIGHT_BODY_BG_DESC" default="" />
+				<field name="light_body_color" type="color" label="TPL_MOKOCASSIOPEIA_LIGHT_BODY_COLOR_LABEL" 
+					description="TPL_MOKOCASSIOPEIA_LIGHT_BODY_COLOR_DESC" default="" />
+				<field name="light_link_color" type="color" label="TPL_MOKOCASSIOPEIA_LIGHT_LINK_COLOR_LABEL" 
+					description="TPL_MOKOCASSIOPEIA_LIGHT_LINK_COLOR_DESC" default="" />
+				<field name="light_link_hover" type="color" label="TPL_MOKOCASSIOPEIA_LIGHT_LINK_HOVER_LABEL" 
+					description="TPL_MOKOCASSIOPEIA_LIGHT_LINK_HOVER_DESC" default="" />
+				<field name="light_bootstrap_primary" type="color" label="TPL_MOKOCASSIOPEIA_LIGHT_BS_PRIMARY_LABEL" 
+					description="TPL_MOKOCASSIOPEIA_LIGHT_BS_PRIMARY_DESC" default="" />
+
+				<!-- Custom Colors (Dark Mode) -->
+				<field name="theme_sep_custom_dark" type="spacer" label="TPL_MOKOCASSIOPEIA_CUSTOM_COLORS_DARK_LABEL" hr="false" class="text fw-bold" />
+				
+				<field name="dark_color_primary" type="color" label="TPL_MOKOCASSIOPEIA_DARK_COLOR_PRIMARY_LABEL" 
+					description="TPL_MOKOCASSIOPEIA_DARK_COLOR_PRIMARY_DESC" default="" />
+				<field name="dark_accent_primary" type="color" label="TPL_MOKOCASSIOPEIA_DARK_ACCENT_PRIMARY_LABEL" 
+					description="TPL_MOKOCASSIOPEIA_DARK_ACCENT_PRIMARY_DESC" default="" />
+				<field name="dark_nav_bg" type="color" label="TPL_MOKOCASSIOPEIA_DARK_NAV_BG_LABEL" 
+					description="TPL_MOKOCASSIOPEIA_DARK_NAV_BG_DESC" default="" />
+				<field name="dark_nav_link" type="color" label="TPL_MOKOCASSIOPEIA_DARK_NAV_LINK_LABEL" 
+					description="TPL_MOKOCASSIOPEIA_DARK_NAV_LINK_DESC" default="" />
+				<field name="dark_body_bg" type="color" label="TPL_MOKOCASSIOPEIA_DARK_BODY_BG_LABEL" 
+					description="TPL_MOKOCASSIOPEIA_DARK_BODY_BG_DESC" default="" />
+				<field name="dark_body_color" type="color" label="TPL_MOKOCASSIOPEIA_DARK_BODY_COLOR_LABEL" 
+					description="TPL_MOKOCASSIOPEIA_DARK_BODY_COLOR_DESC" default="" />
+				<field name="dark_link_color" type="color" label="TPL_MOKOCASSIOPEIA_DARK_LINK_COLOR_LABEL" 
+					description="TPL_MOKOCASSIOPEIA_DARK_LINK_COLOR_DESC" default="" />
+				<field name="dark_link_hover" type="color" label="TPL_MOKOCASSIOPEIA_DARK_LINK_HOVER_LABEL" 
+					description="TPL_MOKOCASSIOPEIA_DARK_LINK_HOVER_DESC" default="" />
+				<field name="dark_bootstrap_primary" type="color" label="TPL_MOKOCASSIOPEIA_DARK_BS_PRIMARY_LABEL" 
+					description="TPL_MOKOCASSIOPEIA_DARK_BS_PRIMARY_DESC" default="" />
+
 				<!-- Typography -->
 				<field name="theme_sep_typo" type="spacer" label="Typography" hr="false" class="text fw-bold" />
 				<field name="useFontScheme" type="groupedlist" label="TPL_MOKOCASSIOPEIA_FONT_LABEL" description="TPL_MOKOCASSIOPEIA_FONT_LABEL_DESC" default="media/templates/site/mokocassiopeia/css/colors/fonts-local_roboto.css">
