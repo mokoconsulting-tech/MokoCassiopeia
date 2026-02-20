@@ -328,9 +328,13 @@ See [Joomla Development Guide](./docs/JOOMLA_DEVELOPMENT.md) for packaging instr
 
 ### Customization Resources
 
-- **[Template Files](./templates/)** - Ready-to-use color palette templates
-  - `colors_custom_light.css` - Light mode template
-  - `colors_custom_dark.css` - Dark mode template
+- **[Template Files](./templates/)** - Ready-to-use templates for customization
+  - `colors_custom.css` - Custom color palette template
+  - `CLIENT_FORK_README_TEMPLATE.md` - Template for client fork documentation
+
+### Client Forks
+
+- **[Client Fork Guide](./CLIENT_FORK_README.md)** - Comprehensive guide for creating and maintaining client custom code forks
 
 ### Governance
 
@@ -397,6 +401,14 @@ We welcome contributions! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for gu
 ### Development Workflow
 
 See [Workflow Guide](./docs/WORKFLOW_GUIDE.md) for detailed Git workflow.
+
+### Client Custom Forks
+
+Creating a custom fork for client-specific branding and code? See our comprehensive [Client Fork Guide](./CLIENT_FORK_README.md) for:
+- Setting up custom color schemes
+- Maintaining fork-specific customizations
+- Syncing with upstream updates
+- Deployment workflows
 
 ---
 

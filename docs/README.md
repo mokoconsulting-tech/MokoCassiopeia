@@ -70,6 +70,15 @@ This directory contains comprehensive documentation for the MokoCassiopeia Jooml
 
 For end-user documentation, installation instructions, and feature guides, see the main [README.md](../README.md) in the repository root.
 
+### Client Fork Documentation
+
+* **[Client Fork Guide](../CLIENT_FORK_README.md)** - Comprehensive guide for client custom code forks
+  * Setting up custom branding and colors
+  * Maintaining fork-specific customizations
+  * Syncing with upstream MokoCassiopeia
+  * Deployment and development workflows
+  * Template README for client forks
+
 ## Project Structure
 
 ```
@@ -85,9 +94,10 @@ moko-cassiopeia/
 │   ├── templates/          # Joomla template files
 │   └── media/              # Assets (CSS, JS, images)
 ├── templates/               # Template files for customization
-│   ├── colors_custom_light.css # Light mode color template
-│   └── colors_custom_dark.css  # Dark mode color template
+│   ├── colors_custom.css       # Custom color palette template
+│   └── CLIENT_FORK_README_TEMPLATE.md # Template for client fork docs
 ├── tests/                   # Automated tests
+├── CLIENT_FORK_README.md    # Client fork guide
 └── .github/                # GitHub configuration and workflows
 ```
 
