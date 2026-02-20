@@ -170,7 +170,7 @@ $generateThemeCSS = function($colorMap, $theme) use ($sanitizeColor) {
 		$value = $this->params->get($param, '');
 		$sanitized = $sanitizeColor($value);
 		if ($sanitized !== null) {
-			$overrides[] = $cssVar . ': ' . $sanitized . ';';
+			$overrides[] = "\t" . $cssVar . ': ' . $sanitized . ';';
 		}
 	}
 	
