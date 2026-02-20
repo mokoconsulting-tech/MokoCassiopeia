@@ -72,6 +72,12 @@ For end-user documentation, installation instructions, and feature guides, see t
 
 ### Client Fork Documentation
 
+* **[Client Fork Workflow](CLIENT_FORK_WORKFLOW.md)** - Automated client fork creation
+  * GitHub Actions workflow for instant fork setup
+  * Local bash script alternative
+  * Complete setup automation in minutes
+  * Post-setup customization guide
+
 * **[Client Fork Guide](../CLIENT_FORK_README.md)** - Comprehensive guide for client custom code forks
   * Setting up custom branding and colors
   * Maintaining fork-specific customizations

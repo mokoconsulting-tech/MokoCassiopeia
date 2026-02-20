@@ -404,7 +404,12 @@ See [Workflow Guide](./docs/WORKFLOW_GUIDE.md) for detailed Git workflow.
 
 ### Client Custom Forks
 
-Creating a custom fork for client-specific branding and code? See our comprehensive [Client Fork Guide](./CLIENT_FORK_README.md) for:
+Creating a custom fork for client-specific branding and code?
+
+**Quick Setup**: Use our automated workflow to create a client fork in minutes:
+- **[Client Fork Workflow Guide](./docs/CLIENT_FORK_WORKFLOW.md)** - Automated GitHub Actions workflow or local bash script
+
+**Comprehensive Guide**: See our [Client Fork Guide](./CLIENT_FORK_README.md) for:
 - Setting up custom color schemes
 - Maintaining fork-specific customizations
 - Syncing with upstream updates

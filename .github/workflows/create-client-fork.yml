@@ -1,16 +1,13 @@
+---
 # Copyright (C) 2026 Moko Consulting <hello@mokoconsulting.tech>
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 # GitHub Actions Workflow: Create Client Fork Implementation
-# This workflow prepares the repository for a client-specific fork by:
-# - Copying custom color templates to the appropriate locations
-# - Replacing the main README with the client fork README
-# - Cleaning up template documentation files
 
 name: Create Client Fork
 
-on:
+"on":
   workflow_dispatch:
     inputs:
       client_name:
@@ -18,7 +15,7 @@ on:
         required: true
         type: string
       confirm:
-        description: 'Type "CONFIRM" to proceed with fork creation'
+        description: 'Type "CONFIRM" to proceed'
         required: true
         type: string
 
@@ -26,139 +23,128 @@ jobs:
   create-fork:
     name: Setup Client Fork
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Validate confirmation
         if: ${{ inputs.confirm != 'CONFIRM' }}
         run: |
-          echo "::error::You must type CONFIRM to proceed with fork creation"
+          echo "::error::Type CONFIRM to proceed"
           exit 1
-      
+
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: Setup Git
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-      
+
       - name: Create client fork branch
         run: |
-          CLIENT_SLUG=$(echo "${{ inputs.client_name }}" | tr '[:upper:]' '[:lower:]' | tr ' ' '-')
+          CLIENT_NAME="${{ inputs.client_name }}"
+          CLIENT_SLUG=$(echo "${CLIENT_NAME}" | tr '[:upper:]' '[:lower:]' | tr ' ' '-')
           BRANCH_NAME="client-fork/${CLIENT_SLUG}"
           git checkout -b "${BRANCH_NAME}"
           echo "BRANCH_NAME=${BRANCH_NAME}" >> $GITHUB_ENV
           echo "CLIENT_SLUG=${CLIENT_SLUG}" >> $GITHUB_ENV
-      
+
       - name: Copy custom color templates
         run: |
-          # Copy the colors_custom.css template to both light and dark mode directories
-          echo "Copying colors_custom.css to light and dark mode directories..."
+          echo "Copying colors_custom.css..."
           cp templates/colors_custom.css src/media/css/colors/light/colors_custom.css
           cp templates/colors_custom.css src/media/css/colors/dark/colors_custom.css
-          
-          # Verify files were created
+
           if [ -f "src/media/css/colors/light/colors_custom.css" ]; then
-            echo "✓ Created src/media/css/colors/light/colors_custom.css"
+            echo "✓ Created light mode colors_custom.css"
           else
             echo "::error::Failed to create light mode colors_custom.css"
             exit 1
           fi
-          
+
           if [ -f "src/media/css/colors/dark/colors_custom.css" ]; then
-            echo "✓ Created src/media/css/colors/dark/colors_custom.css"
+            echo "✓ Created dark mode colors_custom.css"
           else
             echo "::error::Failed to create dark mode colors_custom.css"
             exit 1
           fi
-      
+
       - name: Replace README with client fork README
         run: |
-          echo "Replacing README.md with CLIENT_FORK_README.md..."
-          
-          # Customize the CLIENT_FORK_README.md with client name
+          echo "Replacing README.md..."
           sed "s/\[CLIENT NAME\]/${{ inputs.client_name }}/g" CLIENT_FORK_README.md > README.md
-          
-          # Update fork information section
+
           CURRENT_DATE=$(date +"%Y-%m-%d")
           sed -i "s/\[DATE\]/${CURRENT_DATE}/g" README.md
           sed -i "s/\[YOUR-FORK-URL\]/https:\/\/github.com\/${GITHUB_REPOSITORY}/g" README.md
-          
-          echo "✓ README.md replaced with customized client fork README"
-      
+
+          echo "✓ README.md replaced"
+
       - name: Clean up template files
         run: |
-          echo "Removing template documentation files..."
-          
-          # Remove the original CLIENT_FORK_README.md
+          echo "Removing template files..."
+
           if [ -f "CLIENT_FORK_README.md" ]; then
             rm CLIENT_FORK_README.md
             echo "✓ Removed CLIENT_FORK_README.md"
           fi
-          
-          # Remove the template README from templates directory
+
           if [ -f "templates/CLIENT_FORK_README_TEMPLATE.md" ]; then
             rm templates/CLIENT_FORK_README_TEMPLATE.md
             echo "✓ Removed templates/CLIENT_FORK_README_TEMPLATE.md"
           fi
-          
-          # Update templates/README.md to remove references to CLIENT_FORK_README_TEMPLATE.md
+
           if [ -f "templates/README.md" ]; then
             sed -i '/CLIENT_FORK_README_TEMPLATE.md/d' templates/README.md
             sed -i '/Client Fork README Template/,/^---$/d' templates/README.md
             echo "✓ Updated templates/README.md"
           fi
-          
-          # Keep templates/colors_custom.css as specified
-          echo "✓ Keeping templates/colors_custom.css as template"
-      
+
+          echo "✓ Keeping templates/colors_custom.css"
+
       - name: Commit changes
         run: |
           git add .
           git status
-          
+
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "Setup client fork for ${{ inputs.client_name }}
-
-- Copied colors_custom.css to src/media/css/colors/light/ and dark/
-- Replaced README.md with customized CLIENT_FORK_README.md
-- Removed CLIENT_FORK_README.md and templates/CLIENT_FORK_README_TEMPLATE.md
-- Kept templates/colors_custom.css as template
-
-This commit prepares the repository for ${{ inputs.client_name }}'s custom fork."
-            
-            echo "✓ Changes committed successfully"
+            git commit -m "Setup client fork for ${{ inputs.client_name }}" \
+              -m "Copied colors_custom.css to src/media/css/colors/" \
+              -m "Replaced README.md with CLIENT_FORK_README.md" \
+              -m "Removed CLIENT_FORK_README.md" \
+              -m "Removed templates/CLIENT_FORK_README_TEMPLATE.md" \
+              -m "Kept templates/colors_custom.css as template"
+            echo "✓ Changes committed"
           fi
-      
+
       - name: Push branch
         run: |
           git push origin "${BRANCH_NAME}"
-          echo "✓ Branch ${BRANCH_NAME} pushed successfully"
-      
+          echo "✓ Branch ${BRANCH_NAME} pushed"
+
       - name: Summary
         run: |
-          echo "## Client Fork Setup Complete! 🎉" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Changes Applied" >> $GITHUB_STEP_SUMMARY
-          echo "- ✓ Copied \`colors_custom.css\` to \`src/media/css/colors/light/\`" >> $GITHUB_STEP_SUMMARY
-          echo "- ✓ Copied \`colors_custom.css\` to \`src/media/css/colors/dark/\`" >> $GITHUB_STEP_SUMMARY
-          echo "- ✓ Replaced \`README.md\` with customized client fork README" >> $GITHUB_STEP_SUMMARY
-          echo "- ✓ Removed \`CLIENT_FORK_README.md\`" >> $GITHUB_STEP_SUMMARY
-          echo "- ✓ Removed \`templates/CLIENT_FORK_README_TEMPLATE.md\`" >> $GITHUB_STEP_SUMMARY
-          echo "- ✓ Kept \`templates/colors_custom.css\` as template" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Next Steps" >> $GITHUB_STEP_SUMMARY
-          echo "1. Review the changes in branch: \`${BRANCH_NAME}\`" >> $GITHUB_STEP_SUMMARY
-          echo "2. Customize colors in \`src/media/css/colors/light/colors_custom.css\`" >> $GITHUB_STEP_SUMMARY
-          echo "3. Customize colors in \`src/media/css/colors/dark/colors_custom.css\`" >> $GITHUB_STEP_SUMMARY
-          echo "4. Update \`README.md\` with client-specific details" >> $GITHUB_STEP_SUMMARY
-          echo "5. Create a new repository for ${{ inputs.client_name }}" >> $GITHUB_STEP_SUMMARY
-          echo "6. Push this branch to the new repository" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Branch Information" >> $GITHUB_STEP_SUMMARY
-          echo "- **Branch Name**: \`${BRANCH_NAME}\`" >> $GITHUB_STEP_SUMMARY
-          echo "- **Client**: ${{ inputs.client_name }}" >> $GITHUB_STEP_SUMMARY
+          cat >> $GITHUB_STEP_SUMMARY << EOF
+          ## Client Fork Setup Complete! 🎉
+
+          ### Changes Applied
+          - ✓ Copied colors_custom.css to src/media/css/colors/
+          - ✓ Replaced README.md
+          - ✓ Removed CLIENT_FORK_README.md
+          - ✓ Removed templates/CLIENT_FORK_README_TEMPLATE.md
+          - ✓ Kept templates/colors_custom.css
+
+          ### Next Steps
+          1. Review branch: \`${BRANCH_NAME}\`
+          2. Customize colors in src/media/css/colors/
+          3. Update README.md with client details
+          4. Create new repository for ${{ inputs.client_name }}
+          5. Push branch to new repository
+
+          ### Branch Information
+          - **Branch**: \`${BRANCH_NAME}\`
+          - **Client**: ${{ inputs.client_name }}
+          EOF

@@ -19,6 +19,8 @@
 
 This is a customized fork of the [MokoCassiopeia](https://github.com/mokoconsulting-tech/MokoCassiopeia) Joomla template, tailored specifically for [CLIENT NAME]'s website.
 
+> **💡 Tip**: This fork was likely created using the automated [Client Fork Workflow](./docs/CLIENT_FORK_WORKFLOW.md). If you're creating a new client fork, use the workflow for instant setup!
+
 ---
 
 ## 📋 About This Fork
