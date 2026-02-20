@@ -57,6 +57,7 @@ MokoCassiopeia is a modern, lightweight enhancement layer built on top of Joomla
 
 - **Dark Mode Support**: Built-in light/dark mode toggle with system preference detection
 - **Color Palettes**: Standard, Alternative, and Custom color schemes
+- **Parameter-Based Colors**: Edit key brand colors directly in template settings (no CSS files required)
 - **Theme Persistence**: User preferences saved via localStorage
 - **Theme Control Options**: Switch, radio buttons, or hidden controls
 - **Auto Dark Mode**: Optional automatic dark mode based on time/system settings
@@ -69,6 +70,7 @@ MokoCassiopeia is a modern, lightweight enhancement layer built on top of Joomla
 - **Font Options**: Local and web fonts (Roboto, Fira Sans, Noto Sans)
 - **Sticky Header**: Optional sticky navigation
 - **Back to Top**: Floating back-to-top button
+- **400+ CSS Variables**: Complete control over colors, spacing, and styling
 
 ### Analytics & Tracking
 
@@ -163,6 +165,22 @@ Access template configuration via **System → Site Templates → MokoCassiopeia
 **Variables & Palettes:**
 - **Light Mode Palette**: Standard, Alternative, or Custom
 - **Dark Mode Palette**: Standard, Alternative, or Custom
+
+**Custom Colors - Light Mode:**
+- **Brand Primary Color**: Main brand color throughout the template
+- **Accent Primary Color**: Accent color for highlights and interactive elements
+- **Navigation Background**: Background color for the main navigation menu
+- **Navigation Link Color**: Text color for navigation links
+- **Body Background**: Main page background color
+- **Body Text Color**: Default text color for body content
+- **Link Color**: Color for regular hyperlinks
+- **Link Hover Color**: Color for hyperlinks on hover
+- **Bootstrap Primary Color**: Bootstrap primary color for buttons, alerts, and components
+
+**Custom Colors - Dark Mode:**
+- Same 9 color options as Light Mode, but optimized for dark backgrounds
+
+> **Note**: Custom color parameters override values from color palette CSS files. Leave fields blank to use palette defaults. Changes apply immediately when you save the template.
 
 **Typography:**
 - **Font Scheme**: Local (Roboto) or Web fonts (Fira Sans, Roboto+Noto Sans)
