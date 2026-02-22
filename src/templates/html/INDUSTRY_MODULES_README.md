@@ -42,6 +42,55 @@ Kunena latest posts module with:
 - Responsive card layouts
 - Touch-friendly post links
 
+### 5. mod_kunenalogin (Kunena Forum)
+Kunena login module featuring:
+- Login and logout states
+- User profile with avatar
+- Post count and karma display
+- Profile and private messages links
+- Touch-friendly form controls
+- Password recovery links
+
+### 6. mod_kunenasearch (Kunena Forum)
+Kunena forum search module with:
+- Configurable button positions (top/right/bottom/left)
+- Touch-friendly search input (48px on mobile)
+- 16px input font (prevents iOS zoom)
+- Icon-only or text button options
+- Accessible search form
+
+### 7. mod_kunenastats (Kunena Forum)
+Kunena statistics module offering:
+- Member count with icon
+- Latest member display
+- Message and topic counts
+- Today/yesterday topic counts
+- Responsive grid layout (1-3 columns)
+- Visual stat cards with icons
+
+### 8. mod_osmembership (OS Membership Pro)
+Membership Pro plans module with:
+- Responsive pricing cards
+- Plan images and descriptions
+- Feature lists with checkmarks
+- Pricing display with periods
+- Free plan highlighting
+- Touch-friendly subscribe buttons
+- Grid layout (1-3 columns)
+
+## Component Overrides
+
+### com_kunena (Kunena Forum)
+- Category list view with responsive cards
+- Mobile-optimized forum navigation
+- Touch-friendly category links
+
+### com_osmembership (OS Membership Pro)
+- Plans list with pricing table layout
+- Featured plan highlighting
+- Responsive grid (1-4 columns)
+- Touch-friendly subscription buttons
+
 ## Mobile Responsive Features
 
 ### Touch Target Sizes (WCAG 2.1 Compliant)
