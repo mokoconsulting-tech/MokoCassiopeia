@@ -24,7 +24,7 @@
  INGROUP: MokoCassiopeia.Documentation
  REPO: https://github.com/mokoconsulting-tech/MokoCassiopeia
  FILE: docs/README.md
- VERSION: 03.06.03
+ VERSION: 03.07.00
  BRIEF: Documentation index for MokoCassiopeia template
  PATH: /docs/README.md
 -->
@@ -60,8 +60,14 @@ This directory contains comprehensive documentation for the MokoCassiopeia Jooml
   * Usage examples and tips
   * Light and dark mode theming
 
+* **[Module & Component Overrides](MODULE_OVERRIDES.md)** - Mobile-responsive overrides guide
+  * 20 module overrides + 3 component overrides
+  * VirtueMart, Joomla core, Community Builder, industry extensions
+  * Mobile-first responsive design patterns
+  * Accessibility features and customization
+
 * **[Roadmap](ROADMAP.md)** - Version-specific roadmap
-  * Current features (v03.06.03)
+  * Current features (v03.07.00)
   * Feature evolution timeline
   * Planned enhancements
   * Development priorities
@@ -95,9 +101,11 @@ moko-cassiopeia/
 │   ├── WORKFLOW_GUIDE.md   # Development workflow guide
 │   ├── JOOMLA_DEVELOPMENT.md # Joomla-specific development guide
 │   ├── CSS_VARIABLES.md    # CSS variables reference
+│   ├── MODULE_OVERRIDES.md # Module & component overrides guide
 │   └── ROADMAP.md          # Version-specific roadmap
 ├── src/                     # Template source code
 │   ├── templates/          # Joomla template files
+│   │   └── html/           # Module & component overrides (20 modules, 3 components)
 │   ├── media/              # Assets (CSS, JS, images)
 │   │   └── css/colors/     # Color schemes (light/dark subdirectories)
 │   │       ├── light/      # Light mode color files (colors_custom.css)
@@ -150,7 +158,7 @@ This project adheres to [MokoStandards](https://github.com/mokoconsulting-tech/M
 * Repository: [https://github.com/mokoconsulting-tech/MokoCassiopeia](https://github.com/mokoconsulting-tech/MokoCassiopeia)
 * Path: /docs/README.md
 * Owner: Moko Consulting
-* Version: 03.06.03
+* Version: 03.07.00
 * Status: Active
 * Effective Date: 2026-01-30
 * Classification: Public Open Source Documentation
@@ -159,6 +167,7 @@ This project adheres to [MokoStandards](https://github.com/mokoconsulting-tech/M
 
 | Date       | Change Summary                                        | Author          |
 | ---------- | ----------------------------------------------------- | --------------- |
+| 2026-02-22 | Added MODULE_OVERRIDES.md reference, updated version to 03.07.00 | GitHub Copilot |
 | 2026-01-30 | Added CSS Variables reference, updated version to 03.06.03 | GitHub Copilot |
 | 2026-01-09 | Initial documentation index created for MokoStandards compliance. | GitHub Copilot |
 | 2026-01-27 | Updated with roadmap link and version to 03.05.01.   | GitHub Copilot  |
