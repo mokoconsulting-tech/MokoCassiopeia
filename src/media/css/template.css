@@ -19945,3 +19945,481 @@ nav[data-toggle=toc] .nav-link.active+ul{
 		align-items: flex-start;
 	}
 }
+
+/* ===== INDUSTRY EXTENSION MODULE STYLES ===== */
+
+/* === mod_k2_content (K2) === */
+.mod-k2-content-responsive {
+	width: 100%;
+}
+
+.mod-k2-content__list {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+}
+
+.mod-k2-content__item {
+	display: flex;
+	gap: 1rem;
+	padding-bottom: 1.5rem;
+	border-bottom: 1px solid var(--border-color);
+}
+
+.mod-k2-content__item:last-child {
+	border-bottom: none;
+	padding-bottom: 0;
+}
+
+.mod-k2-content__image {
+	flex-shrink: 0;
+	width: 120px;
+	overflow: hidden;
+	border-radius: var(--border-radius);
+}
+
+.mod-k2-content__image img {
+	width: 100%;
+	height: auto;
+	display: block;
+	transition: transform 0.3s;
+}
+
+.mod-k2-content__image:hover img {
+	transform: scale(1.05);
+}
+
+.mod-k2-content__content {
+	flex: 1;
+	min-width: 0;
+}
+
+.mod-k2-content__title {
+	margin: 0 0 0.75rem 0;
+	font-weight: 600;
+	line-height: 1.4;
+}
+
+.mod-k2-content__title a {
+	color: var(--body-color);
+	text-decoration: none;
+	transition: color 0.2s;
+}
+
+.mod-k2-content__title a:hover {
+	color: var(--color-primary);
+	text-decoration: underline;
+}
+
+.mod-k2-content__meta {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1rem;
+	font-size: 0.875rem;
+	color: var(--gray-600);
+	margin-bottom: 0.75rem;
+}
+
+.mod-k2-content__meta > span {
+	display: flex;
+	align-items: center;
+	gap: 0.25rem;
+}
+
+.mod-k2-content__intro {
+	color: var(--body-color);
+	line-height: 1.6;
+	margin-bottom: 1rem;
+}
+
+.mod-k2-content__readmore {
+	margin-top: 1rem;
+}
+
+.mod-k2-content__readmore-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	min-height: 44px;
+}
+
+.mod-k2-content__custom-link {
+	margin-top: 1.5rem;
+	text-align: center;
+}
+
+.mod-k2-content__empty {
+	text-align: center;
+	padding: 2rem 1rem;
+	background: var(--secondary-bg);
+	border-radius: var(--border-radius);
+	color: var(--gray-600);
+}
+
+/* === mod_acymailing (AcyMailing) === */
+.mod-acymailing-responsive {
+	width: 100%;
+}
+
+.mod-acymailing__form-container {
+	background: var(--body-bg);
+	padding: 1.5rem;
+	border-radius: var(--border-radius);
+	border: 1px solid var(--border-color);
+}
+
+.mod-acymailing__intro {
+	margin-bottom: 1.5rem;
+	line-height: 1.6;
+	color: var(--body-color);
+}
+
+.mod-acymailing__outro {
+	margin-top: 1.5rem;
+	font-size: 0.875rem;
+	color: var(--gray-600);
+	line-height: 1.6;
+}
+
+.mod-acymailing__empty {
+	text-align: center;
+	padding: 2rem 1rem;
+	background: var(--secondary-bg);
+	border-radius: var(--border-radius);
+	color: var(--gray-600);
+}
+
+/* === mod_hikashop_cart (HikaShop) === */
+.mod-hikashop-cart-responsive {
+	width: 100%;
+}
+
+.mod-hikashop-cart__header {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	padding: 1rem;
+	background: var(--secondary-bg);
+	border: 1px solid var(--border-color);
+	border-radius: var(--border-radius);
+	margin-bottom: 1rem;
+}
+
+.mod-hikashop-cart__icon {
+	font-size: 1.5rem;
+	color: var(--color-primary);
+	flex-shrink: 0;
+}
+
+.mod-hikashop-cart__summary {
+	flex: 1;
+	min-width: 0;
+}
+
+.mod-hikashop-cart__count {
+	font-weight: 600;
+	color: var(--body-color);
+	font-size: 1rem;
+}
+
+.mod-hikashop-cart__total {
+	color: var(--success);
+	font-weight: 700;
+	font-size: 1.25rem;
+	margin-top: 0.25rem;
+}
+
+.mod-hikashop-cart__products {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	margin-bottom: 1rem;
+}
+
+.mod-hikashop-cart__product {
+	display: flex;
+	gap: 0.75rem;
+	padding: 0.75rem;
+	background: var(--body-bg);
+	border: 1px solid var(--border-color);
+	border-radius: var(--border-radius);
+	align-items: flex-start;
+}
+
+.mod-hikashop-cart__product-image {
+	flex-shrink: 0;
+	width: 80px;
+}
+
+.mod-hikashop-cart__product-image img {
+	width: 100%;
+	height: auto;
+	border-radius: var(--border-radius);
+}
+
+.mod-hikashop-cart__product-details {
+	flex: 1;
+	min-width: 0;
+}
+
+.mod-hikashop-cart__product-name {
+	font-weight: 600;
+	margin-bottom: 0.25rem;
+	line-height: 1.4;
+	color: var(--body-color);
+}
+
+.mod-hikashop-cart__product-quantity {
+	font-size: 0.875rem;
+	color: var(--gray-600);
+	margin-bottom: 0.25rem;
+}
+
+.mod-hikashop-cart__quantity-value {
+	font-weight: 600;
+	color: var(--body-color);
+}
+
+.mod-hikashop-cart__product-price {
+	font-weight: 700;
+	color: var(--success);
+	margin-top: 0.25rem;
+}
+
+.mod-hikashop-cart__product-remove {
+	flex-shrink: 0;
+}
+
+.mod-hikashop-cart__remove-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+	background: var(--body-bg);
+	border: 1px solid var(--border-color);
+	color: var(--danger);
+	text-decoration: none;
+	transition: all 0.2s;
+}
+
+.mod-hikashop-cart__remove-btn:hover {
+	background: var(--danger);
+	color: white;
+	border-color: var(--danger);
+}
+
+.mod-hikashop-cart__actions {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.mod-hikashop-cart__btn {
+	padding: 0.625rem 1rem;
+	border-radius: var(--border-radius);
+	text-align: center;
+	text-decoration: none;
+	font-weight: 600;
+	min-height: 44px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	transition: all 0.2s;
+}
+
+.mod-hikashop-cart__empty {
+	text-align: center;
+	padding: 2rem 1rem;
+	background: var(--secondary-bg);
+	border: 1px solid var(--border-color);
+	border-radius: var(--border-radius);
+}
+
+.mod-hikashop-cart__empty-icon {
+	font-size: 3rem;
+	color: var(--gray-600);
+	display: block;
+	margin-bottom: 1rem;
+}
+
+.mod-hikashop-cart__empty-text {
+	color: var(--gray-600);
+	margin: 0;
+}
+
+/* === mod_kunenalatest (Kunena Forum) === */
+.mod-kunena-latest-responsive {
+	width: 100%;
+}
+
+.mod-kunena-latest__list {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+.mod-kunena-latest__item {
+	display: flex;
+	gap: 0.75rem;
+	padding: 1rem;
+	background: var(--body-bg);
+	border: 1px solid var(--border-color);
+	border-radius: var(--border-radius);
+	transition: all 0.2s;
+}
+
+.mod-kunena-latest__item:hover {
+	background: var(--secondary-bg);
+	border-color: var(--color-primary);
+}
+
+.mod-kunena-latest__avatar {
+	flex-shrink: 0;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	overflow: hidden;
+}
+
+.mod-kunena-latest__avatar img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.mod-kunena-latest__content {
+	flex: 1;
+	min-width: 0;
+}
+
+.mod-kunena-latest__title {
+	margin: 0 0 0.5rem 0;
+	font-weight: 600;
+	font-size: 1rem;
+	line-height: 1.4;
+}
+
+.mod-kunena-latest__title a {
+	color: var(--body-color);
+	text-decoration: none;
+	transition: color 0.2s;
+}
+
+.mod-kunena-latest__title a:hover {
+	color: var(--color-primary);
+	text-decoration: underline;
+}
+
+.mod-kunena-latest__meta {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.75rem;
+	font-size: 0.875rem;
+	color: var(--gray-600);
+	margin-bottom: 0.5rem;
+}
+
+.mod-kunena-latest__meta > span {
+	display: flex;
+	align-items: center;
+	gap: 0.25rem;
+}
+
+.mod-kunena-latest__meta a {
+	color: var(--gray-600);
+	text-decoration: none;
+	transition: color 0.2s;
+}
+
+.mod-kunena-latest__meta a:hover {
+	color: var(--color-primary);
+}
+
+.mod-kunena-latest__excerpt {
+	font-size: 0.875rem;
+	color: var(--body-color);
+	line-height: 1.6;
+	margin-top: 0.5rem;
+}
+
+.mod-kunena-latest__more {
+	margin-top: 1.5rem;
+	text-align: center;
+}
+
+.mod-kunena-latest__more-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	min-height: 44px;
+}
+
+.mod-kunena-latest__empty {
+	text-align: center;
+	padding: 2rem 1rem;
+	background: var(--secondary-bg);
+	border-radius: var(--border-radius);
+	color: var(--gray-600);
+}
+
+/* === Mobile Responsive Adjustments === */
+@media (max-width: 575.98px) {
+	.mod-k2-content__item {
+		flex-direction: column;
+	}
+	
+	.mod-k2-content__image {
+		width: 100%;
+		max-width: 300px;
+		margin: 0 auto;
+	}
+	
+	.mod-k2-content__meta {
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+	
+	.mod-hikashop-cart__product {
+		flex-direction: column;
+	}
+	
+	.mod-hikashop-cart__product-image {
+		width: 100%;
+		max-width: 200px;
+		margin: 0 auto;
+	}
+	
+	.mod-hikashop-cart__actions {
+		gap: 0.75rem;
+	}
+	
+	.mod-hikashop-cart__btn {
+		min-height: 48px;
+		padding: 0.75rem 1rem;
+		font-size: 1rem;
+	}
+	
+	.mod-kunena-latest__meta {
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+}
+
+/* Tablet and desktop enhancements */
+@media (min-width: 768px) {
+	.mod-hikashop-cart__actions {
+		flex-direction: row;
+	}
+	
+	.mod-k2-content__custom-link {
+		text-align: left;
+	}
+}
