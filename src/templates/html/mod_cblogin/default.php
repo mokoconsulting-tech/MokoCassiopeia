@@ -67,11 +67,11 @@ $wrapperClass = 'mod-cblogin mod-cblogin-responsive ' . $moduleclass_sfx;
 
 			<div class="mod-cblogin__fields">
 				<div class="mod-cblogin__field">
-					<label for="modlogi username<?php echo $moduleId; ?>" class="mod-cblogin__label">
+					<label for="modloginusername<?php echo $moduleId; ?>" class="mod-cblogin__label">
 						<?php echo Text::_('MOD_CBLOGIN_USERNAME'); ?>
 					</label>
 					<input 
-						id="modlogi username<?php echo $moduleId; ?>" 
+						id="modloginusername<?php echo $moduleId; ?>" 
 						type="text" 
 						name="username" 
 						class="mod-cblogin__input form-control" 

@@ -60,11 +60,11 @@ $wrapperClass = 'mod-login mod-login-responsive ' . $moduleclass_sfx;
 
 			<div class="mod-login__fields">
 				<div class="mod-login__field">
-					<label for="modlogi username-<?php echo $module->id; ?>" class="mod-login__label">
+					<label for="modloginusername-<?php echo $module->id; ?>" class="mod-login__label">
 						<?php echo Text::_('MOD_LOGIN_VALUE_USERNAME'); ?>
 					</label>
 					<input 
-						id="modlogi username-<?php echo $module->id; ?>" 
+						id="modloginusername-<?php echo $module->id; ?>" 
 						type="text" 
 						name="username" 
 						class="mod-login__input form-control" 
