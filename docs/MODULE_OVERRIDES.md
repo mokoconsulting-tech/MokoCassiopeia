@@ -24,7 +24,7 @@
  INGROUP: MokoCassiopeia.Documentation
  REPO: https://github.com/mokoconsulting-tech/MokoCassiopeia
  FILE: docs/MODULE_OVERRIDES.md
- VERSION: 03.07.00
+ VERSION: 03.08.00
  BRIEF: Comprehensive guide to MokoCassiopeia mobile-responsive module overrides
  PATH: /docs/MODULE_OVERRIDES.md
 -->
@@ -35,7 +35,7 @@ This document provides a comprehensive guide to all mobile-responsive module and
 
 ## Overview
 
-MokoCassiopeia includes **20 mobile-responsive module overrides** and **3 component overrides** designed to enhance the mobile user experience across standard Joomla, VirtueMart, Community Builder, and popular third-party extensions.
+MokoCassiopeia includes **20 mobile-responsive module overrides** and **7 component view overrides** designed to enhance the mobile user experience across standard Joomla, VirtueMart, Community Builder, and popular third-party extensions.
 
 ### Key Features
 
@@ -337,6 +337,61 @@ Membership pricing tables.
 
 ---
 
+### 5. Community Builder Components
+
+Four comprehensive component view overrides for Community Builder user management.
+
+#### com_comprofiler
+**Location**: `src/templates/html/com_comprofiler/`
+
+Mobile-responsive views for Community Builder user profiles, registration, and login.
+
+##### userprofile
+User profile display with tabbed interface.
+
+**Features**:
+- Large avatar display (150px)
+- Tabbed interface for profile sections
+- Custom field display with labels
+- Online status indicator
+- Responsive layout: vertical mobile → horizontal desktop
+
+##### userslist
+User directory with search and grid layout.
+
+**Features**:
+- Search functionality with accessible form
+- Responsive grid: 1 column mobile → 2-3 columns desktop
+- User cards with avatars (80px)
+- Custom field display
+- Profile view buttons
+- Pagination support
+
+##### registers
+Multi-step registration form with validation.
+
+**Features**:
+- Fieldset organization with legends
+- Required field indicators (*)
+- Input validation and error display
+- Captcha support section
+- Terms & conditions checkbox
+- GDPR-compliant design
+- 16px input font on mobile
+
+##### login
+Login page with remember me and helper links.
+
+**Features**:
+- Centered login container (max-width: 450px)
+- Username/password fields with autocomplete
+- Remember me checkbox
+- Registration and password recovery links
+- CSRF token support
+- Responsive padding adjustments
+
+---
+
 ## CSS Architecture
 
 All module styles are located in `src/media/css/template.css` with dedicated sections:
@@ -360,7 +415,7 @@ All module styles are located in `src/media/css/template.css` with dedicated sec
    - Breadcrumbs
    - Login forms
    - Article displays
-   - CB components
+   - CB module components
 
 4. **INDUSTRY EXTENSION MODULE STYLES** (Lines ~19800+)
    - K2 content grids
@@ -368,6 +423,13 @@ All module styles are located in `src/media/css/template.css` with dedicated sec
    - HikaShop cart
    - Kunena forum modules
    - OS Membership pricing
+
+5. **COMMUNITY BUILDER COMPONENT STYLES** (Lines ~21000+)
+   - User profile layouts
+   - Users list grids
+   - Registration forms
+   - Login pages
+   - Tab interfaces
 
 ### CSS Variables Integration
 

@@ -8,16 +8,57 @@
  DEFGROUP: Joomla.Template.Site
  INGROUP: MokoCassiopeia.Documentation
  PATH: ./CHANGELOG.md
- VERSION: 03.06.03
+ VERSION: 03.08.00
  BRIEF: Changelog file documenting version history of MokoCassiopeia
  -->
 
-# Changelog — MokoCassiopeia (VERSION: 03.07.00)
+# Changelog — MokoCassiopeia (VERSION: 03.08.00)
 
 All notable changes to the MokoCassiopeia Joomla template are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [03.08.00] - 2026-02-22
+
+### Added - Community Builder Component Overrides
+
+Minor version bump adding **4 Community Builder component view overrides** to complement the existing CB module overrides (mod_cblogin, mod_comprofilerOnline).
+
+#### Community Builder Components (4 views)
+- **com_comprofiler/userprofile**: User profile display with avatar, tabs, and custom fields in responsive layout
+- **com_comprofiler/userslist**: User directory with search functionality and responsive grid (1-3 columns)
+- **com_comprofiler/registers**: User registration form with multi-step fieldsets, validation, captcha support
+- **com_comprofiler/login**: Login page with remember me checkbox, registration and password recovery links
+
+#### CSS Architecture (600+ lines)
+- Mobile-first responsive design with Bootstrap breakpoints (576px, 768px, 992px)
+- BEM naming convention (`.cb-profile__`, `.cb-userslist__`, `.cb-register__`, `.cb-login__`)
+- Integrated with template CSS variables for consistent theming
+- 48px touch targets on mobile, 44px on desktop (WCAG 2.1 Level AA)
+- 16px input font size on mobile to prevent iOS zoom
+- Responsive grids adapting from 1 column (mobile) to 2-3 columns (desktop)
+
+#### Accessibility Features
+- Full ARIA labels and descriptions for screen readers
+- Semantic HTML5 structure with proper landmarks
+- Keyboard navigation support throughout
+- Required field indicators with visually-hidden labels
+- Focus states with visible outlines
+
+#### Security Best Practices
+- Proper output escaping with htmlspecialchars() and ENT_QUOTES
+- _JEXEC security checks in all PHP files
+- index.html protection files in all directories (6 files)
+- CSRF token support in forms
+- Input validation and error display
+
+### Technical Details
+- **Files Added**: 11 (4 component view files + 6 index.html + 1 root index.html)
+- **CSS Lines Added**: 600+ lines of responsive styles
+- **PHP Validation**: All files pass syntax validation
+- **Component Views**: userprofile, userslist, registers, login
+- **Documentation**: Ready for MODULE_OVERRIDES.md update
 
 ## [03.07.00] - 2026-02-22
 
