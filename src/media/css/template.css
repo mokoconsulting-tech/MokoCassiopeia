@@ -20949,7 +20949,7 @@ nav[data-toggle=toc] .nav-link.active+ul{
 		min-height: 48px;
 	}
 	
-	.mod-kunenastats__container {
+	.mod-kunena-stats__container {
 		grid-template-columns: 1fr;
 	}
 }
@@ -20971,7 +20971,7 @@ nav[data-toggle=toc] .nav-link.active+ul{
 		flex-direction: row;
 	}
 	
-	.mod-kunenastats__container {
+	.mod-kunena-stats__container {
 		grid-template-columns: repeat(3, 1fr);
 	}
 }
