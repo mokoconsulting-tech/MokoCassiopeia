@@ -24,7 +24,7 @@
  INGROUP: MokoCassiopeia.Documentation
  REPO: https://github.com/mokoconsulting-tech/MokoCassiopeia
  FILE: docs/MODULE_OVERRIDES.md
- VERSION: 03.08.00
+ VERSION: 03.08.01
  BRIEF: Comprehensive guide to MokoCassiopeia mobile-responsive module overrides
  PATH: /docs/MODULE_OVERRIDES.md
 -->
@@ -35,7 +35,7 @@ This document provides a comprehensive guide to all mobile-responsive module and
 
 ## Overview
 
-MokoCassiopeia includes **20 mobile-responsive module overrides** and **7 component view overrides** designed to enhance the mobile user experience across standard Joomla, VirtueMart, Community Builder, and popular third-party extensions.
+MokoCassiopeia includes **19 mobile-responsive module overrides** and **7 component view overrides** designed to enhance the mobile user experience across standard Joomla, VirtueMart, Community Builder, and popular third-party extensions.
 
 ### Key Features
 
@@ -132,25 +132,11 @@ Manufacturer/brand display with grid layout.
 
 ### 3. Standard Joomla & Community Builder Modules
 
-Six essential Joomla core and Community Builder module overrides.
+Five essential Joomla core and Community Builder module overrides.
 
 **Master Documentation**: [STANDARD_MODULES_README.md](../src/templates/html/STANDARD_MODULES_README.md)
 
-#### mod_menu
-**Location**: `src/templates/html/mod_menu/`
-
-Main navigation menu with multiple layout files.
-
-**Features**:
-- Responsive horizontal/vertical layouts
-- Multi-level menu support
-- Active state highlighting
-- Keyboard navigation
-
-**Files**:
-- `default.php` - Main menu layout
-- `default_component.php` - Component links
-- `default_url.php` - External URLs
+**Note**: The mod_menu override has been removed to prevent conflicts with Joomla's core menu system. Use Joomla's default menu rendering or apply custom CSS to the `.mod-menu` class for styling.
 
 #### mod_breadcrumbs
 **Location**: `src/templates/html/mod_breadcrumbs/`

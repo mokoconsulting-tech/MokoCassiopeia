@@ -3,17 +3,11 @@
 ## Overview
 This directory contains mobile-responsive overrides for standard Joomla and Community Builder modules, designed specifically for the MokoCassiopeia template.
 
+**Note**: The mod_menu override has been removed to prevent conflicts with Joomla's core menu system. Use Joomla's default menu rendering or apply custom CSS to the `.mod-menu` class for styling.
+
 ## Standard Joomla Modules
 
-### 1. mod_menu
-Main navigation menu module with:
-- Responsive navigation structure
-- BEM naming for easy styling
-- Support for all menu types
-- Semantic HTML5 nav element
-- Accessibility-friendly with ARIA labels
-
-### 2. mod_breadcrumbs
+### 1. mod_breadcrumbs
 Breadcrumb navigation module featuring:
 - Schema.org structured data
 - Responsive breadcrumb trail
@@ -21,7 +15,7 @@ Breadcrumb navigation module featuring:
 - Active page highlighting
 - Touch-friendly links
 
-### 3. mod_login
+### 2. mod_login
 User login form module with:
 - Login and logout states
 - Two-factor authentication support
@@ -31,7 +25,7 @@ User login form module with:
 - Touch-friendly form inputs (48px on mobile)
 - 16px input font (prevents iOS zoom)
 
-### 4. mod_articles_latest
+### 3. mod_articles_latest
 Latest articles display module offering:
 - Responsive article cards
 - Optional metadata display (author, date, category, hits)
@@ -42,7 +36,7 @@ Latest articles display module offering:
 
 ## Community Builder Modules
 
-### 5. mod_cblogin
+### 4. mod_cblogin
 Community Builder login module with:
 - Avatar display in logged-in state
 - Profile link button
@@ -52,7 +46,7 @@ Community Builder login module with:
 - Registration link
 - Pre/post text support
 
-### 6. mod_comprofilerOnline
+### 5. mod_comprofilerOnline
 Community Builder online users module featuring:
 - Online user count display
 - Members vs. guests breakdown
@@ -143,11 +137,6 @@ All modules include:
 
 ```
 src/templates/html/
-├── mod_menu/
-│   ├── default.php
-│   ├── default_url.php
-│   ├── default_component.php
-│   └── index.html
 ├── mod_breadcrumbs/
 │   ├── default.php
 │   └── index.html
@@ -217,7 +206,7 @@ Each PHP file can be modified to adjust HTML structure while maintaining mobile 
 - [ ] Verify ARIA labels
 
 ### Module-Specific Testing
-- [ ] mod_menu: Test menu types and levels
+- [ ] mod_breadcrumbs: Test breadcrumb trail on nested pages
 - [ ] mod_breadcrumbs: Verify breadcrumb trail accuracy
 - [ ] mod_login: Test login/logout flows, 2FA
 - [ ] mod_articles_latest: Check various parameter combinations

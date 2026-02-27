@@ -8,16 +8,47 @@
  DEFGROUP: Joomla.Template.Site
  INGROUP: MokoCassiopeia.Documentation
  PATH: ./CHANGELOG.md
- VERSION: 03.08.00
+ VERSION: 03.08.01
  BRIEF: Changelog file documenting version history of MokoCassiopeia
  -->
 
-# Changelog — MokoCassiopeia (VERSION: 03.08.00)
+# Changelog — MokoCassiopeia (VERSION: 03.08.01)
 
 All notable changes to the MokoCassiopeia Joomla template are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [03.08.01] - 2026-02-27
+
+### Removed - Fix Breaking Overrides
+
+**Critical fix**: Removed mod_menu override that was causing menu links to break and language strings not to load.
+
+#### Problem
+- mod_menu override files (default.php, default_component.php, default_url.php) were attempting to load menu-specific layouts that don't exist in the template
+- This broke Joomla's core menu rendering system
+- Menu links were not functional
+- Language strings were not loading properly in menus
+
+#### Solution
+- **Removed** entire `src/templates/html/mod_menu/` directory (4 files)
+- Template now uses Joomla's default menu rendering
+- Custom styling can still be applied via CSS using `.mod-menu` class
+- All menu functionality restored to standard Joomla behavior
+
+#### Documentation Updates
+- Updated MODULE_OVERRIDES.md: Changed count from 20 to 19 module overrides, removed mod_menu section, added note about removal
+- Updated STANDARD_MODULES_README.md: Removed mod_menu documentation, renumbered remaining modules, updated file structure
+- Updated testing checklists to remove mod_menu references
+
+#### Files Removed
+- `src/templates/html/mod_menu/default.php`
+- `src/templates/html/mod_menu/default_component.php`
+- `src/templates/html/mod_menu/default_url.php`
+- `src/templates/html/mod_menu/index.html`
+
+**Note**: This is a patch release that removes problematic overrides to restore core functionality. Menu styling via CSS remains intact.
 
 ## [03.08.00] - 2026-02-22
 
