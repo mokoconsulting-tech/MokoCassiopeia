@@ -31,13 +31,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Multi-level dropdown support with hover on desktop, tap on mobile
 - WCAG 2.1 compliant touch targets (48px on mobile, 44px on desktop)
 - BEM naming convention: `.mod-menu-main__*`
+- **Appears as "Mainmenu" layout option** in Joomla admin module settings
 
 #### Files Added
-- `src/templates/html/mod_menu/default.php` - Main layout with Bootstrap navbar
-- `src/templates/html/mod_menu/default_component.php` - Component menu items
-- `src/templates/html/mod_menu/default_heading.php` - Heading menu items
-- `src/templates/html/mod_menu/default_separator.php` - Separator menu items
-- `src/templates/html/mod_menu/default_url.php` - URL menu items
+- `src/templates/html/mod_menu/mainmenu.php` - Main layout with Bootstrap navbar
+- `src/templates/html/mod_menu/mainmenu_component.php` - Component menu items
+- `src/templates/html/mod_menu/mainmenu_heading.php` - Heading menu items
+- `src/templates/html/mod_menu/mainmenu_separator.php` - Separator menu items
+- `src/templates/html/mod_menu/mainmenu_url.php` - URL menu items
 - `src/templates/html/mod_menu/index.html` - Security file
 
 #### Features
@@ -48,6 +49,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Touch-Friendly**: 48px minimum touch targets on mobile
 - **Accessible**: ARIA labels and keyboard navigation support
 - **Active States**: Visual indicators for current and active menu items
+- **Alternative Layout**: Named `mainmenu.php` (not `default.php`) to appear as selectable layout option in Joomla admin
 
 #### CSS Architecture
 - 200+ lines of responsive CSS in template.css
@@ -78,7 +80,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 **Note**: All module override documentation is consolidated in `docs/MODULE_OVERRIDES.md`. The `src/templates/html/` directory now contains only PHP override files and `index.html` security files.
 
-**Note**: Unlike the previously removed mod_menu override (v03.08.01), this new "Main Menu" override is properly structured based on Joomla core layouts and Bootstrap 5, ensuring language strings load correctly and menu functionality works as expected.
+**Note**: Unlike the previously removed mod_menu override (v03.08.01), this new "Main Menu" override is properly structured based on Joomla core layouts and Bootstrap 5, ensuring language strings load correctly and menu functionality works as expected. The layout is named `mainmenu.php` (not `default.php`) to appear as an alternative layout option "Mainmenu" in the Joomla admin module dropdown selector, preserving Joomla's core default menu layout.
 
 ## [03.08.02] - 2026-02-27
 

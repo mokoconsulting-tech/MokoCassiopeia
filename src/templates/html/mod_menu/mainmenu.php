@@ -78,11 +78,11 @@ $moduleclass_sfx = htmlspecialchars($params->get('moduleclass_sfx', ''), ENT_COM
         case 'component':
         case 'heading':
         case 'url':
-            require ModuleHelper::getLayoutPath('mod_menu', 'default_' . $item->type);
+            require ModuleHelper::getLayoutPath('mod_menu', 'mainmenu_' . $item->type);
             break;
 
         default:
-            require ModuleHelper::getLayoutPath('mod_menu', 'default_url');
+            require ModuleHelper::getLayoutPath('mod_menu', 'mainmenu_url');
             break;
     endswitch;
 
