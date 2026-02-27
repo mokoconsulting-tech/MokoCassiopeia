@@ -12,9 +12,14 @@
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
+
+// Ensure module language file is loaded
+$lang = Factory::getLanguage();
+$lang->load('mod_login', JPATH_SITE);
 
 HTMLHelper::_('behavior.keepalive');
 HTMLHelper::_('bootstrap.tooltip', '.hasTooltip');

@@ -11,8 +11,13 @@
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+
+// Ensure module language file is loaded
+$lang = Factory::getLanguage();
+$lang->load('mod_articles_latest', JPATH_SITE);
 
 $moduleclass_sfx = htmlspecialchars($params->get('moduleclass_sfx', ''), ENT_COMPAT, 'UTF-8');
 
