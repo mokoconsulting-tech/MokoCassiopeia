@@ -61,6 +61,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **After**: 17 module overrides (added mod_menu "Main Menu")
 - **Component overrides**: Still 7 (unchanged)
 
+### Removed - Documentation Cleanup
+
+**Documentation policy**: Removed all markdown files from `src/templates/html/` directory. All documentation belongs in `docs/` folder only.
+
+#### Files Removed (9 markdown files)
+- `src/templates/html/STANDARD_MODULES_README.md`
+- `src/templates/html/INDUSTRY_MODULES_README.md`
+- `src/templates/html/VIRTUEMART_MODULES_README.md`
+- `src/templates/html/mod_virtuemart_cart/README.md`
+- `src/templates/html/mod_virtuemart_category/README.md`
+- `src/templates/html/mod_virtuemart_currencies/README.md`
+- `src/templates/html/mod_virtuemart_manufacturer/README.md`
+- `src/templates/html/mod_virtuemart_product/README.md`
+- `src/templates/html/mod_search/README.md`
+
+**Note**: All module override documentation is consolidated in `docs/MODULE_OVERRIDES.md`. The `src/templates/html/` directory now contains only PHP override files and `index.html` security files.
+
 **Note**: Unlike the previously removed mod_menu override (v03.08.01), this new "Main Menu" override is properly structured based on Joomla core layouts and Bootstrap 5, ensuring language strings load correctly and menu functionality works as expected.
 
 ## [03.08.02] - 2026-02-27
