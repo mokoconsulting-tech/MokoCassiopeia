@@ -8,16 +8,60 @@
  DEFGROUP: Joomla.Template.Site
  INGROUP: MokoCassiopeia.Documentation
  PATH: ./CHANGELOG.md
- VERSION: 03.08.01
+ VERSION: 03.08.03
  BRIEF: Changelog file documenting version history of MokoCassiopeia
  -->
 
-# Changelog — MokoCassiopeia (VERSION: 03.08.01)
+# Changelog — MokoCassiopeia (VERSION: 03.08.03)
 
 All notable changes to the MokoCassiopeia Joomla template are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [03.08.03] - 2026-02-27
+
+### Added - Main Menu Collapsible Dropdown Override
+
+**New feature**: Added responsive "Main Menu" mod_menu override with Bootstrap 5 collapsible dropdown functionality.
+
+#### What's New
+- **Main Menu module override** with full Bootstrap 5 responsive navbar
+- Collapsible hamburger menu for mobile devices
+- Multi-level dropdown support with hover on desktop, tap on mobile
+- WCAG 2.1 compliant touch targets (48px on mobile, 44px on desktop)
+- BEM naming convention: `.mod-menu-main__*`
+
+#### Files Added
+- `src/templates/html/mod_menu/default.php` - Main layout with Bootstrap navbar
+- `src/templates/html/mod_menu/default_component.php` - Component menu items
+- `src/templates/html/mod_menu/default_heading.php` - Heading menu items
+- `src/templates/html/mod_menu/default_separator.php` - Separator menu items
+- `src/templates/html/mod_menu/default_url.php` - URL menu items
+- `src/templates/html/mod_menu/index.html` - Security file
+
+#### Features
+- **Bootstrap 5 Navbar**: Uses Bootstrap's native navbar-nav structure
+- **Collapsible on Mobile**: Hamburger menu with smooth collapse animation
+- **Dropdown Menus**: Multi-level dropdown support with caret indicators
+- **Responsive Breakpoints**: Mobile-first design adapting at 768px and 992px
+- **Touch-Friendly**: 48px minimum touch targets on mobile
+- **Accessible**: ARIA labels and keyboard navigation support
+- **Active States**: Visual indicators for current and active menu items
+
+#### CSS Architecture
+- 200+ lines of responsive CSS in template.css
+- BEM naming: `.mod-menu-main`, `.mod-menu-main__list`, `.mod-menu-main__link`
+- CSS variables integration for colors and borders
+- Hover effects on desktop, tap effects on mobile
+- Smooth transitions and animations
+
+#### Module Count Update
+- **Before**: 16 module overrides
+- **After**: 17 module overrides (added mod_menu "Main Menu")
+- **Component overrides**: Still 7 (unchanged)
+
+**Note**: Unlike the previously removed mod_menu override (v03.08.01), this new "Main Menu" override is properly structured based on Joomla core layouts and Bootstrap 5, ensuring language strings load correctly and menu functionality works as expected.
 
 ## [03.08.02] - 2026-02-27
 

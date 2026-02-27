@@ -19362,6 +19362,177 @@ nav[data-toggle=toc] .nav-link.active+ul{
 	font-weight: 600;
 }
 
+/* === Main Menu - Collapsible Dropdown Bootstrap Responsive === */
+.mod-menu-main {
+	background-color: var(--body-bg);
+	padding: 0.5rem 0;
+}
+
+.mod-menu-main .navbar-toggler {
+	border-color: var(--border-color);
+	padding: 0.5rem 0.75rem;
+	font-size: 1.25rem;
+	min-height: 48px; /* WCAG 2.1 touch target */
+}
+
+.mod-menu-main .navbar-toggler:focus {
+	box-shadow: 0 0 0 0.25rem rgba(var(--link-color-rgb), 0.25);
+	outline: 0;
+}
+
+.mod-menu-main .navbar-toggler-icon {
+	background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(0, 0, 0, 0.75)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+	display: inline-block;
+	width: 1.5em;
+	height: 1.5em;
+	vertical-align: middle;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: 100%;
+}
+
+.mod-menu-main__list {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.mod-menu-main__item {
+	position: relative;
+}
+
+.mod-menu-main__link,
+.mod-menu-main__heading {
+	display: block;
+	padding: 0.75rem 1rem;
+	color: var(--link-color);
+	text-decoration: none;
+	transition: background-color 0.2s ease, color 0.2s ease;
+	min-height: 48px; /* WCAG 2.1 touch target on mobile */
+	display: flex;
+	align-items: center;
+	border-radius: var(--border-radius);
+}
+
+.mod-menu-main__link:hover,
+.mod-menu-main__link:focus {
+	background-color: var(--secondary-bg);
+	color: var(--link-hover-color);
+	text-decoration: none;
+}
+
+.mod-menu-main__item.active > .mod-menu-main__link,
+.mod-menu-main__item.current > .mod-menu-main__link {
+	background-color: var(--primary-bg);
+	color: var(--white);
+	font-weight: 600;
+}
+
+/* Dropdown menu styles */
+.mod-menu-main__dropdown {
+	list-style: none;
+	padding: 0.5rem 0;
+	margin: 0;
+	background-color: var(--body-bg);
+	border: 1px solid var(--border-color);
+	border-radius: var(--border-radius);
+	box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+	display: none;
+}
+
+.mod-menu-main__item.dropdown.show > .mod-menu-main__dropdown {
+	display: block;
+}
+
+.mod-menu-main__dropdown .mod-menu-main__item {
+	padding: 0;
+}
+
+.mod-menu-main__dropdown .mod-menu-main__link {
+	padding: 0.5rem 1.5rem;
+	min-height: 44px; /* Slightly smaller for nested items */
+}
+
+.mod-menu-main__dropdown .mod-menu-main__link:hover,
+.mod-menu-main__dropdown .mod-menu-main__link:focus {
+	background-color: var(--secondary-bg);
+}
+
+.mod-menu-main__separator {
+	border-top: 1px solid var(--border-color);
+	margin: 0.5rem 0;
+	padding: 0;
+}
+
+/* Dropdown toggle arrow */
+.mod-menu-main__link.dropdown-toggle::after,
+.mod-menu-main__heading.dropdown-toggle::after {
+	content: "";
+	display: inline-block;
+	margin-left: auto;
+	padding-left: 0.5rem;
+	vertical-align: middle;
+	border-top: 0.3em solid;
+	border-right: 0.3em solid transparent;
+	border-bottom: 0;
+	border-left: 0.3em solid transparent;
+}
+
+/* Desktop styles (≥768px) */
+@media (min-width: 768px) {
+	.mod-menu-main__list {
+		flex-direction: row;
+		flex-wrap: wrap;
+		gap: 0;
+	}
+
+	.mod-menu-main__link,
+	.mod-menu-main__heading {
+		min-height: 44px; /* WCAG 2.1 touch target on desktop */
+		padding: 0.5rem 1rem;
+	}
+
+	.mod-menu-main__item.dropdown {
+		position: relative;
+	}
+
+	.mod-menu-main__dropdown {
+		position: absolute;
+		top: 100%;
+		left: 0;
+		min-width: 200px;
+		z-index: 1000;
+		margin-top: 0.125rem;
+	}
+
+	/* Hover dropdown on desktop */
+	.mod-menu-main__item.dropdown:hover > .mod-menu-main__dropdown {
+		display: block;
+	}
+
+	/* Nested dropdowns */
+	.mod-menu-main__dropdown .mod-menu-main__dropdown {
+		top: 0;
+		left: 100%;
+		margin-top: 0;
+		margin-left: 0.125rem;
+	}
+}
+
+/* Large desktop styles (≥992px) */
+@media (min-width: 992px) {
+	.mod-menu-main {
+		padding: 1rem 0;
+	}
+
+	.mod-menu-main__list {
+		gap: 0.25rem;
+	}
+}
+
 /* === mod_breadcrumbs === */
 .mod-breadcrumbs-responsive {
 	width: 100%;
