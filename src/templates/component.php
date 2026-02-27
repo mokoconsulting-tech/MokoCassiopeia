@@ -45,6 +45,11 @@ $params_custom_head_start  = $this->params->get('custom_head_start', null);
 $params_custom_head_end    = $this->params->get('custom_head_end', null);
 $params_developmentmode = $this->params->get('developmentmode', false);
 
+$params_googletagmanager   = $this->params->get('googletagmanager', false);
+$params_googletagmanagerid = $this->params->get('googletagmanagerid', null);
+$params_googleanalytics    = $this->params->get('googleanalytics', false);
+$params_googleanalyticsid  = $this->params->get('googleanalyticsid', null);
+
 // Detecting Active Variables
 $option    = $input->getCmd('option', '');
 $view      = $input->getCmd('view', '');
@@ -222,7 +227,75 @@ $wa->useStyle('template.user');   // css/user.css
 	<?php endif; ?>
 </head>
 <body class="<?php echo $this->direction === 'rtl' ? 'rtl' : ''; ?>">
+<?php if (!empty($params_googletagmanager) && !empty($params_googletagmanagerid)) :
+	$gtmID = htmlspecialchars($params_googletagmanagerid, ENT_QUOTES, 'UTF-8'); ?>
+	<!-- Google Tag Manager -->
+	<script>
+		(function(w,d,s,l,i){
+			w[l]=w[l]||[];
+			w[l].push({'gtm.start': new Date().getTime(), event:'gtm.js'});
+			var f=d.getElementsByTagName(s)[0],
+				j=d.createElement(s),
+				dl=l!='dataLayer'?'&l='+l:'';
+			j.async=true;
+			j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+			f.parentNode.insertBefore(j,f);
+		})(window,document,'script','dataLayer','<?php echo $gtmID; ?>');
+	</script>
+	<!-- End Google Tag Manager -->
+
+	<!-- Google Tag Manager (noscript) -->
+	<noscript>
+		<iframe src="https://www.googletagmanager.com/ns.html?id=<?php echo $gtmID; ?>"
+				height="0" width="0" style="display:none;visibility:hidden"></iframe>
+	</noscript>
+	<!-- End Google Tag Manager (noscript) -->
+<?php endif; ?>
+
+<?php if (!empty($params_googleanalytics) && !empty($params_googleanalyticsid)) :
+	$gaId = htmlspecialchars($params_googleanalyticsid, ENT_QUOTES, 'UTF-8'); ?>
+	<!-- Google Analytics (gtag.js) -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=<?php echo $gaId; ?>"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('consent', 'default', {
+			'ad_storage': 'denied',
+			'analytics_storage': 'granted',
+			'ad_user_data': 'denied',
+			'ad_personalization': 'denied'
+		});
+		(function(id){
+			if (/^G-/.test(id)) {
+				gtag('config', id, { 'anonymize_ip': true });
+			} else if (/^UA-/.test(id)) {
+				gtag('config', id, { 'anonymize_ip': true });
+				console.warn('Using a UA- ID. Universal Analytics is sunset; consider migrating to GA4.');
+			} else {
+				console.warn('Unrecognized Google Analytics ID format:', id);
+			}
+		})('<?php echo $gaId; ?>');
+	</script>
+	<!-- End Google Analytics -->
+<?php endif; ?>
+
 	<jdoc:include type="message" />
 	<jdoc:include type="component" />
+
+	<footer class="container-footer footer full-width">
+		<?php if ($this->countModules('footer-menu', true)) : ?>
+			<div class="grid-child footer-menu">
+				<jdoc:include type="modules" name="footer-menu" />
+			</div>
+		<?php endif; ?>
+		<?php if ($this->countModules('footer', true)) : ?>
+			<div class="grid-child">
+				<jdoc:include type="modules" name="footer" style="none" />
+			</div>
+		<?php endif; ?>
+	</footer>
+
+	<jdoc:include type="modules" name="debug" style="none" />
 </body>
 </html>

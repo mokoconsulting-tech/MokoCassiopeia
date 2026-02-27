@@ -107,6 +107,12 @@ $showTagline  = (int) $params->get('show_brand_tagline', 0);
 // Theme params
 $params_theme_enabled = (int) $params->get('theme_enabled', 1);
 
+// Analytics params
+$params_googletagmanager   = $params->get('googletagmanager', false);
+$params_googletagmanagerid = $params->get('googletagmanagerid', null);
+$params_googleanalytics    = $params->get('googleanalytics', false);
+$params_googleanalyticsid  = $params->get('googleanalyticsid', null);
+
 /* -----------------------
    Login routes & Users
 ------------------------ */
