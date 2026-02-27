@@ -79,40 +79,26 @@ $displayOfflineMessage = (int) $app->get('display_offline_message', 1); // 0|1|2
 $offlineMessage        = trim((string) $app->get('offline_message', ''));
 
 /* -----------------------
-   Brand (mutually exclusive: logoFile OR siteTitle)
+   Brand: logo from params OR siteTitle (matches index.php)
 ------------------------ */
-if ($params->get('logoFile')) {
-	$logo = HTMLHelper::_(
+$brandHtml = '';
+$logoFile  = (string) $params->get('logoFile');
+
+if ($logoFile !== '') {
+	$brandHtml = HTMLHelper::_(
 		'image',
-		Uri::root(false) . htmlspecialchars((string) $params->get('logoFile'), ENT_QUOTES, 'UTF-8'),
+		Uri::root(false) . htmlspecialchars($logoFile, ENT_QUOTES, 'UTF-8'),
 		$sitename,
-		[
-			'class'    => 'logo d-inline-block',
-			'loading'  => 'eager',
-			'decoding' => 'async',
-			'style'    => 'max-height:64px;height:auto;width:auto;'
-		],
+		['class' => 'logo d-inline-block', 'loading' => 'eager', 'decoding' => 'async'],
 		false,
 		0
 	);
-} elseif ($params->get('siteTitle')) {
-	$logo = '<span class="logo-text d-inline-block" title="' . htmlspecialchars($sitename, ENT_COMPAT, 'UTF-8') . '">'
-	      . htmlspecialchars((string) $params->get('siteTitle'), ENT_COMPAT, 'UTF-8')
-	      . '</span>';
 } else {
-	$logo = HTMLHelper::_(
-		'image',
-		'full_logo.png',
-		$sitename,
-		[
-			'class'    => 'logo d-inline-block',
-			'loading'  => 'eager',
-			'decoding' => 'async',
-			'style'    => 'max-height:64px;height:auto;width:auto;'
-		],
-		true,
-		0
-	);
+	// If no logo file, show the title (defaults to "MokoCassiopeia" if not set)
+	$siteTitle = $params->get('siteTitle', 'MokoCassiopeia');
+	$brandHtml = '<span class="site-title" title="' . $sitename . '">'
+			   . htmlspecialchars($siteTitle, ENT_COMPAT, 'UTF-8')
+			   . '</span>';
 }
 
 $brandTagline = (string) ($params->get('brand_tagline') ?: $params->get('siteDescription') ?: '');
@@ -206,7 +192,7 @@ if (class_exists('\Joomla\Component\Users\Site\Helper\RouteHelper')) {
 
 			<!-- Brand (mutually exclusive image/text) -->
 			<a class="moko-brand me-auto" href="<?php echo htmlspecialchars(Uri::base(), ENT_QUOTES, 'UTF-8'); ?>" aria-label="<?php echo htmlspecialchars($sitename, ENT_COMPAT, 'UTF-8'); ?>">
-				<?php echo $logo; ?>
+				<?php echo $brandHtml; ?>
 				<?php if ($showTagline && $brandTagline): ?>
 					<small class="brand-tagline"><?php echo htmlspecialchars($brandTagline, ENT_COMPAT, 'UTF-8'); ?></small>
 				<?php endif; ?>
