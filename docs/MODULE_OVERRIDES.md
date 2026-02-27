@@ -35,7 +35,7 @@ This document provides a comprehensive guide to all mobile-responsive module and
 
 ## Overview
 
-MokoCassiopeia includes **16 mobile-responsive module overrides** and **7 component view overrides** designed to enhance the mobile user experience for third-party extensions and the Main Menu navigation.
+MokoCassiopeia includes **16 mobile-responsive module overrides** and **12 component view overrides** designed to enhance the mobile user experience for third-party extensions and the Main Menu navigation.
 
 **Important**: Following Cassiopeia template best practices, MokoCassiopeia avoids overriding standard Joomla core modules (such as mod_search, mod_login, mod_breadcrumbs) to ensure proper language loading and compatibility. **Exception**: mod_menu "Main Menu" override provides essential Bootstrap 5 collapsible dropdown functionality.
 
@@ -361,6 +361,79 @@ Login page with remember me and helper links.
 - CSRF token support
 - Responsive padding adjustments
 
+### 5. JEM (Joomla Event Manager) Components
+
+Five comprehensive component view overrides for JEM event management.
+
+#### com_jem
+**Location**: `src/templates/html/com_jem/`
+
+Mobile-responsive views for JEM event listings, details, calendar, venues, and categories.
+
+##### eventslist
+Event listing with card-based layout.
+
+**Features**:
+- Event cards with date, time, and venue
+- Category badges with color coding
+- Responsive event grid layout
+- Event description excerpts
+- Read more buttons with clear calls-to-action
+- Pagination support
+- Empty state messaging
+
+##### event
+Single event details view with comprehensive information.
+
+**Features**:
+- Large event image display (responsive)
+- Date and time with structured data
+- Venue information with maps link
+- Event description with full content
+- Category display with badges
+- Registration information (if enabled)
+- Contact information display
+- Back to events navigation
+- Meta information with icons
+
+##### calendar
+Monthly calendar view with event indicators.
+
+**Features**:
+- Month navigation (previous/next)
+- Calendar grid with weekday headers
+- Event indicators on dates with events
+- Responsive calendar layout
+- Today highlighting
+- Event list for selected month
+- Event count per day display
+- Touch-friendly navigation buttons
+
+##### venue
+Venue details with location and upcoming events.
+
+**Features**:
+- Venue image display
+- Complete address information
+- Website link (external)
+- Google Maps integration
+- Venue description
+- Upcoming events at venue
+- Location coordinates display
+- Back navigation
+
+##### categories
+Event category listing with descriptions.
+
+**Features**:
+- Category cards with images
+- Category descriptions
+- Event count per category
+- View category buttons
+- Responsive grid layout
+- Empty state messaging
+- Pagination support
+
 ---
 
 ## CSS Architecture
@@ -401,6 +474,13 @@ All module styles are located in `src/media/css/template.css` with dedicated sec
    - Registration forms
    - Login pages
    - Tab interfaces
+
+6. **JEM COMPONENT STYLES** (Lines ~22000+)
+   - Event list cards
+   - Event details layout
+   - Calendar grid
+   - Venue information
+   - Category displays
 
 ### CSS Variables Integration
 
