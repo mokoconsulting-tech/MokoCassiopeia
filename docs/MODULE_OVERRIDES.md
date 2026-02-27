@@ -480,16 +480,16 @@ Each module can be customized in two ways:
 Edit `src/media/css/user.css` to add custom styles:
 
 ```css
-/* Example: Customize search button color */
-.mod-search__button {
-	background-color: #ff6600;
-}
-
 /* Example: Change product grid columns */
 @media (min-width: 768px) {
 	.mod-vm-product__grid {
 		grid-template-columns: repeat(3, 1fr);
 	}
+}
+
+/* Example: Customize cart button */
+.mod-vm-cart__checkout-button {
+	background-color: #28a745;
 }
 ```
 
@@ -499,10 +499,10 @@ Copy the entire module directory and modify:
 
 ```bash
 # Keep original override as reference
-cp -r src/templates/html/mod_search src/templates/html/mod_search_original
+cp -r src/templates/html/mod_virtuemart_cart src/templates/html/mod_virtuemart_cart_original
 
 # Modify your version
-# Edit src/templates/html/mod_search/default.php
+# Edit src/templates/html/mod_virtuemart_cart/default.php
 ```
 
 ### CSS Variables Override
@@ -512,9 +512,9 @@ Override CSS variables in your custom color scheme:
 ```css
 /* src/media/css/colors/light/colors_custom.css */
 :root {
-	--mod-search-bg: #f8f9fa;
-	--mod-search-border: #dee2e6;
 	--vm-price-color: #28a745;
+	--vm-cart-bg: #f8f9fa;
+	--vm-button-primary: #007bff;
 }
 ```
 
