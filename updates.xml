@@ -24,7 +24,7 @@
  INGROUP: MokoCassiopeia
  REPO: https://github.com/mokoconsulting-tech/MokoCassiopeia
  PATH: ./updates.xml
- VERSION: 03.08.01
+ VERSION: 03.08.02
  BRIEF: Update manifest XML file for MokoCassiopeia
  -->
 
@@ -36,7 +36,7 @@
     <type>template</type>
     <client>site</client>
 
-    <version>03.08.01</version>
+    <version>03.08.02</version>
     <creationDate>2026-02-27</creationDate>
     <author>Jonathan Miller || Moko Consulting</author>
     <authorEmail>hello@mokoconsulting.tech</authorEmail>

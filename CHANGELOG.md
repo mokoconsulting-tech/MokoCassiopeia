@@ -19,6 +19,52 @@ All notable changes to the MokoCassiopeia Joomla template are documented in this
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [03.08.02] - 2026-02-27
+
+### Removed - Fix Language Loading in All Module Overrides
+
+**Critical fix**: Removed standard Joomla module overrides to fix language string loading issues. Following Cassiopeia template approach.
+
+#### Problem
+- Default language strings not loading in module overrides (mod_breadcrumbs, mod_login, mod_articles_latest)
+- Language constants displayed instead of translated text (e.g., "MOD_LOGIN_VALUE_USERNAME" instead of "Username")
+- Custom overrides interfered with Joomla's module initialization and language loading process
+
+#### Solution - Cassiopeia Approach
+- **Removed** standard Joomla module overrides:
+  - `src/templates/html/mod_breadcrumbs/` (2 files)
+  - `src/templates/html/mod_login/` (2 files)
+  - `src/templates/html/mod_articles_latest/` (2 files)
+- Template now uses Joomla's core module layouts for standard modules
+- Language files load automatically via Joomla's module system
+- Custom styling can still be applied via CSS using module-specific classes
+- **Retained** third-party extension overrides where they add mobile-responsive value:
+  - VirtueMart modules (5): mod_virtuemart_cart, _category, _currencies, _manufacturer, _product
+  - Community Builder modules (2): mod_cblogin, mod_comprofilerOnline
+  - Other extensions (9): mod_acymailing, mod_hikashop_cart, mod_k2_content, mod_kunena*, mod_osmembership, mod_search
+
+#### Cassiopeia Template Philosophy
+- Cassiopeia (Joomla's default template) does NOT override standard module layouts
+- It relies on core Joomla module files and applies styling via CSS
+- Overrides are only created when structural changes are absolutely necessary
+- This ensures compatibility, automatic language loading, and easier maintenance
+
+#### Module Count Update
+- **Before**: 19 module overrides
+- **After**: 16 module overrides  
+- **Removed**: 3 standard Joomla modules (breadcrumbs, login, articles_latest)
+- **Component overrides**: Still 7 (unchanged)
+
+#### Files Removed
+- `src/templates/html/mod_breadcrumbs/default.php`
+- `src/templates/html/mod_breadcrumbs/index.html`
+- `src/templates/html/mod_login/default.php`
+- `src/templates/html/mod_login/index.html`
+- `src/templates/html/mod_articles_latest/default.php`
+- `src/templates/html/mod_articles_latest/index.html`
+
+**Note**: This follows Joomla best practices by using core layouts for standard modules. Styling is handled via CSS. Third-party extension overrides remain for mobile responsiveness.
+
 ## [03.08.01] - 2026-02-27
 
 ### Removed - Fix Breaking Overrides

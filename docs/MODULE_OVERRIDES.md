@@ -24,7 +24,7 @@
  INGROUP: MokoCassiopeia.Documentation
  REPO: https://github.com/mokoconsulting-tech/MokoCassiopeia
  FILE: docs/MODULE_OVERRIDES.md
- VERSION: 03.08.01
+ VERSION: 03.08.02
  BRIEF: Comprehensive guide to MokoCassiopeia mobile-responsive module overrides
  PATH: /docs/MODULE_OVERRIDES.md
 -->
@@ -35,7 +35,9 @@ This document provides a comprehensive guide to all mobile-responsive module and
 
 ## Overview
 
-MokoCassiopeia includes **19 mobile-responsive module overrides** and **7 component view overrides** designed to enhance the mobile user experience across standard Joomla, VirtueMart, Community Builder, and popular third-party extensions.
+MokoCassiopeia includes **16 mobile-responsive module overrides** and **7 component view overrides** designed to enhance the mobile user experience for third-party extensions (VirtueMart, Community Builder, Kunena, etc.).
+
+**Important**: Following Cassiopeia template best practices, MokoCassiopeia does NOT override standard Joomla core modules (mod_breadcrumbs, mod_login, mod_articles_latest, etc.). These use Joomla's default layouts to ensure proper language loading and compatibility.
 
 ### Key Features
 

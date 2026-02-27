@@ -1,42 +1,13 @@
 # Standard Joomla & Community Builder Module Mobile Responsive Overrides
 
 ## Overview
-This directory contains mobile-responsive overrides for standard Joomla and Community Builder modules, designed specifically for the MokoCassiopeia template.
+This directory contains mobile-responsive overrides for Community Builder modules, designed specifically for the MokoCassiopeia template.
 
-**Note**: The mod_menu override has been removed to prevent conflicts with Joomla's core menu system. Use Joomla's default menu rendering or apply custom CSS to the `.mod-menu` class for styling.
-
-## Standard Joomla Modules
-
-### 1. mod_breadcrumbs
-Breadcrumb navigation module featuring:
-- Schema.org structured data
-- Responsive breadcrumb trail
-- Home icon support
-- Active page highlighting
-- Touch-friendly links
-
-### 2. mod_login
-User login form module with:
-- Login and logout states
-- Two-factor authentication support
-- Remember me functionality
-- Password recovery links
-- User registration links
-- Touch-friendly form inputs (48px on mobile)
-- 16px input font (prevents iOS zoom)
-
-### 3. mod_articles_latest
-Latest articles display module offering:
-- Responsive article cards
-- Optional metadata display (author, date, category, hits)
-- Schema.org Article markup
-- Introtext support
-- Read more links
-- Touch-friendly interactions
+**Important**: Following Cassiopeia template best practices, standard Joomla core modules (mod_breadcrumbs, mod_login, mod_articles_latest, mod_menu) are NOT overridden. These use Joomla's default layouts to ensure proper language loading and compatibility. Apply custom styling via CSS.
 
 ## Community Builder Modules
 
-### 4. mod_cblogin
+### 1. mod_cblogin
 Community Builder login module with:
 - Avatar display in logged-in state
 - Profile link button
@@ -46,7 +17,7 @@ Community Builder login module with:
 - Registration link
 - Pre/post text support
 
-### 5. mod_comprofilerOnline
+### 2. mod_comprofilerOnline
 Community Builder online users module featuring:
 - Online user count display
 - Members vs. guests breakdown
