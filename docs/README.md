@@ -61,10 +61,16 @@ This directory contains comprehensive documentation for the MokoCassiopeia Jooml
   * Light and dark mode theming
 
 * **[Module & Component Overrides](MODULE_OVERRIDES.md)** - Mobile-responsive overrides guide
-  * 20 module overrides + 3 component overrides
-  * VirtueMart, Joomla core, Community Builder, industry extensions
+  * 16 module overrides + 12 component overrides
+  * VirtueMart, Community Builder, JEM, Kunena, industry extensions
   * Mobile-first responsive design patterns
   * Accessibility features and customization
+
+* **[Override Philosophy](OVERRIDE_PHILOSOPHY.md)** ⭐ - Alternative layouts, not replacements
+  * Why overrides use `mobile.php` naming instead of `default.php`
+  * How to activate alternative layouts in Joomla
+  * Benefits of non-replacing overrides
+  * Developer guidelines and best practices
 
 * **[Roadmap](ROADMAP.md)** - Version-specific roadmap
   * Current features (v03.07.00)

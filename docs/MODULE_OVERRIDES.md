@@ -39,6 +39,17 @@ MokoCassiopeia includes **16 mobile-responsive module overrides** and **12 compo
 
 **Important**: Following Cassiopeia template best practices, MokoCassiopeia avoids overriding standard Joomla core modules (such as mod_search, mod_login, mod_breadcrumbs) to ensure proper language loading and compatibility. **Exception**: mod_menu "Main Menu" override provides essential Bootstrap 5 collapsible dropdown functionality.
 
+### Alternative Layouts, Not Replacements
+
+**All MokoCassiopeia overrides use alternative layout names (`mobile.php`) instead of replacing default layouts (`default.php`).** This means:
+
+- ✅ Default Joomla layouts continue to work unchanged
+- ✅ You must explicitly select the "mobile" layout in module/menu item settings
+- ✅ Joomla core updates don't break your site
+- ✅ Full control over which modules use enhanced layouts
+
+**📖 See [OVERRIDE_PHILOSOPHY.md](OVERRIDE_PHILOSOPHY.md) for complete details on how to activate and use these alternative layouts.**
+
 ### Key Features
 
 All module overrides share these characteristics:
@@ -655,16 +666,54 @@ Override CSS variables in your custom color scheme:
 
 ---
 
+## How to Activate Alternative Layouts
+
+All MokoCassiopeia overrides are **alternative layouts** that must be explicitly activated. They do not automatically replace default layouts.
+
+### Quick Start: Enable Mobile Layout
+
+1. **Go to Joomla Administrator** → Extensions → Modules
+2. **Open the module** you want to enhance (e.g., VirtueMart Cart)
+3. **Navigate to Advanced tab**
+4. **Find "Alternative Layout" field**
+5. **Select "MokoCassiopeia - mobile"** from dropdown
+6. **Save & Close**
+
+### For Menu Items (Component Views)
+
+1. **Go to Menus** → Select your menu
+2. **Open the menu item** (e.g., Events List)
+3. **Navigate to Advanced Options or Page Display tab**
+4. **Find "Alternative Layout" field**
+5. **Select "MokoCassiopeia - mobile"** from dropdown
+6. **Save & Close**
+
+### Apply to All Modules in a Position
+
+In your template's `index.php`, specify layout for entire module position:
+
+```php
+<jdoc:include type="modules" name="sidebar-left" style="none" layout="mobile" />
+```
+
+**📖 For complete documentation, see [OVERRIDE_PHILOSOPHY.md](OVERRIDE_PHILOSOPHY.md)**
+
+---
+
 ## Version History
 
 | Version  | Date       | Changes                                           |
 |----------|------------|--------------------------------------------------|
+| 03.08.04 | 2026-02-27 | Added alternative layout activation instructions, JEM overrides |
+| 03.08.03 | 2026-02-25 | Removed mod_search override per Cassiopeia philosophy |
+| 03.08.00 | 2026-02-22 | Added Community Builder component overrides       |
 | 03.07.00 | 2026-02-22 | Initial release of all mobile-responsive overrides |
 
 ---
 
 ## Additional Resources
 
+- **Override Philosophy**: [OVERRIDE_PHILOSOPHY.md](OVERRIDE_PHILOSOPHY.md) ⭐ **Start here**
 - **Main README**: [README.md](../README.md)
 - **Changelog**: [CHANGELOG.md](../CHANGELOG.md)
 - **CSS Variables**: [CSS_VARIABLES.md](CSS_VARIABLES.md)
