@@ -45,11 +45,6 @@ $params_custom_head_start  = $this->params->get('custom_head_start', null);
 $params_custom_head_end    = $this->params->get('custom_head_end', null);
 $params_developmentmode = $this->params->get('developmentmode', false);
 
-$params_googletagmanager   = $this->params->get('googletagmanager', false);
-$params_googletagmanagerid = $this->params->get('googletagmanagerid', null);
-$params_googleanalytics    = $this->params->get('googleanalytics', false);
-$params_googleanalyticsid  = $this->params->get('googleanalyticsid', null);
-
 // Detecting Active Variables
 $option    = $input->getCmd('option', '');
 $view      = $input->getCmd('view', '');
