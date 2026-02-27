@@ -45,8 +45,14 @@ This directory contains comprehensive documentation for the MokoCassiopeia Jooml
 * **[Workflow Guide](WORKFLOW_GUIDE.md)** - Complete workflow reference
   * Git branching strategy
   * Development workflow
-  * Release process
   * Pull request guidelines
+
+* **[Release Process](RELEASE_PROCESS.md)** ⭐ - Complete release documentation
+  * Automated release workflow with GitHub Actions
+  * Manual release procedures
+  * Update server configuration
+  * Testing and rollback procedures
+  * Build scripts and tools
 
 * **[Joomla Development Guide](JOOMLA_DEVELOPMENT.md)** - Joomla-specific development
   * Testing with Codeception
