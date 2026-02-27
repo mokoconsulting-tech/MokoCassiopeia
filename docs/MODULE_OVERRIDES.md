@@ -35,9 +35,9 @@ This document provides a comprehensive guide to all mobile-responsive module and
 
 ## Overview
 
-MokoCassiopeia includes **17 mobile-responsive module overrides** and **7 component view overrides** designed to enhance the mobile user experience for third-party extensions and the Main Menu navigation.
+MokoCassiopeia includes **16 mobile-responsive module overrides** and **7 component view overrides** designed to enhance the mobile user experience for third-party extensions and the Main Menu navigation.
 
-**Important**: Following Cassiopeia template best practices, MokoCassiopeia generally avoids overriding standard Joomla core modules to ensure proper language loading and compatibility. **Exception**: mod_menu "Main Menu" override provides essential Bootstrap 5 collapsible dropdown functionality.
+**Important**: Following Cassiopeia template best practices, MokoCassiopeia avoids overriding standard Joomla core modules (such as mod_search, mod_login, mod_breadcrumbs) to ensure proper language loading and compatibility. **Exception**: mod_menu "Main Menu" override provides essential Bootstrap 5 collapsible dropdown functionality.
 
 ### Key Features
 
@@ -54,24 +54,7 @@ All module overrides share these characteristics:
 
 ## Module Categories
 
-### 1. Search Module
-
-#### mod_search
-**Location**: `src/templates/html/mod_search/`
-
-Search box with multiple button position options and responsive design.
-
-**Features**:
-- Button positions: left, right, top, bottom
-- Text, icon, or both display modes
-- 48px touch targets on mobile
-- Prevents iOS zoom with 16px input font
-
-**Documentation**: [mod_search/README.md](../src/templates/html/mod_search/README.md)
-
----
-
-### 2. VirtueMart E-Commerce Modules
+### 1. VirtueMart E-Commerce Modules
 
 Five comprehensive overrides for VirtueMart shopping functionality.
 
@@ -132,7 +115,7 @@ Manufacturer/brand display with grid layout.
 
 ---
 
-### 3. Standard Joomla & Community Builder Modules
+### 2. Standard Joomla & Community Builder Modules
 
 Five essential Joomla core and Community Builder module overrides.
 
@@ -197,7 +180,7 @@ Community Builder online users display.
 
 ---
 
-### 4. Industry Extension Modules
+### 3. Industry Extension Modules
 
 Eight popular third-party extension module overrides plus component views.
 
@@ -325,7 +308,7 @@ Membership pricing tables.
 
 ---
 
-### 5. Community Builder Components
+### 4. Community Builder Components
 
 Four comprehensive component view overrides for Community Builder user management.
 

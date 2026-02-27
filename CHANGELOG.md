@@ -63,6 +63,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **After**: 17 module overrides (added mod_menu "Main Menu")
 - **Component overrides**: Still 7 (unchanged)
 
+### Removed - mod_search Override
+
+**Cassiopeia approach**: Removed mod_search override to align with Cassiopeia template philosophy of not overriding standard Joomla modules.
+
+#### Reason for Removal
+- mod_search is a standard Joomla core module
+- Following Cassiopeia template approach: use core layouts for standard modules
+- Prevents potential language loading issues
+- Ensures compatibility with future Joomla updates
+- Core mod_search already includes responsive design and accessibility features
+
+#### Files Removed
+- `src/templates/html/mod_search/default.php` - Custom search module layout
+- `src/templates/html/mod_search/index.html` - Security file
+
+#### Module Count Update (After Removal)
+- **Before**: 17 module overrides
+- **After**: 16 module overrides (removed mod_search)
+- **Component overrides**: Still 7 (unchanged)
+
 ### Removed - Documentation Cleanup
 
 **Documentation policy**: Removed all markdown files from `src/templates/html/` directory. All documentation belongs in `docs/` folder only.
