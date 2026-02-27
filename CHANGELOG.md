@@ -41,6 +41,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated MODULE_OVERRIDES.md: Changed count from 20 to 19 module overrides, removed mod_menu section, added note about removal
 - Updated STANDARD_MODULES_README.md: Removed mod_menu documentation, renumbered remaining modules, updated file structure
 - Updated testing checklists to remove mod_menu references
+- **Added clarification**: MokoCassiopeia is a standalone template extension (not a package)
+- Updated updates.xml to version 03.08.01
 
 #### Files Removed
 - `src/templates/html/mod_menu/default.php`
@@ -48,7 +50,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `src/templates/html/mod_menu/default_url.php`
 - `src/templates/html/mod_menu/index.html`
 
-**Note**: This is a patch release that removes problematic overrides to restore core functionality. Menu styling via CSS remains intact.
+**Note**: This is a patch release that removes problematic overrides to restore core functionality. Menu styling via CSS remains intact. MokoCassiopeia remains a standalone Joomla template extension (type="template"), not bundled as a package.
 
 ## [03.08.00] - 2026-02-22
 
