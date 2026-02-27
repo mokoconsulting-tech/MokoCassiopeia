@@ -126,46 +126,34 @@ Manufacturer/brand display with grid layout.
 
 ---
 
-### 2. Standard Joomla & Community Builder Modules
+### 2. Main Menu & Community Builder Modules
 
-Five essential Joomla core and Community Builder module overrides.
+Three essential Community Builder and navigation module overrides.
 
-**Master Documentation**: [STANDARD_MODULES_README.md](../src/templates/html/STANDARD_MODULES_README.md)
+#### mod_menu (Main Menu)
+**Location**: `src/templates/html/mod_menu/`
 
-**Note**: The mod_menu override has been removed to prevent conflicts with Joomla's core menu system. Use Joomla's default menu rendering or apply custom CSS to the `.mod-menu` class for styling.
+Bootstrap 5 responsive navigation menu with collapsible dropdown functionality.
 
-#### mod_breadcrumbs
-**Location**: `src/templates/html/mod_breadcrumbs/`
-
-Breadcrumb navigation with Schema.org markup.
-
-**Features**:
-- Structured data for SEO
-- Responsive text truncation
-- Proper separators
-- Home icon support
-
-#### mod_login
-**Location**: `src/templates/html/mod_login/`
-
-User login/logout form with 2FA support.
+**Files**:
+- `mainmenu.php` - Main layout with Bootstrap navbar
+- `mainmenu_component.php` - Component menu items
+- `mainmenu_heading.php` - Heading menu items
+- `mainmenu_separator.php` - Separator menu items
+- `mainmenu_url.php` - URL menu items
 
 **Features**:
-- Login and logout states
-- Two-factor authentication fields
-- Remember me checkbox
-- User greeting when logged in
+- Bootstrap 5 navbar structure with collapsible hamburger menu
+- Multi-level dropdown support (hover on desktop, tap on mobile)
+- WCAG 2.1 compliant touch targets (48px mobile, 44px desktop)
+- BEM naming convention: `.mod-menu-main__*`
+- Active state indicators for current menu items
+- ARIA labels and keyboard navigation support
+- Alternative layout named `mainmenu.php` (not `default.php`)
 
-#### mod_articles_latest
-**Location**: `src/templates/html/mod_articles_latest/`
+**Activation**: Select "Mainmenu" layout in Joomla Administrator → Modules → Menu Module → Advanced Tab → Alternative Layout
 
-Latest articles display with metadata.
-
-**Features**:
-- Responsive article cards
-- Author, date, category metadata
-- Read more links
-- Featured article badges
+**Note**: Unlike the broken mod_menu override removed in v03.08.01, this v03.08.03 version is properly structured based on Joomla core layouts and Bootstrap 5, ensuring language strings load correctly and menu functionality works as expected.
 
 #### mod_cblogin
 **Location**: `src/templates/html/mod_cblogin/`
@@ -194,8 +182,6 @@ Community Builder online users display.
 ### 3. Industry Extension Modules
 
 Eight popular third-party extension module overrides plus component views.
-
-**Master Documentation**: [INDUSTRY_MODULES_README.md](../src/templates/html/INDUSTRY_MODULES_README.md)
 
 #### K2 Content Extension
 
