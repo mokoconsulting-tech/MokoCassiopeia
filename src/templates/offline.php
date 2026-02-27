@@ -103,7 +103,9 @@ if ($logoFile !== '') {
 
 $brandTagline = (string) ($params->get('brand_tagline') ?: $params->get('siteDescription') ?: '');
 $showTagline  = (int) $params->get('show_brand_tagline', 0);
-$showSwitcher = (int) $params->get('show_theme_switcher', 1);
+
+// Theme params
+$params_theme_enabled = (int) $params->get('theme_enabled', 1);
 
 /* -----------------------
    Login routes & Users
@@ -129,49 +131,20 @@ if (class_exists('\Joomla\Component\Users\Site\Helper\RouteHelper')) {
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-	<!-- Three-mode theme bootstrapper: system | light | dark -->
+	<?php if ($params_theme_enabled) : ?>
 	<script>
-		(function () {
-			try {
-				var saved = localStorage.getItem('moko-theme'); // '', 'light', or 'dark'
-				var root  = document.documentElement;
-
-				function apply(mode) {
-					root.removeAttribute('data-theme');
-					root.classList.remove('theme-dark');
-					if (mode === 'light') {
-						root.setAttribute('data-theme', 'light');
-					} else if (mode === 'dark') {
-						root.setAttribute('data-theme', 'dark');
-						root.classList.add('theme-dark');
-					}
-				}
-
-				var initial = (saved === 'light' || saved === 'dark') ? saved : 'system';
-				apply(initial);
-
-				if (initial === 'system' && window.matchMedia) {
-					var mq = window.matchMedia('(prefers-color-scheme: dark)');
-					mq.addEventListener && mq.addEventListener('change', function () { apply('system'); });
-				}
-
-				window.__mokoSetTheme = function (mode) {
-					if (mode === 'light' || mode === 'dark') {
-						localStorage.setItem('moko-theme', mode);
-					} else {
-						localStorage.removeItem('moko-theme'); mode = 'system';
-					}
-					apply(mode);
-					try {
-						document.querySelectorAll('[data-theme-select]').forEach(function (el) {
-							el.classList.toggle('active', el.getAttribute('data-theme-select') === mode);
-							el.setAttribute('aria-current', el.classList.contains('active') ? 'true' : 'false');
-						});
-					} catch(e){}
-				};
-			} catch (e) {}
-		}());
+	  // Early theme application to avoid FOUC
+	  (function () {
+		try {
+		  var stored = localStorage.getItem('theme');
+		  var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+		  var theme = stored ? stored : (prefersDark ? 'dark' : 'light');
+		  document.documentElement.setAttribute('data-bs-theme', theme);
+		  document.documentElement.setAttribute('data-aria-theme', theme);
+		} catch (e) {}
+	  })();
 	</script>
+	<?php endif; ?>
 
 	<style>
 		.moko-offline-wrap { min-height: 100vh; display: grid; grid-template-rows: auto 1fr auto; }
@@ -179,7 +152,6 @@ if (class_exists('\Joomla\Component\Users\Site\Helper\RouteHelper')) {
 		.moko-card { max-width: 720px; width: 100%; }
 		.moko-brand { display:flex; align-items:center; gap:.75rem; text-decoration:none; }
 		.moko-brand .brand-tagline { display:block; opacity:.75; font-size:.875rem; line-height:1.2; }
-		.theme-switcher .dropdown-item.active { font-weight:600; }
 		.skip-link { position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden; }
 		.skip-link:focus { position:static; width:auto; height:auto; padding:.5rem 1rem; }
 	</style>
@@ -197,32 +169,6 @@ if (class_exists('\Joomla\Component\Users\Site\Helper\RouteHelper')) {
 					<small class="brand-tagline"><?php echo htmlspecialchars($brandTagline, ENT_COMPAT, 'UTF-8'); ?></small>
 				<?php endif; ?>
 			</a>
-
-			<!-- Theme switcher (System / Light / Dark) -->
-			<?php if ($showSwitcher): ?>
-			<div class="theme-switcher dropdown me-2">
-				<button class="btn btn-outline-secondary dropdown-toggle" type="button" id="themeDropdown" data-bs-toggle="dropdown" aria-expanded="false" aria-label="<?php echo Text::_('JTOGGLE_DARK_MODE'); ?>">
-					<span class="me-1">Theme</span> <span aria-hidden="true">🌓</span>
-				</button>
-				<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="themeDropdown">
-					<li><button type="button" class="dropdown-item" data-theme-select="system" onclick="window.__mokoSetTheme('system')">System</button></li>
-					<li><button type="button" class="dropdown-item" data-theme-select="light"  onclick="window.__mokoSetTheme('light')">Light</button></li>
-					<li><button type="button" class="dropdown-item" data-theme-select="dark"   onclick="window.__mokoSetTheme('dark')">Dark</button></li>
-				</ul>
-			</div>
-			<script>
-				(function(){
-					try {
-						var saved = localStorage.getItem('moko-theme');
-						var mode  = (saved === 'light' || saved === 'dark') ? saved : 'system';
-						document.querySelectorAll('[data-theme-select]').forEach(function (el) {
-							el.classList.toggle('active', el.getAttribute('data-theme-select') === mode);
-							el.setAttribute('aria-current', el.classList.contains('active') ? 'true' : 'false');
-						});
-					} catch(e){}
-				}());
-			</script>
-			<?php endif; ?>
 
 			<!-- Header module position: offline-header -->
 			<?php if ($this->countModules('offline-header')) : ?>

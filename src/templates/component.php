@@ -193,6 +193,9 @@ if ($this->params->get('faKitCode')) {
 $params_leftIcon           = htmlspecialchars($this->params->get('drawerLeftIcon', 'fa-solid fa-chevron-left'), ENT_COMPAT, 'UTF-8');
 $params_rightIcon          = htmlspecialchars($this->params->get('drawerRightIcon', 'fa-solid fa-chevron-right'), ENT_COMPAT, 'UTF-8');
 
+// Theme params
+$params_theme_enabled      = $this->params->get('theme_enabled', 1);
+
 $wa->useStyle('template.user');   // css/user.css
 ?>
 <!DOCTYPE html>
@@ -202,6 +205,21 @@ $wa->useStyle('template.user');   // css/user.css
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<jdoc:include type="styles" />
 	<jdoc:include type="scripts" />
+
+	<?php if ($params_theme_enabled) : ?>
+	<script>
+	  // Early theme application to avoid FOUC
+	  (function () {
+		try {
+		  var stored = localStorage.getItem('theme');
+		  var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+		  var theme = stored ? stored : (prefersDark ? 'dark' : 'light');
+		  document.documentElement.setAttribute('data-bs-theme', theme);
+		  document.documentElement.setAttribute('data-aria-theme', theme);
+		} catch (e) {}
+	  })();
+	</script>
+	<?php endif; ?>
 </head>
 <body class="<?php echo $this->direction === 'rtl' ? 'rtl' : ''; ?>">
 	<jdoc:include type="message" />
