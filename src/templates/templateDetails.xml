@@ -25,7 +25,7 @@
 	DEFGROUP: Joomla
 	INGROUP: MokoCassiopeia
 	PATH: templates/mokocassiopeia/templateDetails.xml
-	VERSION: 03.08.01
+	VERSION: 03.08.04
 	BRIEF: Template manifest XML file for MokoCassiopeia
 	=========================================================================
 -->
@@ -36,7 +36,7 @@
 	  </server>
 	</updateservers>
 	<name>MokoCassiopeia</name>
-	<version>03.08.03</version>
+	<version>03.08.04</version>
 	<creationDate>2026-02-27</creationDate>
 	<author>Jonathan Miller || Moko Consulting</author>
 	<authorEmail>hello@mokoconsulting.tech</authorEmail>
