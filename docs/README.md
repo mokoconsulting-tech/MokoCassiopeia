@@ -60,6 +60,12 @@ This directory contains comprehensive documentation for the MokoCassiopeia Jooml
   * Joomla extension packaging
   * Multi-version testing
 
+* **[Manual Deployment Guide](MANUAL_DEPLOYMENT.md)** - Deploy src directory without building
+  * Understanding src vs. installed structure
+  * Manual deployment methods (copy, symlink)
+  * Troubleshooting language files and media
+  * Best practices for development deployments
+
 * **[CSS Variables Reference](CSS_VARIABLES.md)** - Complete CSS customization guide
   * All available CSS variables
   * Custom color palette creation
