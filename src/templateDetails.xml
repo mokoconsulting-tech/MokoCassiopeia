@@ -52,7 +52,6 @@
 		<filename>templateDetails.xml</filename>
 		<folder>html</folder>
 		<folder>language</folder>
-		<folder>administrator</folder>
 	</files>
 	<stylesheets>
 		<stylesheet>media/templates/site/mokocassiopeia/css/editor.css</stylesheet>
@@ -89,13 +88,10 @@
 		<position>drawer-right</position>
 	</positions>
 	<languages folder="language">
-		<language tag="en-GB">language/en-GB/tpl_mokocassiopeia.ini</language>
-		<language tag="en-US">language/en-US/tpl_mokocassiopeia.ini</language>
-	</languages>
-
-	<languages folder="administrator">
-		<language tag="en-GB">administrator/language/en-GB/tpl_mokocassiopeia.sys.ini</language>
-		<language tag="en-US">administrator/language/en-US/tpl_mokocassiopeia.sys.ini</language>
+		<language tag="en-GB">en-GB/tpl_mokocassiopeia.ini</language>
+		<language tag="en-GB">en-GB/tpl_mokocassiopeia.sys.ini</language>
+		<language tag="en-US">en-US/tpl_mokocassiopeia.ini</language>
+		<language tag="en-US">en-US/tpl_mokocassiopeia.sys.ini</language>
 	</languages>
 
 	<config>
