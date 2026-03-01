@@ -87,11 +87,11 @@
 		<position>drawer-left</position>
 		<position>drawer-right</position>
 	</positions>
-	<languages folder="language">
-		<language tag="en-GB">en-GB/tpl_mokocassiopeia.ini</language>
-		<language tag="en-GB">en-GB/tpl_mokocassiopeia.sys.ini</language>
-		<language tag="en-US">en-US/tpl_mokocassiopeia.ini</language>
-		<language tag="en-US">en-US/tpl_mokocassiopeia.sys.ini</language>
+	<languages>
+		<language tag="en-GB">language/en-GB/tpl_mokocassiopeia.ini</language>
+		<language tag="en-GB">language/en-GB/tpl_mokocassiopeia.sys.ini</language>
+		<language tag="en-US">language/en-US/tpl_mokocassiopeia.ini</language>
+		<language tag="en-US">language/en-US/tpl_mokocassiopeia.sys.ini</language>
 	</languages>
 
 	<config>
