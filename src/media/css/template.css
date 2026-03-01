@@ -19362,6 +19362,177 @@ nav[data-toggle=toc] .nav-link.active+ul{
 	font-weight: 600;
 }
 
+/* === Main Menu - Collapsible Dropdown Bootstrap Responsive === */
+.mod-menu-main {
+	background-color: var(--body-bg);
+	padding: 0.5rem 0;
+}
+
+.mod-menu-main .navbar-toggler {
+	border-color: var(--border-color);
+	padding: 0.5rem 0.75rem;
+	font-size: 1.25rem;
+	min-height: 48px; /* WCAG 2.1 touch target */
+}
+
+.mod-menu-main .navbar-toggler:focus {
+	box-shadow: 0 0 0 0.25rem rgba(var(--link-color-rgb), 0.25);
+	outline: 0;
+}
+
+.mod-menu-main .navbar-toggler-icon {
+	background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(0, 0, 0, 0.75)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+	display: inline-block;
+	width: 1.5em;
+	height: 1.5em;
+	vertical-align: middle;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: 100%;
+}
+
+.mod-menu-main__list {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.mod-menu-main__item {
+	position: relative;
+}
+
+.mod-menu-main__link,
+.mod-menu-main__heading {
+	display: block;
+	padding: 0.75rem 1rem;
+	color: var(--link-color);
+	text-decoration: none;
+	transition: background-color 0.2s ease, color 0.2s ease;
+	min-height: 48px; /* WCAG 2.1 touch target on mobile */
+	display: flex;
+	align-items: center;
+	border-radius: var(--border-radius);
+}
+
+.mod-menu-main__link:hover,
+.mod-menu-main__link:focus {
+	background-color: var(--secondary-bg);
+	color: var(--link-hover-color);
+	text-decoration: none;
+}
+
+.mod-menu-main__item.active > .mod-menu-main__link,
+.mod-menu-main__item.current > .mod-menu-main__link {
+	background-color: var(--primary-bg);
+	color: var(--white);
+	font-weight: 600;
+}
+
+/* Dropdown menu styles */
+.mod-menu-main__dropdown {
+	list-style: none;
+	padding: 0.5rem 0;
+	margin: 0;
+	background-color: var(--body-bg);
+	border: 1px solid var(--border-color);
+	border-radius: var(--border-radius);
+	box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+	display: none;
+}
+
+.mod-menu-main__item.dropdown.show > .mod-menu-main__dropdown {
+	display: block;
+}
+
+.mod-menu-main__dropdown .mod-menu-main__item {
+	padding: 0;
+}
+
+.mod-menu-main__dropdown .mod-menu-main__link {
+	padding: 0.5rem 1.5rem;
+	min-height: 44px; /* Slightly smaller for nested items */
+}
+
+.mod-menu-main__dropdown .mod-menu-main__link:hover,
+.mod-menu-main__dropdown .mod-menu-main__link:focus {
+	background-color: var(--secondary-bg);
+}
+
+.mod-menu-main__separator {
+	border-top: 1px solid var(--border-color);
+	margin: 0.5rem 0;
+	padding: 0;
+}
+
+/* Dropdown toggle arrow */
+.mod-menu-main__link.dropdown-toggle::after,
+.mod-menu-main__heading.dropdown-toggle::after {
+	content: "";
+	display: inline-block;
+	margin-left: auto;
+	padding-left: 0.5rem;
+	vertical-align: middle;
+	border-top: 0.3em solid;
+	border-right: 0.3em solid transparent;
+	border-bottom: 0;
+	border-left: 0.3em solid transparent;
+}
+
+/* Desktop styles (≥768px) */
+@media (min-width: 768px) {
+	.mod-menu-main__list {
+		flex-direction: row;
+		flex-wrap: wrap;
+		gap: 0;
+	}
+
+	.mod-menu-main__link,
+	.mod-menu-main__heading {
+		min-height: 44px; /* WCAG 2.1 touch target on desktop */
+		padding: 0.5rem 1rem;
+	}
+
+	.mod-menu-main__item.dropdown {
+		position: relative;
+	}
+
+	.mod-menu-main__dropdown {
+		position: absolute;
+		top: 100%;
+		left: 0;
+		min-width: 200px;
+		z-index: 1000;
+		margin-top: 0.125rem;
+	}
+
+	/* Hover dropdown on desktop */
+	.mod-menu-main__item.dropdown:hover > .mod-menu-main__dropdown {
+		display: block;
+	}
+
+	/* Nested dropdowns */
+	.mod-menu-main__dropdown .mod-menu-main__dropdown {
+		top: 0;
+		left: 100%;
+		margin-top: 0;
+		margin-left: 0.125rem;
+	}
+}
+
+/* Large desktop styles (≥992px) */
+@media (min-width: 992px) {
+	.mod-menu-main {
+		padding: 1rem 0;
+	}
+
+	.mod-menu-main__list {
+		gap: 0.25rem;
+	}
+}
+
 /* === mod_breadcrumbs === */
 .mod-breadcrumbs-responsive {
 	width: 100%;
@@ -21680,5 +21851,999 @@ height: 120px;
 .cb-register__form,
 .cb-login__container {
 padding: 1.5rem;
+}
+}
+
+/*
+   JEM (JOOMLA EVENT MANAGER) COMPONENT STYLES
+   Mobile-responsive overrides for JEM event management component
+   Includes: Events List, Event Details, Calendar, Venue, Categories
+*/
+
+/* ===========================
+   JEM Events List Styles
+   =========================== */
+
+.jem-eventslist-responsive {
+width: 100%;
+max-width: 100%;
+}
+
+.jem-eventslist__container {
+padding: 1rem;
+}
+
+.jem-eventslist__header {
+margin-bottom: 1.5rem;
+}
+
+.jem-eventslist__title {
+font-size: 1.75rem;
+font-weight: 700;
+margin: 0;
+color: var(--body-color);
+}
+
+.jem-eventslist__list {
+display: flex;
+flex-direction: column;
+gap: 1.5rem;
+}
+
+.jem-eventslist__item {
+background: var(--secondary-bg, #f8f9fa);
+border: 1px solid var(--border-color, #dee2e6);
+border-radius: var(--border-radius, 0.375rem);
+overflow: hidden;
+transition: box-shadow 0.3s ease;
+}
+
+.jem-eventslist__item:hover {
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.jem-eventslist__item-inner {
+padding: 1.25rem;
+}
+
+.jem-eventslist__date {
+font-size: 0.875rem;
+color: var(--secondary-color, #6c757d);
+margin-bottom: 0.5rem;
+display: flex;
+align-items: center;
+flex-wrap: wrap;
+gap: 0.25rem;
+}
+
+.jem-eventslist__datetime {
+font-weight: 500;
+}
+
+.jem-eventslist__date-separator {
+margin: 0 0.25rem;
+}
+
+.jem-eventslist__event-title {
+font-size: 1.25rem;
+font-weight: 600;
+margin: 0.5rem 0;
+}
+
+.jem-eventslist__link {
+color: var(--link-color);
+text-decoration: none;
+transition: color 0.2s ease;
+}
+
+.jem-eventslist__link:hover {
+color: var(--link-hover-color);
+text-decoration: underline;
+}
+
+.jem-eventslist__venue {
+display: flex;
+align-items: center;
+gap: 0.5rem;
+margin: 0.75rem 0;
+font-size: 0.9375rem;
+color: var(--body-color);
+}
+
+.jem-eventslist__venue-icon {
+font-size: 1rem;
+}
+
+.jem-eventslist__venue-link {
+color: var(--link-color);
+text-decoration: none;
+}
+
+.jem-eventslist__venue-link:hover {
+text-decoration: underline;
+}
+
+.jem-eventslist__description {
+margin: 1rem 0;
+color: var(--body-color);
+line-height: 1.6;
+}
+
+.jem-eventslist__categories {
+display: flex;
+flex-wrap: wrap;
+gap: 0.5rem;
+margin: 1rem 0;
+}
+
+.jem-eventslist__category-badge {
+display: inline-block;
+padding: 0.25rem 0.75rem;
+background: var(--primary-color, #007bff);
+color: #fff;
+border-radius: 1rem;
+font-size: 0.8125rem;
+font-weight: 500;
+}
+
+.jem-eventslist__actions {
+margin-top: 1rem;
+}
+
+.jem-eventslist__button {
+display: inline-block;
+padding: 0.625rem 1.25rem;
+min-height: 44px;
+background: var(--btn-primary-bg, #007bff);
+color: #fff;
+border: none;
+border-radius: var(--border-radius, 0.375rem);
+text-decoration: none;
+font-weight: 500;
+text-align: center;
+transition: background-color 0.2s ease;
+cursor: pointer;
+}
+
+.jem-eventslist__button:hover {
+background: var(--btn-primary-hover-bg, #0056b3);
+color: #fff;
+text-decoration: none;
+}
+
+.jem-eventslist__pagination {
+margin-top: 2rem;
+text-align: center;
+}
+
+.jem-eventslist__empty {
+padding: 3rem 1rem;
+text-align: center;
+}
+
+.jem-eventslist__empty-message {
+font-size: 1.125rem;
+color: var(--secondary-color, #6c757d);
+}
+
+/* ===========================
+   JEM Event Details Styles
+   =========================== */
+
+.jem-event-responsive {
+width: 100%;
+max-width: 100%;
+}
+
+.jem-event__container {
+padding: 1rem;
+}
+
+.jem-event__header {
+margin-bottom: 1.5rem;
+}
+
+.jem-event__title {
+font-size: 2rem;
+font-weight: 700;
+margin: 0;
+color: var(--body-color);
+}
+
+.jem-event__image-wrapper {
+margin: 1.5rem 0;
+border-radius: var(--border-radius, 0.375rem);
+overflow: hidden;
+}
+
+.jem-event__image {
+width: 100%;
+height: auto;
+display: block;
+}
+
+.jem-event__meta {
+background: var(--secondary-bg, #f8f9fa);
+border: 1px solid var(--border-color, #dee2e6);
+border-radius: var(--border-radius, 0.375rem);
+padding: 1.5rem;
+margin: 1.5rem 0;
+}
+
+.jem-event__meta-item {
+display: flex;
+align-items: flex-start;
+gap: 0.75rem;
+margin-bottom: 1rem;
+}
+
+.jem-event__meta-item:last-child {
+margin-bottom: 0;
+}
+
+.jem-event__meta-icon {
+font-size: 1.25rem;
+flex-shrink: 0;
+margin-top: 0.125rem;
+}
+
+.jem-event__meta-content {
+flex: 1;
+}
+
+.jem-event__meta-label {
+display: block;
+margin-bottom: 0.25rem;
+color: var(--body-color);
+}
+
+.jem-event__datetime,
+.jem-event__time-value,
+.jem-event__venue-name {
+color: var(--body-color);
+}
+
+.jem-event__venue-link {
+color: var(--link-color);
+text-decoration: none;
+font-weight: 500;
+}
+
+.jem-event__venue-link:hover {
+color: var(--link-hover-color);
+text-decoration: underline;
+}
+
+.jem-event__address {
+margin-top: 0.5rem;
+font-size: 0.9375rem;
+color: var(--secondary-color, #6c757d);
+}
+
+.jem-event__street,
+.jem-event__city {
+display: block;
+}
+
+.jem-event__category-list {
+display: flex;
+flex-wrap: wrap;
+gap: 0.5rem;
+margin-top: 0.5rem;
+}
+
+.jem-event__category-badge {
+display: inline-block;
+padding: 0.25rem 0.75rem;
+background: var(--primary-color, #007bff);
+color: #fff;
+border-radius: 1rem;
+font-size: 0.8125rem;
+font-weight: 500;
+}
+
+.jem-event__description {
+margin: 2rem 0;
+}
+
+.jem-event__description-title {
+font-size: 1.5rem;
+font-weight: 600;
+margin-bottom: 1rem;
+color: var(--body-color);
+}
+
+.jem-event__description-content {
+line-height: 1.8;
+color: var(--body-color);
+}
+
+.jem-event__registration,
+.jem-event__contact {
+background: var(--secondary-bg, #f8f9fa);
+border: 1px solid var(--border-color, #dee2e6);
+border-radius: var(--border-radius, 0.375rem);
+padding: 1.5rem;
+margin: 1.5rem 0;
+}
+
+.jem-event__registration-title,
+.jem-event__contact-title {
+font-size: 1.25rem;
+font-weight: 600;
+margin-bottom: 1rem;
+color: var(--body-color);
+}
+
+.jem-event__contact-link {
+color: var(--link-color);
+text-decoration: none;
+}
+
+.jem-event__contact-link:hover {
+text-decoration: underline;
+}
+
+.jem-event__actions {
+margin-top: 2rem;
+}
+
+.jem-event__button {
+display: inline-block;
+padding: 0.625rem 1.25rem;
+min-height: 44px;
+background: var(--btn-secondary-bg, #6c757d);
+color: #fff;
+border: none;
+border-radius: var(--border-radius, 0.375rem);
+text-decoration: none;
+font-weight: 500;
+text-align: center;
+transition: background-color 0.2s ease;
+cursor: pointer;
+}
+
+.jem-event__button:hover {
+background: var(--btn-secondary-hover-bg, #5a6268);
+color: #fff;
+text-decoration: none;
+}
+
+/* ===========================
+   JEM Calendar Styles
+   =========================== */
+
+.jem-calendar-responsive {
+width: 100%;
+max-width: 100%;
+}
+
+.jem-calendar__container {
+padding: 1rem;
+}
+
+.jem-calendar__header {
+margin-bottom: 1.5rem;
+}
+
+.jem-calendar__title {
+font-size: 1.75rem;
+font-weight: 700;
+margin: 0;
+color: var(--body-color);
+}
+
+.jem-calendar__navigation {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 1.5rem;
+padding: 1rem;
+background: var(--secondary-bg, #f8f9fa);
+border-radius: var(--border-radius, 0.375rem);
+}
+
+.jem-calendar__nav-button {
+display: flex;
+align-items: center;
+justify-content: center;
+width: 44px;
+height: 44px;
+background: var(--btn-primary-bg, #007bff);
+color: #fff;
+border: none;
+border-radius: 50%;
+text-decoration: none;
+font-size: 1.5rem;
+transition: background-color 0.2s ease;
+}
+
+.jem-calendar__nav-button:hover {
+background: var(--btn-primary-hover-bg, #0056b3);
+color: #fff;
+}
+
+.jem-calendar__current-month {
+font-size: 1.25rem;
+font-weight: 600;
+margin: 0;
+color: var(--body-color);
+}
+
+.jem-calendar__grid {
+background: var(--secondary-bg, #f8f9fa);
+border: 1px solid var(--border-color, #dee2e6);
+border-radius: var(--border-radius, 0.375rem);
+padding: 1rem;
+margin-bottom: 2rem;
+}
+
+.jem-calendar__weekdays {
+display: grid;
+grid-template-columns: repeat(7, 1fr);
+gap: 0.5rem;
+margin-bottom: 0.5rem;
+}
+
+.jem-calendar__weekday {
+text-align: center;
+font-weight: 600;
+font-size: 0.875rem;
+color: var(--body-color);
+padding: 0.5rem 0;
+}
+
+.jem-calendar__days {
+display: grid;
+grid-template-columns: repeat(7, 1fr);
+gap: 0.5rem;
+}
+
+.jem-calendar__day {
+aspect-ratio: 1;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+padding: 0.5rem;
+background: #fff;
+border: 1px solid var(--border-color, #dee2e6);
+border-radius: var(--border-radius, 0.375rem);
+cursor: pointer;
+transition: background-color 0.2s ease;
+}
+
+.jem-calendar__day:hover {
+background: var(--hover-bg, #e9ecef);
+}
+
+.jem-calendar__day--empty {
+background: transparent;
+border: none;
+cursor: default;
+}
+
+.jem-calendar__day--has-events {
+background: var(--primary-light, #cfe2ff);
+border-color: var(--primary-color, #007bff);
+}
+
+.jem-calendar__day--today {
+border: 2px solid var(--primary-color, #007bff);
+font-weight: 700;
+}
+
+.jem-calendar__day-number {
+font-size: 0.9375rem;
+color: var(--body-color);
+}
+
+.jem-calendar__event-indicator {
+display: inline-flex;
+align-items: center;
+justify-content: center;
+min-width: 1.25rem;
+height: 1.25rem;
+background: var(--primary-color, #007bff);
+color: #fff;
+border-radius: 50%;
+font-size: 0.6875rem;
+font-weight: 600;
+margin-top: 0.25rem;
+}
+
+.jem-calendar__events-list {
+margin-top: 2rem;
+}
+
+.jem-calendar__events-title {
+font-size: 1.5rem;
+font-weight: 600;
+margin-bottom: 1rem;
+color: var(--body-color);
+}
+
+.jem-calendar__events {
+display: flex;
+flex-direction: column;
+gap: 1rem;
+}
+
+.jem-calendar__event-item {
+padding: 1rem;
+background: var(--secondary-bg, #f8f9fa);
+border: 1px solid var(--border-color, #dee2e6);
+border-radius: var(--border-radius, 0.375rem);
+}
+
+.jem-calendar__event-date {
+font-size: 0.875rem;
+color: var(--secondary-color, #6c757d);
+margin-bottom: 0.5rem;
+}
+
+.jem-calendar__event-title {
+font-size: 1.125rem;
+font-weight: 600;
+margin: 0.5rem 0;
+}
+
+.jem-calendar__event-link {
+color: var(--link-color);
+text-decoration: none;
+}
+
+.jem-calendar__event-link:hover {
+color: var(--link-hover-color);
+text-decoration: underline;
+}
+
+.jem-calendar__event-venue {
+font-size: 0.9375rem;
+color: var(--body-color);
+margin-top: 0.5rem;
+}
+
+/* ===========================
+   JEM Venue Styles
+   =========================== */
+
+.jem-venue-responsive {
+width: 100%;
+max-width: 100%;
+}
+
+.jem-venue__container {
+padding: 1rem;
+}
+
+.jem-venue__header {
+margin-bottom: 1.5rem;
+}
+
+.jem-venue__title {
+font-size: 2rem;
+font-weight: 700;
+margin: 0;
+color: var(--body-color);
+}
+
+.jem-venue__image-wrapper {
+margin: 1.5rem 0;
+border-radius: var(--border-radius, 0.375rem);
+overflow: hidden;
+}
+
+.jem-venue__image {
+width: 100%;
+height: auto;
+display: block;
+}
+
+.jem-venue__info {
+margin: 2rem 0;
+}
+
+.jem-venue__info-item {
+display: flex;
+align-items: flex-start;
+gap: 0.75rem;
+margin-bottom: 1.5rem;
+padding: 1.25rem;
+background: var(--secondary-bg, #f8f9fa);
+border: 1px solid var(--border-color, #dee2e6);
+border-radius: var(--border-radius, 0.375rem);
+}
+
+.jem-venue__info-item:last-child {
+margin-bottom: 0;
+}
+
+.jem-venue__info-icon {
+font-size: 1.25rem;
+flex-shrink: 0;
+margin-top: 0.125rem;
+}
+
+.jem-venue__info-content {
+flex: 1;
+}
+
+.jem-venue__info-label {
+display: block;
+margin-bottom: 0.5rem;
+color: var(--body-color);
+}
+
+.jem-venue__address-content {
+font-style: normal;
+color: var(--body-color);
+}
+
+.jem-venue__street,
+.jem-venue__city-line,
+.jem-venue__state,
+.jem-venue__country {
+display: block;
+margin-bottom: 0.25rem;
+}
+
+.jem-venue__link {
+color: var(--link-color);
+text-decoration: none;
+word-break: break-all;
+}
+
+.jem-venue__link:hover {
+text-decoration: underline;
+}
+
+.jem-venue__description {
+margin: 2rem 0;
+}
+
+.jem-venue__description-title {
+font-size: 1.5rem;
+font-weight: 600;
+margin-bottom: 1rem;
+color: var(--body-color);
+}
+
+.jem-venue__description-content {
+line-height: 1.8;
+color: var(--body-color);
+}
+
+.jem-venue__map {
+margin: 2rem 0;
+}
+
+.jem-venue__map-title {
+font-size: 1.5rem;
+font-weight: 600;
+margin-bottom: 1rem;
+color: var(--body-color);
+}
+
+.jem-venue__map-container {
+border-radius: var(--border-radius, 0.375rem);
+overflow: hidden;
+}
+
+.jem-venue__map-placeholder {
+padding: 3rem 1rem;
+background: var(--secondary-bg, #f8f9fa);
+border: 1px solid var(--border-color, #dee2e6);
+text-align: center;
+}
+
+.jem-venue__map-link {
+display: inline-block;
+padding: 0.625rem 1.25rem;
+min-height: 44px;
+background: var(--btn-primary-bg, #007bff);
+color: #fff;
+border: none;
+border-radius: var(--border-radius, 0.375rem);
+text-decoration: none;
+font-weight: 500;
+margin-top: 1rem;
+transition: background-color 0.2s ease;
+}
+
+.jem-venue__map-link:hover {
+background: var(--btn-primary-hover-bg, #0056b3);
+color: #fff;
+text-decoration: none;
+}
+
+.jem-venue__events {
+margin: 2rem 0;
+}
+
+.jem-venue__events-title {
+font-size: 1.5rem;
+font-weight: 600;
+margin-bottom: 1rem;
+color: var(--body-color);
+}
+
+.jem-venue__events-list {
+display: flex;
+flex-direction: column;
+gap: 1rem;
+}
+
+.jem-venue__event-item {
+padding: 1rem;
+background: var(--secondary-bg, #f8f9fa);
+border: 1px solid var(--border-color, #dee2e6);
+border-radius: var(--border-radius, 0.375rem);
+}
+
+.jem-venue__event-date {
+font-size: 0.875rem;
+color: var(--secondary-color, #6c757d);
+margin-bottom: 0.5rem;
+}
+
+.jem-venue__event-title {
+font-size: 1.125rem;
+font-weight: 600;
+margin: 0.5rem 0;
+}
+
+.jem-venue__event-link {
+color: var(--link-color);
+text-decoration: none;
+}
+
+.jem-venue__event-link:hover {
+color: var(--link-hover-color);
+text-decoration: underline;
+}
+
+.jem-venue__actions {
+margin-top: 2rem;
+}
+
+.jem-venue__button {
+display: inline-block;
+padding: 0.625rem 1.25rem;
+min-height: 44px;
+background: var(--btn-secondary-bg, #6c757d);
+color: #fff;
+border: none;
+border-radius: var(--border-radius, 0.375rem);
+text-decoration: none;
+font-weight: 500;
+text-align: center;
+transition: background-color 0.2s ease;
+cursor: pointer;
+}
+
+.jem-venue__button:hover {
+background: var(--btn-secondary-hover-bg, #5a6268);
+color: #fff;
+text-decoration: none;
+}
+
+/* ===========================
+   JEM Categories Styles
+   =========================== */
+
+.jem-categories-responsive {
+width: 100%;
+max-width: 100%;
+}
+
+.jem-categories__container {
+padding: 1rem;
+}
+
+.jem-categories__header {
+margin-bottom: 1.5rem;
+}
+
+.jem-categories__title {
+font-size: 1.75rem;
+font-weight: 700;
+margin: 0;
+color: var(--body-color);
+}
+
+.jem-categories__list {
+display: flex;
+flex-direction: column;
+gap: 1.5rem;
+}
+
+.jem-categories__item {
+background: var(--secondary-bg, #f8f9fa);
+border: 1px solid var(--border-color, #dee2e6);
+border-radius: var(--border-radius, 0.375rem);
+overflow: hidden;
+transition: box-shadow 0.3s ease;
+}
+
+.jem-categories__item:hover {
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.jem-categories__item-inner {
+padding: 1.25rem;
+}
+
+.jem-categories__image-wrapper {
+margin-bottom: 1rem;
+border-radius: var(--border-radius, 0.375rem);
+overflow: hidden;
+}
+
+.jem-categories__image {
+width: 100%;
+height: auto;
+display: block;
+}
+
+.jem-categories__category-title {
+font-size: 1.25rem;
+font-weight: 600;
+margin: 0.5rem 0;
+}
+
+.jem-categories__link {
+color: var(--link-color);
+text-decoration: none;
+transition: color 0.2s ease;
+}
+
+.jem-categories__link:hover {
+color: var(--link-hover-color);
+text-decoration: underline;
+}
+
+.jem-categories__description {
+margin: 1rem 0;
+color: var(--body-color);
+line-height: 1.6;
+}
+
+.jem-categories__meta {
+margin: 0.75rem 0;
+font-size: 0.875rem;
+color: var(--secondary-color, #6c757d);
+}
+
+.jem-categories__event-count {
+font-weight: 500;
+}
+
+.jem-categories__actions {
+margin-top: 1rem;
+}
+
+.jem-categories__button {
+display: inline-block;
+padding: 0.625rem 1.25rem;
+min-height: 44px;
+background: var(--btn-primary-bg, #007bff);
+color: #fff;
+border: none;
+border-radius: var(--border-radius, 0.375rem);
+text-decoration: none;
+font-weight: 500;
+text-align: center;
+transition: background-color 0.2s ease;
+cursor: pointer;
+}
+
+.jem-categories__button:hover {
+background: var(--btn-primary-hover-bg, #0056b3);
+color: #fff;
+text-decoration: none;
+}
+
+.jem-categories__pagination {
+margin-top: 2rem;
+text-align: center;
+}
+
+.jem-categories__empty {
+padding: 3rem 1rem;
+text-align: center;
+}
+
+.jem-categories__empty-message {
+font-size: 1.125rem;
+color: var(--secondary-color, #6c757d);
+}
+
+/* ===========================
+   JEM Responsive Styles
+   =========================== */
+
+@media (min-width: 768px) {
+.jem-eventslist__list,
+.jem-categories__list {
+display: grid;
+grid-template-columns: repeat(2, 1fr);
+gap: 1.5rem;
+}
+
+.jem-calendar__day-number {
+font-size: 1rem;
+}
+
+.jem-event__meta {
+padding: 2rem;
+}
+
+.jem-venue__info-item {
+padding: 1.5rem;
+}
+}
+
+@media (min-width: 992px) {
+.jem-eventslist__container,
+.jem-event__container,
+.jem-calendar__container,
+.jem-venue__container,
+.jem-categories__container {
+padding: 2rem;
+}
+
+.jem-eventslist__title,
+.jem-calendar__title,
+.jem-categories__title {
+font-size: 2rem;
+}
+
+.jem-event__title,
+.jem-venue__title {
+font-size: 2.5rem;
+}
+
+.jem-calendar__grid {
+padding: 1.5rem;
+}
+}
+
+@media (max-width: 575.98px) {
+.jem-eventslist__button,
+.jem-event__button,
+.jem-calendar__nav-button,
+.jem-venue__button,
+.jem-venue__map-link,
+.jem-categories__button {
+min-height: 48px;
+}
+
+.jem-eventslist__item-inner,
+.jem-event__meta,
+.jem-venue__info-item,
+.jem-categories__item-inner {
+padding: 1rem;
+}
+
+.jem-calendar__navigation {
+padding: 0.75rem;
+}
+
+.jem-calendar__current-month {
+font-size: 1rem;
+}
+
+.jem-calendar__weekday {
+font-size: 0.75rem;
+padding: 0.25rem 0;
+}
+
+.jem-calendar__day {
+padding: 0.25rem;
+}
+
+.jem-calendar__day-number {
+font-size: 0.8125rem;
 }
 }

@@ -96,6 +96,8 @@ MokoCassiopeia is a modern, lightweight enhancement layer built on top of Joomla
 
 ## 📦 Installation
 
+**Note**: MokoCassiopeia is a **standalone Joomla template extension** (not bundled as a package). Install it directly via Joomla's Extension Manager.
+
 ### Via Joomla Extension Manager
 
 1. Download the latest `mokocassiopeia-{version}.zip` from [Releases](https://github.com/mokoconsulting-tech/MokoCassiopeia/releases)

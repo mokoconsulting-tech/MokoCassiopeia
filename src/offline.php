@@ -1,0 +1,342 @@
+<?php
+/* Copyright (C) 2026 Moko Consulting <hello@mokoconsulting.tech>
+
+ This file is part of a Moko Consulting project.
+
+ SPDX-License-Identifier: GPL-3.0-or-later
+
+
+
+ # FILE INFORMATION
+ DEFGROUP: Joomla.Template.Site
+ INGROUP: MokoCassiopeia
+ REPO: https://github.com/mokoconsulting-tech/MokoCassiopeia
+ PATH: ./templates/mokocassiopeia/offline.php
+ VERSION: 03.06.02
+ BRIEF: Offline page template file for MokoCassiopeia
+ */
+
+declare(strict_types=1);
+
+defined('_JEXEC') or die;
+
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Uri\Uri;
+
+/**
+ * @var \Joomla\CMS\Document\HtmlDocument $this
+ * @var \Joomla\Registry\Registry         $this->params
+ * @var string                            $this->language
+ * @var string                            $this->direction
+ */
+
+$app       = Factory::getApplication();
+$doc       = Factory::getDocument();
+$params    = $this->params ?: $app->getTemplate(true)->params;
+$direction = $this->direction ?: 'ltr';
+
+/* -----------------------
+   Load ONLY template.css + colors_*.css (with min toggle)
+------------------------ */
+$useMin      = !((int) $params->get('development_mode', 0) === 1);
+$assetSuffix = $useMin ? '.min' : '';
+$base        = rtrim(Uri::root(true), '/') . '/templates/' . $this->template . '/css/';
+
+$doc->addStyleSheet($base . 'template' . $assetSuffix . '.css', ['version' => 'auto'], ['id' => 'moko-template']);
+/* If you have a template param for color variant, set it here; defaults to 'standard' */
+$colorKey = (string) ($params->get('colors', 'standard') ?: 'standard');
+$colorKey = preg_replace('~[^a-z0-9_-]~i', '', $colorKey);
+$doc->addStyleSheet($base . 'colors_' . $colorKey . $assetSuffix . '.css', ['version' => 'auto'], ['id' => 'moko-colors']);
+
+/* Bootstrap CSS/JS for accordion behavior; safe to keep. */
+HTMLHelper::_('bootstrap.loadCss', true, $doc);
+HTMLHelper::_('bootstrap.framework');
+
+/* -----------------------
+   Title + Meta (Include Site Name in Page Titles)
+------------------------ */
+$sitename  = (string) $app->get('sitename');
+$baseTitle = Text::_('JGLOBAL_OFFLINE') ?: 'Offline';
+$snSetting = (int) $app->get('sitename_pagetitles', 0); // 0=no, 1=before, 2=after
+
+if ($snSetting === 1) {
+	$doc->setTitle(Text::sprintf('JPAGETITLE', $sitename, $baseTitle));  // Site Name BEFORE
+} elseif ($snSetting === 2) {
+	$doc->setTitle(Text::sprintf('JPAGETITLE', $baseTitle, $sitename));  // Site Name AFTER
+} else {
+	$doc->setTitle($baseTitle);
+}
+$doc->setMetaData('robots', 'noindex, nofollow');
+
+/* -----------------------
+   Offline content from Global Config
+------------------------ */
+$displayOfflineMessage = (int) $app->get('display_offline_message', 1); // 0|1|2
+$offlineMessage        = trim((string) $app->get('offline_message', ''));
+
+/* -----------------------
+   Brand: logo from params OR siteTitle (matches index.php)
+------------------------ */
+$brandHtml = '';
+$logoFile  = (string) $params->get('logoFile');
+
+if ($logoFile !== '') {
+	$brandHtml = HTMLHelper::_(
+		'image',
+		Uri::root(false) . htmlspecialchars($logoFile, ENT_QUOTES, 'UTF-8'),
+		$sitename,
+		['class' => 'logo d-inline-block', 'loading' => 'eager', 'decoding' => 'async'],
+		false,
+		0
+	);
+} else {
+	// If no logo file, show the title (defaults to "MokoCassiopeia" if not set)
+	$siteTitle = $params->get('siteTitle', 'MokoCassiopeia');
+	$brandHtml = '<span class="site-title" title="' . $sitename . '">'
+			   . htmlspecialchars($siteTitle, ENT_COMPAT, 'UTF-8')
+			   . '</span>';
+}
+
+$brandTagline = (string) ($params->get('brand_tagline') ?: $params->get('siteDescription') ?: '');
+$showTagline  = (int) $params->get('show_brand_tagline', 0);
+
+// Theme params
+$params_theme_enabled = (int) $params->get('theme_enabled', 1);
+
+// Analytics params
+$params_googletagmanager   = $params->get('googletagmanager', false);
+$params_googletagmanagerid = $params->get('googletagmanagerid', null);
+$params_googleanalytics    = $params->get('googleanalytics', false);
+$params_googleanalyticsid  = $params->get('googleanalyticsid', null);
+
+/* -----------------------
+   Login routes & Users
+------------------------ */
+$action = Route::_('index.php', true);
+$return = base64_encode(Uri::base());
+$allowRegistration = (bool) ComponentHelper::getParams('com_users')->get('allowUserRegistration', 0);
+
+if (class_exists('\Joomla\Component\Users\Site\Helper\RouteHelper')) {
+	$resetUrl        = \Joomla\Component\Users\Site\Helper\RouteHelper::getResetRoute();
+	$remindUrl       = \Joomla\Component\Users\Site\Helper\RouteHelper::getRemindRoute();
+	$registrationUrl = \Joomla\Component\Users\Site\Helper\RouteHelper::getRegistrationRoute();
+} else {
+	$resetUrl        = Route::_('index.php?option=com_users&view=reset');
+	$remindUrl       = Route::_('index.php?option=com_users&view=remind');
+	$registrationUrl = Route::_('index.php?option=com_users&view=registration');
+}
+?>
+<!DOCTYPE html>
+<html lang="<?php echo htmlspecialchars($this->language ?? 'en', ENT_QUOTES, 'UTF-8'); ?>" dir="<?php echo htmlspecialchars($direction, ENT_QUOTES, 'UTF-8'); ?>">
+<head>
+	<jdoc:include type="head" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+	<?php if ($params_theme_enabled) : ?>
+	<script>
+	  // Early theme application to avoid FOUC
+	  (function () {
+		try {
+		  var stored = localStorage.getItem('theme');
+		  var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+		  var theme = stored ? stored : (prefersDark ? 'dark' : 'light');
+		  document.documentElement.setAttribute('data-bs-theme', theme);
+		  document.documentElement.setAttribute('data-aria-theme', theme);
+		} catch (e) {}
+	  })();
+	</script>
+	<?php endif; ?>
+
+	<style>
+		.moko-offline-wrap { min-height: 100vh; display: grid; grid-template-rows: auto 1fr auto; }
+		.moko-offline-main { display: grid; place-items: center; padding: 2rem 1rem; }
+		.moko-card { max-width: 720px; width: 100%; }
+		.moko-brand { display:flex; align-items:center; gap:.75rem; text-decoration:none; }
+		.moko-brand .brand-tagline { display:block; opacity:.75; font-size:.875rem; line-height:1.2; }
+		.skip-link { position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden; }
+		.skip-link:focus { position:static; width:auto; height:auto; padding:.5rem 1rem; }
+	</style>
+</head>
+<body class="site moko-offline-wrap <?php echo htmlspecialchars($direction, ENT_QUOTES, 'UTF-8'); ?>">
+<?php if (!empty($params_googletagmanager) && !empty($params_googletagmanagerid)) :
+	$gtmID = htmlspecialchars($params_googletagmanagerid, ENT_QUOTES, 'UTF-8'); ?>
+	<!-- Google Tag Manager -->
+	<script>
+		(function(w,d,s,l,i){
+			w[l]=w[l]||[];
+			w[l].push({'gtm.start': new Date().getTime(), event:'gtm.js'});
+			var f=d.getElementsByTagName(s)[0],
+				j=d.createElement(s),
+				dl=l!='dataLayer'?'&l='+l:'';
+			j.async=true;
+			j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+			f.parentNode.insertBefore(j,f);
+		})(window,document,'script','dataLayer','<?php echo $gtmID; ?>');
+	</script>
+	<!-- End Google Tag Manager -->
+
+	<!-- Google Tag Manager (noscript) -->
+	<noscript>
+		<iframe src="https://www.googletagmanager.com/ns.html?id=<?php echo $gtmID; ?>"
+				height="0" width="0" style="display:none;visibility:hidden"></iframe>
+	</noscript>
+	<!-- End Google Tag Manager (noscript) -->
+<?php endif; ?>
+
+<?php if (!empty($params_googleanalytics) && !empty($params_googleanalyticsid)) :
+	$gaId = htmlspecialchars($params_googleanalyticsid, ENT_QUOTES, 'UTF-8'); ?>
+	<!-- Google Analytics (gtag.js) -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=<?php echo $gaId; ?>"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('consent', 'default', {
+			'ad_storage': 'denied',
+			'analytics_storage': 'granted',
+			'ad_user_data': 'denied',
+			'ad_personalization': 'denied'
+		});
+		(function(id){
+			if (/^G-/.test(id)) {
+				gtag('config', id, { 'anonymize_ip': true });
+			} else if (/^UA-/.test(id)) {
+				gtag('config', id, { 'anonymize_ip': true });
+				console.warn('Using a UA- ID. Universal Analytics is sunset; consider migrating to GA4.');
+			} else {
+				console.warn('Unrecognized Google Analytics ID format:', id);
+			}
+		})('<?php echo $gaId; ?>');
+	</script>
+	<!-- End Google Analytics -->
+<?php endif; ?>
+
+	<a class="skip-link" href="#maincontent"><?php echo Text::_('JSKIP_TO_CONTENT') ?: 'Skip to content'; ?></a>
+
+	<header class="container-header header py-3">
+		<div class="grid-child container-nav d-flex align-items-center gap-3">
+
+			<!-- Brand (mutually exclusive image/text) -->
+			<a class="moko-brand me-auto" href="<?php echo htmlspecialchars(Uri::base(), ENT_QUOTES, 'UTF-8'); ?>" aria-label="<?php echo htmlspecialchars($sitename, ENT_COMPAT, 'UTF-8'); ?>">
+				<?php echo $brandHtml; ?>
+				<?php if ($showTagline && $brandTagline): ?>
+					<small class="brand-tagline"><?php echo htmlspecialchars($brandTagline, ENT_COMPAT, 'UTF-8'); ?></small>
+				<?php endif; ?>
+			</a>
+
+			<!-- Header module position: offline-header -->
+			<?php if ($this->countModules('offline-header')) : ?>
+				<div class="ms-2">
+					<jdoc:include type="modules" name="offline-header" style="none" />
+				</div>
+			<?php endif; ?>
+
+		</div>
+	</header>
+
+	<main id="maincontent" class="moko-offline-main">
+		<div class="container">
+			<jdoc:include type="message" />
+
+			<div class="moko-card card shadow-sm rounded-3 p-4 p-md-5">
+				<?php if ($displayOfflineMessage === 1 && $offlineMessage !== '') : ?>
+					<div class="mb-4">
+						<h1 class="h3 mb-2"><?php echo Text::_('JOFFLINE_MESSAGE') ?: 'Site Offline'; ?></h1>
+						<p class="lead mb-0"><?php echo $offlineMessage; ?></p>
+					</div>
+				<?php elseif ($displayOfflineMessage === 2) : ?>
+					<div class="mb-4">
+						<h1 class="h3 mb-2"><?php echo Text::_('JOFFLINE_MESSAGE') ?: 'Site Offline'; ?></h1>
+						<p class="lead mb-0">
+							<?php echo Text::_('JOFFLINE_MESSAGE_DEFAULT') ?: 'This site is down for maintenance. Please check back soon.'; ?>
+						</p>
+					</div>
+				<?php endif; ?>
+
+				<!-- Main offline module position -->
+				<?php if ($this->countModules('offline')) : ?>
+					<section class="mb-4" aria-label="Offline modules">
+						<jdoc:include type="modules" name="offline" style="none" />
+					</section>
+				<?php endif; ?>
+
+				<!-- Login UNDER an accordion (collapsed by default) -->
+				<div class="accordion" id="offlineAccordion">
+					<div class="accordion-item">
+						<h2 class="accordion-header" id="headingLogin">
+							<button class="accordion-button collapsed" type="button"
+								data-bs-toggle="collapse" data-bs-target="#collapseLogin"
+								aria-expanded="false" aria-controls="collapseLogin">
+								<?php echo Text::_('JLOGIN'); ?>
+							</button>
+						</h2>
+						<div id="collapseLogin" class="accordion-collapse collapse" aria-labelledby="headingLogin" data-bs-parent="#offlineAccordion">
+							<div class="accordion-body">
+								<form action="<?php echo $action; ?>" method="post" class="form-validate">
+									<fieldset>
+										<legend class="visually-hidden"><?php echo Text::_('JLOGIN'); ?></legend>
+
+										<div class="mb-3">
+											<label class="form-label" for="username"><?php echo Text::_('JGLOBAL_USERNAME'); ?></label>
+											<input class="form-control" type="text" name="username" id="username" autocomplete="username" required aria-required="true">
+										</div>
+
+										<div class="mb-3">
+											<label class="form-label" for="password"><?php echo Text::_('JGLOBAL_PASSWORD'); ?></label>
+											<input class="form-control" type="password" name="password" id="password" autocomplete="current-password" required aria-required="true">
+										</div>
+
+										<div class="mb-3">
+											<label class="form-label" for="secretkey"><?php echo Text::_('JGLOBAL_SECRETKEY'); ?></label>
+											<input class="form-control" type="text" name="secretkey" id="secretkey" autocomplete="one-time-code" placeholder="<?php echo Text::_('JGLOBAL_SECRETKEY'); ?>">
+										</div>
+
+										<div class="form-check mb-4">
+											<input class="form-check-input" type="checkbox" name="remember" id="remember">
+											<label class="form-check-label" for="remember"><?php echo Text::_('JGLOBAL_REMEMBER_ME'); ?></label>
+										</div>
+
+										<div class="d-grid">
+											<button type="submit" class="btn btn-primary"><?php echo Text::_('JLOGIN'); ?></button>
+										</div>
+
+										<input type="hidden" name="option" value="com_users">
+										<input type="hidden" name="task" value="user.login">
+										<input type="hidden" name="return" value="<?php echo $return; ?>">
+										<?php echo HTMLHelper::_('form.token'); ?>
+									</fieldset>
+
+									<nav class="mt-3 small" aria-label="<?php echo Text::_('COM_USERS'); ?>">
+										<ul class="list-inline m-0">
+											<li class="list-inline-item">
+												<a href="<?php echo $resetUrl; ?>"><?php echo Text::_('COM_USERS_LOGIN_RESET'); ?></a>
+											</li>
+											<li class="list-inline-item">
+												<a href="<?php echo $remindUrl; ?>"><?php echo Text::_('COM_USERS_LOGIN_REMIND'); ?></a>
+											</li>
+											<?php if ($allowRegistration) : ?>
+												<li class="list-inline-item">
+													<a href="<?php echo $registrationUrl; ?>"><?php echo Text::_('COM_USERS_REGISTER'); ?></a>
+												</li>
+											<?php endif; ?>
+										</ul>
+									</nav>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- /accordion -->
+			</div>
+		</div>
+	</main>
+
+	<!-- No footer modules on offline page -->
+	<jdoc:include type="modules" name="debug" style="none" />
+</body>
+</html>

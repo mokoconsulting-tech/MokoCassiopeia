@@ -24,7 +24,7 @@
  INGROUP: MokoCassiopeia.Documentation
  REPO: https://github.com/mokoconsulting-tech/MokoCassiopeia
  FILE: docs/MODULE_OVERRIDES.md
- VERSION: 03.08.00
+ VERSION: 03.08.03
  BRIEF: Comprehensive guide to MokoCassiopeia mobile-responsive module overrides
  PATH: /docs/MODULE_OVERRIDES.md
 -->
@@ -35,7 +35,20 @@ This document provides a comprehensive guide to all mobile-responsive module and
 
 ## Overview
 
-MokoCassiopeia includes **20 mobile-responsive module overrides** and **7 component view overrides** designed to enhance the mobile user experience across standard Joomla, VirtueMart, Community Builder, and popular third-party extensions.
+MokoCassiopeia includes **16 mobile-responsive module overrides** and **12 component view overrides** designed to enhance the mobile user experience for third-party extensions and the Main Menu navigation.
+
+**Important**: Following Cassiopeia template best practices, MokoCassiopeia avoids overriding standard Joomla core modules (such as mod_search, mod_login, mod_breadcrumbs) to ensure proper language loading and compatibility. **Exception**: mod_menu "Main Menu" override provides essential Bootstrap 5 collapsible dropdown functionality.
+
+### Alternative Layouts, Not Replacements
+
+**All MokoCassiopeia overrides use alternative layout names (`mobile.php`) instead of replacing default layouts (`default.php`).** This means:
+
+- ✅ Default Joomla layouts continue to work unchanged
+- ✅ You must explicitly select the "mobile" layout in module/menu item settings
+- ✅ Joomla core updates don't break your site
+- ✅ Full control over which modules use enhanced layouts
+
+**📖 See [OVERRIDE_PHILOSOPHY.md](OVERRIDE_PHILOSOPHY.md) for complete details on how to activate and use these alternative layouts.**
 
 ### Key Features
 
@@ -52,31 +65,14 @@ All module overrides share these characteristics:
 
 ## Module Categories
 
-### 1. Search Module
-
-#### mod_search
-**Location**: `src/templates/html/mod_search/`
-
-Search box with multiple button position options and responsive design.
-
-**Features**:
-- Button positions: left, right, top, bottom
-- Text, icon, or both display modes
-- 48px touch targets on mobile
-- Prevents iOS zoom with 16px input font
-
-**Documentation**: [mod_search/README.md](../src/templates/html/mod_search/README.md)
-
----
-
-### 2. VirtueMart E-Commerce Modules
+### 1. VirtueMart E-Commerce Modules
 
 Five comprehensive overrides for VirtueMart shopping functionality.
 
-**Master Documentation**: [VIRTUEMART_MODULES_README.md](../src/templates/html/VIRTUEMART_MODULES_README.md)
+**Master Documentation**: [VIRTUEMART_MODULES_README.md](../src/html/VIRTUEMART_MODULES_README.md)
 
 #### mod_virtuemart_cart
-**Location**: `src/templates/html/mod_virtuemart_cart/`
+**Location**: `src/html/mod_virtuemart_cart/`
 
 Shopping cart display with product list and checkout button.
 
@@ -87,7 +83,7 @@ Shopping cart display with product list and checkout button.
 - Checkout button with prominent styling
 
 #### mod_virtuemart_product
-**Location**: `src/templates/html/mod_virtuemart_product/`
+**Location**: `src/html/mod_virtuemart_product/`
 
 Product showcase with grid layouts.
 
@@ -98,7 +94,7 @@ Product showcase with grid layouts.
 - Rating display support
 
 #### mod_virtuemart_currencies
-**Location**: `src/templates/html/mod_virtuemart_currencies/`
+**Location**: `src/html/mod_virtuemart_currencies/`
 
 Currency selector dropdown for multi-currency stores.
 
@@ -108,7 +104,7 @@ Currency selector dropdown for multi-currency stores.
 - Responsive button styling
 
 #### mod_virtuemart_category
-**Location**: `src/templates/html/mod_virtuemart_category/`
+**Location**: `src/html/mod_virtuemart_category/`
 
 Category navigation with hierarchical display.
 
@@ -119,7 +115,7 @@ Category navigation with hierarchical display.
 - Active category highlighting
 
 #### mod_virtuemart_manufacturer
-**Location**: `src/templates/html/mod_virtuemart_manufacturer/`
+**Location**: `src/html/mod_virtuemart_manufacturer/`
 
 Manufacturer/brand display with grid layout.
 
@@ -130,63 +126,37 @@ Manufacturer/brand display with grid layout.
 
 ---
 
-### 3. Standard Joomla & Community Builder Modules
+### 2. Main Menu & Community Builder Modules
 
-Six essential Joomla core and Community Builder module overrides.
+Three essential Community Builder and navigation module overrides.
 
-**Master Documentation**: [STANDARD_MODULES_README.md](../src/templates/html/STANDARD_MODULES_README.md)
+#### mod_menu (Main Menu)
+**Location**: `src/html/mod_menu/`
 
-#### mod_menu
-**Location**: `src/templates/html/mod_menu/`
-
-Main navigation menu with multiple layout files.
-
-**Features**:
-- Responsive horizontal/vertical layouts
-- Multi-level menu support
-- Active state highlighting
-- Keyboard navigation
+Bootstrap 5 responsive navigation menu with collapsible dropdown functionality.
 
 **Files**:
-- `default.php` - Main menu layout
-- `default_component.php` - Component links
-- `default_url.php` - External URLs
-
-#### mod_breadcrumbs
-**Location**: `src/templates/html/mod_breadcrumbs/`
-
-Breadcrumb navigation with Schema.org markup.
+- `mainmenu.php` - Main layout with Bootstrap navbar
+- `mainmenu_component.php` - Component menu items
+- `mainmenu_heading.php` - Heading menu items
+- `mainmenu_separator.php` - Separator menu items
+- `mainmenu_url.php` - URL menu items
 
 **Features**:
-- Structured data for SEO
-- Responsive text truncation
-- Proper separators
-- Home icon support
+- Bootstrap 5 navbar structure with collapsible hamburger menu
+- Multi-level dropdown support (hover on desktop, tap on mobile)
+- WCAG 2.1 compliant touch targets (48px mobile, 44px desktop)
+- BEM naming convention: `.mod-menu-main__*`
+- Active state indicators for current menu items
+- ARIA labels and keyboard navigation support
+- Alternative layout named `mainmenu.php` (not `default.php`)
 
-#### mod_login
-**Location**: `src/templates/html/mod_login/`
+**Activation**: Select "Mainmenu" layout in Joomla Administrator → Modules → Menu Module → Advanced Tab → Alternative Layout
 
-User login/logout form with 2FA support.
-
-**Features**:
-- Login and logout states
-- Two-factor authentication fields
-- Remember me checkbox
-- User greeting when logged in
-
-#### mod_articles_latest
-**Location**: `src/templates/html/mod_articles_latest/`
-
-Latest articles display with metadata.
-
-**Features**:
-- Responsive article cards
-- Author, date, category metadata
-- Read more links
-- Featured article badges
+**Note**: Unlike the broken mod_menu override removed in v03.08.01, this v03.08.03 version is properly structured based on Joomla core layouts and Bootstrap 5, ensuring language strings load correctly and menu functionality works as expected.
 
 #### mod_cblogin
-**Location**: `src/templates/html/mod_cblogin/`
+**Location**: `src/html/mod_cblogin/`
 
 Community Builder login with avatar display.
 
@@ -197,7 +167,7 @@ Community Builder login with avatar display.
 - Logout button
 
 #### mod_comprofilerOnline
-**Location**: `src/templates/html/mod_comprofilerOnline/`
+**Location**: `src/html/mod_comprofilerOnline/`
 
 Community Builder online users display.
 
@@ -209,16 +179,14 @@ Community Builder online users display.
 
 ---
 
-### 4. Industry Extension Modules
+### 3. Industry Extension Modules
 
 Eight popular third-party extension module overrides plus component views.
-
-**Master Documentation**: [INDUSTRY_MODULES_README.md](../src/templates/html/INDUSTRY_MODULES_README.md)
 
 #### K2 Content Extension
 
 ##### mod_k2_content
-**Location**: `src/templates/html/mod_k2_content/`
+**Location**: `src/html/mod_k2_content/`
 
 K2 content display with advanced layouts.
 
@@ -232,7 +200,7 @@ K2 content display with advanced layouts.
 #### AcyMailing Newsletter
 
 ##### mod_acymailing
-**Location**: `src/templates/html/mod_acymailing/`
+**Location**: `src/html/mod_acymailing/`
 
 Newsletter subscription form.
 
@@ -245,7 +213,7 @@ Newsletter subscription form.
 #### HikaShop E-Commerce
 
 ##### mod_hikashop_cart
-**Location**: `src/templates/html/mod_hikashop_cart/`
+**Location**: `src/html/mod_hikashop_cart/`
 
 HikaShop shopping cart module.
 
@@ -260,7 +228,7 @@ HikaShop shopping cart module.
 Four comprehensive forum modules plus component view.
 
 ##### mod_kunenalatest
-**Location**: `src/templates/html/mod_kunenalatest/`
+**Location**: `src/html/mod_kunenalatest/`
 
 Latest forum posts display.
 
@@ -271,7 +239,7 @@ Latest forum posts display.
 - Post date
 
 ##### mod_kunenalogin
-**Location**: `src/templates/html/mod_kunenalogin/`
+**Location**: `src/html/mod_kunenalogin/`
 
 Forum-specific login module.
 
@@ -282,7 +250,7 @@ Forum-specific login module.
 - Profile link
 
 ##### mod_kunenasearch
-**Location**: `src/templates/html/mod_kunenasearch/`
+**Location**: `src/html/mod_kunenasearch/`
 
 Forum search with button positions.
 
@@ -293,7 +261,7 @@ Forum search with button positions.
 - 48px touch targets
 
 ##### mod_kunenastats
-**Location**: `src/templates/html/mod_kunenastats/`
+**Location**: `src/html/mod_kunenastats/`
 
 Forum statistics display.
 
@@ -305,7 +273,7 @@ Forum statistics display.
 - Responsive grid layout
 
 ##### com_kunena (Component)
-**Location**: `src/templates/html/com_kunena/`
+**Location**: `src/html/com_kunena/`
 
 Forum category list view.
 
@@ -317,7 +285,7 @@ Forum category list view.
 Module and component overrides for membership management.
 
 ##### mod_osmembership
-**Location**: `src/templates/html/mod_osmembership/`
+**Location**: `src/html/mod_osmembership/`
 
 Membership plans module.
 
@@ -328,7 +296,7 @@ Membership plans module.
 - Badge displays (popular, featured)
 
 ##### com_osmembership (Component)
-**Location**: `src/templates/html/com_osmembership/`
+**Location**: `src/html/com_osmembership/`
 
 Membership pricing tables.
 
@@ -337,12 +305,12 @@ Membership pricing tables.
 
 ---
 
-### 5. Community Builder Components
+### 4. Community Builder Components
 
 Four comprehensive component view overrides for Community Builder user management.
 
 #### com_comprofiler
-**Location**: `src/templates/html/com_comprofiler/`
+**Location**: `src/html/com_comprofiler/`
 
 Mobile-responsive views for Community Builder user profiles, registration, and login.
 
@@ -390,6 +358,79 @@ Login page with remember me and helper links.
 - CSRF token support
 - Responsive padding adjustments
 
+### 5. JEM (Joomla Event Manager) Components
+
+Five comprehensive component view overrides for JEM event management.
+
+#### com_jem
+**Location**: `src/html/com_jem/`
+
+Mobile-responsive views for JEM event listings, details, calendar, venues, and categories.
+
+##### eventslist
+Event listing with card-based layout.
+
+**Features**:
+- Event cards with date, time, and venue
+- Category badges with color coding
+- Responsive event grid layout
+- Event description excerpts
+- Read more buttons with clear calls-to-action
+- Pagination support
+- Empty state messaging
+
+##### event
+Single event details view with comprehensive information.
+
+**Features**:
+- Large event image display (responsive)
+- Date and time with structured data
+- Venue information with maps link
+- Event description with full content
+- Category display with badges
+- Registration information (if enabled)
+- Contact information display
+- Back to events navigation
+- Meta information with icons
+
+##### calendar
+Monthly calendar view with event indicators.
+
+**Features**:
+- Month navigation (previous/next)
+- Calendar grid with weekday headers
+- Event indicators on dates with events
+- Responsive calendar layout
+- Today highlighting
+- Event list for selected month
+- Event count per day display
+- Touch-friendly navigation buttons
+
+##### venue
+Venue details with location and upcoming events.
+
+**Features**:
+- Venue image display
+- Complete address information
+- Website link (external)
+- Google Maps integration
+- Venue description
+- Upcoming events at venue
+- Location coordinates display
+- Back navigation
+
+##### categories
+Event category listing with descriptions.
+
+**Features**:
+- Category cards with images
+- Category descriptions
+- Event count per category
+- View category buttons
+- Responsive grid layout
+- Empty state messaging
+- Pagination support
+
 ---
 
 ## CSS Architecture
@@ -430,6 +471,13 @@ All module styles are located in `src/media/css/template.css` with dedicated sec
    - Registration forms
    - Login pages
    - Tab interfaces
+
+6. **JEM COMPONENT STYLES** (Lines ~22000+)
+   - Event list cards
+   - Event details layout
+   - Calendar grid
+   - Venue information
+   - Category displays
 
 ### CSS Variables Integration
 
@@ -509,16 +557,16 @@ Each module can be customized in two ways:
 Edit `src/media/css/user.css` to add custom styles:
 
 ```css
-/* Example: Customize search button color */
-.mod-search__button {
-	background-color: #ff6600;
-}
-
 /* Example: Change product grid columns */
 @media (min-width: 768px) {
 	.mod-vm-product__grid {
 		grid-template-columns: repeat(3, 1fr);
 	}
+}
+
+/* Example: Customize cart button */
+.mod-vm-cart__checkout-button {
+	background-color: #28a745;
 }
 ```
 
@@ -528,10 +576,10 @@ Copy the entire module directory and modify:
 
 ```bash
 # Keep original override as reference
-cp -r src/templates/html/mod_search src/templates/html/mod_search_original
+cp -r src/html/mod_virtuemart_cart src/html/mod_virtuemart_cart_original
 
 # Modify your version
-# Edit src/templates/html/mod_search/default.php
+# Edit src/html/mod_virtuemart_cart/default.php
 ```
 
 ### CSS Variables Override
@@ -541,9 +589,9 @@ Override CSS variables in your custom color scheme:
 ```css
 /* src/media/css/colors/light/colors_custom.css */
 :root {
-	--mod-search-bg: #f8f9fa;
-	--mod-search-border: #dee2e6;
 	--vm-price-color: #28a745;
+	--vm-cart-bg: #f8f9fa;
+	--vm-button-primary: #007bff;
 }
 ```
 
@@ -604,16 +652,54 @@ Override CSS variables in your custom color scheme:
 
 ---
 
+## How to Activate Alternative Layouts
+
+All MokoCassiopeia overrides are **alternative layouts** that must be explicitly activated. They do not automatically replace default layouts.
+
+### Quick Start: Enable Mobile Layout
+
+1. **Go to Joomla Administrator** → Extensions → Modules
+2. **Open the module** you want to enhance (e.g., VirtueMart Cart)
+3. **Navigate to Advanced tab**
+4. **Find "Alternative Layout" field**
+5. **Select "MokoCassiopeia - mobile"** from dropdown
+6. **Save & Close**
+
+### For Menu Items (Component Views)
+
+1. **Go to Menus** → Select your menu
+2. **Open the menu item** (e.g., Events List)
+3. **Navigate to Advanced Options or Page Display tab**
+4. **Find "Alternative Layout" field**
+5. **Select "MokoCassiopeia - mobile"** from dropdown
+6. **Save & Close**
+
+### Apply to All Modules in a Position
+
+In your template's `index.php`, specify layout for entire module position:
+
+```php
+<jdoc:include type="modules" name="sidebar-left" style="none" layout="mobile" />
+```
+
+**📖 For complete documentation, see [OVERRIDE_PHILOSOPHY.md](OVERRIDE_PHILOSOPHY.md)**
+
+---
+
 ## Version History
 
 | Version  | Date       | Changes                                           |
 |----------|------------|--------------------------------------------------|
+| 03.08.04 | 2026-02-27 | Added alternative layout activation instructions, JEM overrides |
+| 03.08.03 | 2026-02-25 | Removed mod_search override per Cassiopeia philosophy |
+| 03.08.00 | 2026-02-22 | Added Community Builder component overrides       |
 | 03.07.00 | 2026-02-22 | Initial release of all mobile-responsive overrides |
 
 ---
 
 ## Additional Resources
 
+- **Override Philosophy**: [OVERRIDE_PHILOSOPHY.md](OVERRIDE_PHILOSOPHY.md) ⭐ **Start here**
 - **Main README**: [README.md](../README.md)
 - **Changelog**: [CHANGELOG.md](../CHANGELOG.md)
 - **CSS Variables**: [CSS_VARIABLES.md](CSS_VARIABLES.md)

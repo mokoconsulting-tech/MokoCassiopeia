@@ -45,14 +45,26 @@ This directory contains comprehensive documentation for the MokoCassiopeia Jooml
 * **[Workflow Guide](WORKFLOW_GUIDE.md)** - Complete workflow reference
   * Git branching strategy
   * Development workflow
-  * Release process
   * Pull request guidelines
+
+* **[Release Process](RELEASE_PROCESS.md)** ⭐ - Complete release documentation
+  * Automated release workflow with GitHub Actions
+  * Manual release procedures
+  * Update server configuration
+  * Testing and rollback procedures
+  * Build scripts and tools
 
 * **[Joomla Development Guide](JOOMLA_DEVELOPMENT.md)** - Joomla-specific development
   * Testing with Codeception
   * PHP quality checks (PHPStan, PHPCS)
   * Joomla extension packaging
   * Multi-version testing
+
+* **[Manual Deployment Guide](MANUAL_DEPLOYMENT.md)** - Deploy src directory without building
+  * Understanding src vs. installed structure
+  * Manual deployment methods (copy, symlink)
+  * Troubleshooting language files and media
+  * Best practices for development deployments
 
 * **[CSS Variables Reference](CSS_VARIABLES.md)** - Complete CSS customization guide
   * All available CSS variables
@@ -61,10 +73,16 @@ This directory contains comprehensive documentation for the MokoCassiopeia Jooml
   * Light and dark mode theming
 
 * **[Module & Component Overrides](MODULE_OVERRIDES.md)** - Mobile-responsive overrides guide
-  * 20 module overrides + 3 component overrides
-  * VirtueMart, Joomla core, Community Builder, industry extensions
+  * 16 module overrides + 12 component overrides
+  * VirtueMart, Community Builder, JEM, Kunena, industry extensions
   * Mobile-first responsive design patterns
   * Accessibility features and customization
+
+* **[Override Philosophy](OVERRIDE_PHILOSOPHY.md)** ⭐ - Alternative layouts, not replacements
+  * Why overrides use `mobile.php` naming instead of `default.php`
+  * How to activate alternative layouts in Joomla
+  * Benefits of non-replacing overrides
+  * Developer guidelines and best practices
 
 * **[Roadmap](ROADMAP.md)** - Version-specific roadmap
   * Current features (v03.07.00)
@@ -103,18 +121,33 @@ moko-cassiopeia/
 │   ├── CSS_VARIABLES.md    # CSS variables reference
 │   ├── MODULE_OVERRIDES.md # Module & component overrides guide
 │   └── ROADMAP.md          # Version-specific roadmap
-├── src/                     # Template source code
-│   ├── templates/          # Joomla template files
-│   │   └── html/           # Module & component overrides (20 modules, 3 components)
-│   ├── media/              # Assets (CSS, JS, images)
-│   │   └── css/colors/     # Color schemes (light/dark subdirectories)
-│   │       ├── light/      # Light mode color files (colors_custom.css)
-│   │       └── dark/       # Dark mode color files (colors_custom.css)
-│   └── language/           # Translation files
+├── src/                     # Template source code (Joomla template root)
+│   ├── component.php       # Component template
+│   ├── index.php           # Main template file
+│   ├── offline.php         # Offline template
+│   ├── error.php           # Error page template
+│   ├── templateDetails.xml # Template manifest
+│   ├── html/               # Module & component overrides (16 modules, 12 components)
+│   ├── media/              # Assets (CSS, JS, images, fonts)
+│   │   ├── css/            # Stylesheets
+│   │   │   └── colors/     # Color schemes
+│   │   │       ├── light/  # Light mode color files (colors_standard.css, colors_custom.css)
+│   │   │       └── dark/   # Dark mode color files (colors_standard.css, colors_custom.css)
+│   │   ├── js/             # JavaScript files
+│   │   ├── images/         # Image assets
+│   │   └── fonts/          # Font files
+│   ├── language/           # Frontend language files
+│   │   ├── en-GB/         # English (UK) translations
+│   │   └── en-US/         # English (US) translations
+│   └── administrator/      # Backend files
+│       └── language/       # Backend language files
+│           ├── en-GB/     # English (UK) system translations
+│           └── en-US/     # English (US) system translations
 ├── templates/               # Template files for customization
 │   ├── colors_custom.css       # Custom color palette template (copy to src/media/css/colors/)
 │   ├── CLIENT_FORK_README_TEMPLATE.md # Template for client fork docs
 │   └── README.md               # Guide to using templates
+├── scripts/                 # Build and utility scripts
 ├── tests/                   # Automated tests
 ├── CLIENT_FORK_README.md    # Client fork guide
 └── .github/                # GitHub configuration and workflows
