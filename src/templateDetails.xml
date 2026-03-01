@@ -91,7 +91,7 @@
 		<language tag="en-US">language/en-US/tpl_mokocassiopeia.ini</language>
 	</languages>
 
-	<languages folder="administrator/language">
+	<languages folder="administrator">
 		<language tag="en-GB">administrator/language/en-GB/tpl_mokocassiopeia.sys.ini</language>
 		<language tag="en-US">administrator/language/en-US/tpl_mokocassiopeia.sys.ini</language>
 	</languages>
