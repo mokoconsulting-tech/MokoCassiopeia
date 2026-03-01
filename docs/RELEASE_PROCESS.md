@@ -127,7 +127,7 @@ git pull
 git checkout -b release/03.08.04
 
 # Update version in templateDetails.xml
-# Edit: src/templates/templateDetails.xml
+# Edit: src/templateDetails.xml
 # Change: <version>03.08.03</version>
 # To:     <version>03.08.04</version>
 
@@ -145,7 +145,7 @@ git checkout -b release/03.08.04
 - Change descriptions
 
 # Commit changes
-git add src/templates/templateDetails.xml CHANGELOG.md
+git add src/templateDetails.xml CHANGELOG.md
 git commit -m "chore: Prepare release 03.08.04"
 git push origin release/03.08.04
 ```
@@ -223,11 +223,11 @@ git push origin 03.08.04
 
 ```bash
 # Update version numbers
-# Edit: src/templates/templateDetails.xml
+# Edit: src/templateDetails.xml
 # Edit: CHANGELOG.md
 
 # Commit changes
-git add src/templates/templateDetails.xml CHANGELOG.md
+git add src/templateDetails.xml CHANGELOG.md
 git commit -m "chore: Prepare release 03.08.04"
 git push
 ```
@@ -337,7 +337,7 @@ The `updates.xml` file is hosted directly on GitHub:
 
 **URL**: `https://raw.githubusercontent.com/mokoconsulting-tech/MokoCassiopeia/main/updates.xml`
 
-This URL is configured in `src/templates/templateDetails.xml`:
+This URL is configured in `src/templateDetails.xml`:
 
 ```xml
 <updateservers>
@@ -467,7 +467,7 @@ For users who installed the problematic version:
 
 **Problem**: ZIP creation fails
 
-**Solution**: Check that `src/templates/` and `src/media/` directories exist and contain files.
+**Solution**: Check that `src/` and `src/media/` directories exist and contain files.
 
 **Problem**: Version update fails
 

@@ -98,10 +98,10 @@ jobs:
         run: |
           mkdir -p build/package
           
-          # Copy template files from src/templates
-          rsync -av src/templates/ build/package/
+          # Copy template files from src (excluding media directory)
+          rsync -av --exclude='media' src/ build/package/
           
-          # Copy media files from src/media to media directory
+          # Copy media files from src/media to package/media directory
           mkdir -p build/package/media
           rsync -av src/media/ build/package/media/
 

@@ -69,10 +69,10 @@ All module overrides share these characteristics:
 
 Five comprehensive overrides for VirtueMart shopping functionality.
 
-**Master Documentation**: [VIRTUEMART_MODULES_README.md](../src/templates/html/VIRTUEMART_MODULES_README.md)
+**Master Documentation**: [VIRTUEMART_MODULES_README.md](../src/html/VIRTUEMART_MODULES_README.md)
 
 #### mod_virtuemart_cart
-**Location**: `src/templates/html/mod_virtuemart_cart/`
+**Location**: `src/html/mod_virtuemart_cart/`
 
 Shopping cart display with product list and checkout button.
 
@@ -83,7 +83,7 @@ Shopping cart display with product list and checkout button.
 - Checkout button with prominent styling
 
 #### mod_virtuemart_product
-**Location**: `src/templates/html/mod_virtuemart_product/`
+**Location**: `src/html/mod_virtuemart_product/`
 
 Product showcase with grid layouts.
 
@@ -94,7 +94,7 @@ Product showcase with grid layouts.
 - Rating display support
 
 #### mod_virtuemart_currencies
-**Location**: `src/templates/html/mod_virtuemart_currencies/`
+**Location**: `src/html/mod_virtuemart_currencies/`
 
 Currency selector dropdown for multi-currency stores.
 
@@ -104,7 +104,7 @@ Currency selector dropdown for multi-currency stores.
 - Responsive button styling
 
 #### mod_virtuemart_category
-**Location**: `src/templates/html/mod_virtuemart_category/`
+**Location**: `src/html/mod_virtuemart_category/`
 
 Category navigation with hierarchical display.
 
@@ -115,7 +115,7 @@ Category navigation with hierarchical display.
 - Active category highlighting
 
 #### mod_virtuemart_manufacturer
-**Location**: `src/templates/html/mod_virtuemart_manufacturer/`
+**Location**: `src/html/mod_virtuemart_manufacturer/`
 
 Manufacturer/brand display with grid layout.
 
@@ -131,7 +131,7 @@ Manufacturer/brand display with grid layout.
 Three essential Community Builder and navigation module overrides.
 
 #### mod_menu (Main Menu)
-**Location**: `src/templates/html/mod_menu/`
+**Location**: `src/html/mod_menu/`
 
 Bootstrap 5 responsive navigation menu with collapsible dropdown functionality.
 
@@ -156,7 +156,7 @@ Bootstrap 5 responsive navigation menu with collapsible dropdown functionality.
 **Note**: Unlike the broken mod_menu override removed in v03.08.01, this v03.08.03 version is properly structured based on Joomla core layouts and Bootstrap 5, ensuring language strings load correctly and menu functionality works as expected.
 
 #### mod_cblogin
-**Location**: `src/templates/html/mod_cblogin/`
+**Location**: `src/html/mod_cblogin/`
 
 Community Builder login with avatar display.
 
@@ -167,7 +167,7 @@ Community Builder login with avatar display.
 - Logout button
 
 #### mod_comprofilerOnline
-**Location**: `src/templates/html/mod_comprofilerOnline/`
+**Location**: `src/html/mod_comprofilerOnline/`
 
 Community Builder online users display.
 
@@ -186,7 +186,7 @@ Eight popular third-party extension module overrides plus component views.
 #### K2 Content Extension
 
 ##### mod_k2_content
-**Location**: `src/templates/html/mod_k2_content/`
+**Location**: `src/html/mod_k2_content/`
 
 K2 content display with advanced layouts.
 
@@ -200,7 +200,7 @@ K2 content display with advanced layouts.
 #### AcyMailing Newsletter
 
 ##### mod_acymailing
-**Location**: `src/templates/html/mod_acymailing/`
+**Location**: `src/html/mod_acymailing/`
 
 Newsletter subscription form.
 
@@ -213,7 +213,7 @@ Newsletter subscription form.
 #### HikaShop E-Commerce
 
 ##### mod_hikashop_cart
-**Location**: `src/templates/html/mod_hikashop_cart/`
+**Location**: `src/html/mod_hikashop_cart/`
 
 HikaShop shopping cart module.
 
@@ -228,7 +228,7 @@ HikaShop shopping cart module.
 Four comprehensive forum modules plus component view.
 
 ##### mod_kunenalatest
-**Location**: `src/templates/html/mod_kunenalatest/`
+**Location**: `src/html/mod_kunenalatest/`
 
 Latest forum posts display.
 
@@ -239,7 +239,7 @@ Latest forum posts display.
 - Post date
 
 ##### mod_kunenalogin
-**Location**: `src/templates/html/mod_kunenalogin/`
+**Location**: `src/html/mod_kunenalogin/`
 
 Forum-specific login module.
 
@@ -250,7 +250,7 @@ Forum-specific login module.
 - Profile link
 
 ##### mod_kunenasearch
-**Location**: `src/templates/html/mod_kunenasearch/`
+**Location**: `src/html/mod_kunenasearch/`
 
 Forum search with button positions.
 
@@ -261,7 +261,7 @@ Forum search with button positions.
 - 48px touch targets
 
 ##### mod_kunenastats
-**Location**: `src/templates/html/mod_kunenastats/`
+**Location**: `src/html/mod_kunenastats/`
 
 Forum statistics display.
 
@@ -273,7 +273,7 @@ Forum statistics display.
 - Responsive grid layout
 
 ##### com_kunena (Component)
-**Location**: `src/templates/html/com_kunena/`
+**Location**: `src/html/com_kunena/`
 
 Forum category list view.
 
@@ -285,7 +285,7 @@ Forum category list view.
 Module and component overrides for membership management.
 
 ##### mod_osmembership
-**Location**: `src/templates/html/mod_osmembership/`
+**Location**: `src/html/mod_osmembership/`
 
 Membership plans module.
 
@@ -296,7 +296,7 @@ Membership plans module.
 - Badge displays (popular, featured)
 
 ##### com_osmembership (Component)
-**Location**: `src/templates/html/com_osmembership/`
+**Location**: `src/html/com_osmembership/`
 
 Membership pricing tables.
 
@@ -310,7 +310,7 @@ Membership pricing tables.
 Four comprehensive component view overrides for Community Builder user management.
 
 #### com_comprofiler
-**Location**: `src/templates/html/com_comprofiler/`
+**Location**: `src/html/com_comprofiler/`
 
 Mobile-responsive views for Community Builder user profiles, registration, and login.
 
@@ -363,7 +363,7 @@ Login page with remember me and helper links.
 Five comprehensive component view overrides for JEM event management.
 
 #### com_jem
-**Location**: `src/templates/html/com_jem/`
+**Location**: `src/html/com_jem/`
 
 Mobile-responsive views for JEM event listings, details, calendar, venues, and categories.
 
@@ -576,10 +576,10 @@ Copy the entire module directory and modify:
 
 ```bash
 # Keep original override as reference
-cp -r src/templates/html/mod_virtuemart_cart src/templates/html/mod_virtuemart_cart_original
+cp -r src/html/mod_virtuemart_cart src/html/mod_virtuemart_cart_original
 
 # Modify your version
-# Edit src/templates/html/mod_virtuemart_cart/default.php
+# Edit src/html/mod_virtuemart_cart/default.php
 ```
 
 ### CSS Variables Override

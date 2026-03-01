@@ -241,7 +241,7 @@ git fetch origin
 git checkout dev/X.Y.Z
 
 # 3. Make your changes
-vim src/templates/index.php
+vim src/index.php
 
 # 4. Validate locally
 make validate-required
@@ -293,7 +293,7 @@ Update CHANGELOG.md manually or via pull request following the existing format.
 
 ```bash
 # Check specific file
-php -l src/templates/index.php
+php -l src/index.php
 
 # Run validation
 make validate-required

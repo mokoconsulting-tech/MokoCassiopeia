@@ -50,7 +50,7 @@ make validate
 
 ```bash
 # 1. Make your changes
-vim src/templates/index.php
+vim src/index.php
 
 # 2. Validate locally
 make validate-required
@@ -143,13 +143,20 @@ make all               # Complete build pipeline
 
 ```
 moko-cassiopeia/
-├── src/                      # Joomla template source
-│   ├── templates/            # Template files
-│   ├── media/                # Assets (CSS, JS, images)
-│   ├── language/             # Language files
-│   └── administrator/        # Admin files
+├── src/                      # Joomla template source (template root)
+│   ├── component.php         # Component template file
+│   ├── index.php             # Main template file
+│   ├── offline.php           # Offline page template
+│   ├── error.php             # Error page template
+│   ├── templateDetails.xml   # Template manifest
+│   ├── html/                 # Module & component overrides
+│   ├── media/                # Assets (CSS, JS, images, fonts)
+│   ├── language/             # Frontend language files (en-GB, en-US)
+│   └── administrator/        # Backend files
+│       └── language/         # Backend language files
 ├── tests/                    # Test suites
 ├── docs/                     # Documentation
+├── scripts/                  # Build scripts
 ├── .github/workflows/        # CI/CD workflows
 ├── Makefile                  # Make commands
 └── README.md                 # Project overview
@@ -179,7 +186,7 @@ moko-cassiopeia/
 3. **Make changes and test**:
    ```bash
    # Edit files
-   vim src/templates/index.php
+   vim src/index.php
    
    # Validate
    make validate-required

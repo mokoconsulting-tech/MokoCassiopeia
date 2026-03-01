@@ -52,10 +52,10 @@ All MokoCassiopeia overrides use **`mobile.php`** naming instead of **`default.p
 
 ```
 ❌ BAD (Replaces default):
-src/templates/html/mod_virtuemart_cart/default.php
+src/html/mod_virtuemart_cart/default.php
 
 ✅ GOOD (Alternative layout):
-src/templates/html/mod_virtuemart_cart/mobile.php
+src/html/mod_virtuemart_cart/mobile.php
 ```
 
 ### How Joomla Handles Layouts
@@ -105,11 +105,11 @@ Create a custom module chrome in `templates/mokocassiopeia/html/layouts/chromes/
 **The only exception** to this philosophy is `mod_menu` with the "Main Menu" module type.
 
 The template includes files like:
-- `src/templates/html/mod_menu/mainmenu.php`
-- `src/templates/html/mod_menu/mainmenu_component.php`
-- `src/templates/html/mod_menu/mainmenu_heading.php`
-- `src/templates/html/mod_menu/mainmenu_url.php`
-- `src/templates/html/mod_menu/mainmenu_separator.php`
+- `src/html/mod_menu/mainmenu.php`
+- `src/html/mod_menu/mainmenu_component.php`
+- `src/html/mod_menu/mainmenu_heading.php`
+- `src/html/mod_menu/mainmenu_url.php`
+- `src/html/mod_menu/mainmenu_separator.php`
 
 These use a **custom layout name** (`mainmenu`) instead of replacing `default.php`, which allows the site to:
 - Use the enhanced Bootstrap 5 collapsible menu for main navigation

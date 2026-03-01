@@ -115,18 +115,33 @@ moko-cassiopeia/
 │   ├── CSS_VARIABLES.md    # CSS variables reference
 │   ├── MODULE_OVERRIDES.md # Module & component overrides guide
 │   └── ROADMAP.md          # Version-specific roadmap
-├── src/                     # Template source code
-│   ├── templates/          # Joomla template files
-│   │   └── html/           # Module & component overrides (20 modules, 3 components)
-│   ├── media/              # Assets (CSS, JS, images)
-│   │   └── css/colors/     # Color schemes (light/dark subdirectories)
-│   │       ├── light/      # Light mode color files (colors_custom.css)
-│   │       └── dark/       # Dark mode color files (colors_custom.css)
-│   └── language/           # Translation files
+├── src/                     # Template source code (Joomla template root)
+│   ├── component.php       # Component template
+│   ├── index.php           # Main template file
+│   ├── offline.php         # Offline template
+│   ├── error.php           # Error page template
+│   ├── templateDetails.xml # Template manifest
+│   ├── html/               # Module & component overrides (16 modules, 12 components)
+│   ├── media/              # Assets (CSS, JS, images, fonts)
+│   │   ├── css/            # Stylesheets
+│   │   │   └── colors/     # Color schemes
+│   │   │       ├── light/  # Light mode color files (colors_standard.css, colors_custom.css)
+│   │   │       └── dark/   # Dark mode color files (colors_standard.css, colors_custom.css)
+│   │   ├── js/             # JavaScript files
+│   │   ├── images/         # Image assets
+│   │   └── fonts/          # Font files
+│   ├── language/           # Frontend language files
+│   │   ├── en-GB/         # English (UK) translations
+│   │   └── en-US/         # English (US) translations
+│   └── administrator/      # Backend files
+│       └── language/       # Backend language files
+│           ├── en-GB/     # English (UK) system translations
+│           └── en-US/     # English (US) system translations
 ├── templates/               # Template files for customization
 │   ├── colors_custom.css       # Custom color palette template (copy to src/media/css/colors/)
 │   ├── CLIENT_FORK_README_TEMPLATE.md # Template for client fork docs
 │   └── README.md               # Guide to using templates
+├── scripts/                 # Build and utility scripts
 ├── tests/                   # Automated tests
 ├── CLIENT_FORK_README.md    # Client fork guide
 └── .github/                # GitHub configuration and workflows

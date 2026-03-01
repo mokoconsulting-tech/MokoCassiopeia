@@ -44,8 +44,8 @@ log_error() {
 # Check if version is provided
 if [ -z "$1" ]; then
     # Try to extract version from templateDetails.xml
-    if [ -f "${PROJECT_ROOT}/src/templates/templateDetails.xml" ]; then
-        VERSION=$(grep -oP '<version>\K[^<]+' "${PROJECT_ROOT}/src/templates/templateDetails.xml" | head -1)
+    if [ -f "${PROJECT_ROOT}/src/templateDetails.xml" ]; then
+        VERSION=$(grep -oP '<version>\K[^<]+' "${PROJECT_ROOT}/src/templateDetails.xml" | head -1)
         log_info "Detected version: ${VERSION}"
     else
         log_error "Please provide version as argument: ./build-release.sh 03.08.03"
@@ -69,11 +69,11 @@ mkdir -p "${PACKAGE_DIR}"
 
 log_info "Creating package structure..."
 
-# Copy template files from src/templates
-if [ -d "src/templates" ]; then
-    rsync -av --exclude='.git*' src/templates/ "${PACKAGE_DIR}/"
+# Copy template files from src (excluding media directory)
+if [ -d "src" ]; then
+    rsync -av --exclude='.git*' --exclude='media' src/ "${PACKAGE_DIR}/"
 else
-    log_error "src/templates directory not found!"
+    log_error "src directory not found!"
     exit 1
 fi
 
