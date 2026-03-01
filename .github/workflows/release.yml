@@ -86,12 +86,12 @@ jobs:
         run: |
           VERSION="${{ steps.version.outputs.version }}"
           # Update version in templateDetails.xml
-          sed -i "s/<version>.*<\/version>/<version>${VERSION}<\/version>/g" src/templates/templateDetails.xml
+          sed -i "s/<version>.*<\/version>/<version>${VERSION}<\/version>/g" src/templateDetails.xml
           # Update version in updates.xml
           sed -i "s/<version>.*<\/version>/<version>${VERSION}<\/version>/g" updates.xml
           # Update creation date to today
           DATE=$(date +%Y-%m-%d)
-          sed -i "s/<creationDate>.*<\/creationDate>/<creationDate>${DATE}<\/creationDate>/g" src/templates/templateDetails.xml
+          sed -i "s/<creationDate>.*<\/creationDate>/<creationDate>${DATE}<\/creationDate>/g" src/templateDetails.xml
           sed -i "s/<creationDate>.*<\/creationDate>/<creationDate>${DATE}<\/creationDate>/g" updates.xml
 
       - name: Create package structure

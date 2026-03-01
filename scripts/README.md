@@ -19,7 +19,7 @@ This directory contains utility scripts for building, releasing, and managing th
 
 **What it does**:
 1. Creates a `build/` directory
-2. Copies template files from `src/templates/`
+2. Copies template files from `src/`
 3. Copies media files from `src/media/` to `media/`
 4. Creates a ZIP package: `mokocassiopeia-src-{version}.zip`
 5. Generates SHA-256 and MD5 checksums
@@ -116,7 +116,7 @@ git push origin 03.08.04
 1. **Update version numbers**:
    ```bash
    # Update these files manually:
-   # - src/templates/templateDetails.xml
+   # - src/templateDetails.xml
    # - updates.xml
    # - CHANGELOG.md
    ```
@@ -148,7 +148,7 @@ git push origin 03.08.04
 1. **Update version numbers**:
    ```bash
    # Update these files in a branch:
-   # - src/templates/templateDetails.xml
+   # - src/templateDetails.xml
    # - CHANGELOG.md
    
    git checkout -b release/03.08.04
@@ -199,7 +199,7 @@ git push origin 03.08.04
 
 - [ ] All code changes merged to main
 - [ ] Version numbers updated:
-  - [ ] `src/templates/templateDetails.xml`
+  - [ ] `src/templateDetails.xml`
   - [ ] `CHANGELOG.md`
 - [ ] CHANGELOG.md updated with release notes
 - [ ] Tests passing
@@ -237,7 +237,7 @@ brew install zip
 Check:
 1. Tag format matches pattern: `[0-9][0-9].[0-9][0-9].[0-9][0-9]`
 2. Repository has write permissions for GITHUB_TOKEN
-3. `src/templates/` and `src/media/` directories exist
+3. `src/` and `src/media/` directories exist
 
 **Problem**: auto-update-sha fails
 
