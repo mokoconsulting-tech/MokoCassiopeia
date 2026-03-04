@@ -1,0 +1,106 @@
+# MokoCassiopeia Client Fork .gitignore Template
+# This file is copied to client forks to ensure custom color files are tracked
+
+# DO NOT ignore custom color files in client forks
+# These files should be tracked to preserve client-specific branding
+# 
+# The files below are intentionally NOT ignored:
+# src/media/css/colors/light/colors_custom.css
+# src/media/css/colors/dark/colors_custom.css
+
+# ============================================================
+# Environment and secrets
+# ============================================================
+.env
+.env.local
+.env.*.local
+*.local.php
+*.secret.php
+configuration.php
+configuration.*.php
+configuration.local.php
+conf/conf.php
+conf/conf*.php
+secrets/
+*.secrets.*
+
+# ============================================================
+# Logs, dumps and databases
+# ============================================================
+*.db
+*.db-journal
+*.dump
+*.log
+*.pid
+*.seed
+*.sql
+*.sql.gz
+*.sqlite
+*.sqlite3
+
+# ============================================================
+# OS / Editor / IDE cruft
+# ============================================================
+.DS_Store
+Thumbs.db
+desktop.ini
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+$RECYCLE.BIN/
+System Volume Information/
+*.lnk
+Icon?
+.idea/
+.settings/
+.vscode/*
+!.vscode/tasks.json
+!.vscode/settings.json.example
+!.vscode/extensions.json
+*.code-workspace
+
+# ============================================================
+# Package manager and dependencies
+# ============================================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+*.tgz
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+vendor/
+
+# ============================================================
+# Build artifacts and temporary files
+# ============================================================
+dist/
+build/
+.cache/
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+.#*
+\#*#
+
+# ============================================================
+# Test and coverage
+# ============================================================
+tests/_output/
+coverage/
+.nyc_output/
+phpunit.xml
+.phpunit.result.cache
+
+# ============================================================
+# Joomla specific
+# ============================================================
+administrator/cache/
+cache/
+tmp/
+logs/

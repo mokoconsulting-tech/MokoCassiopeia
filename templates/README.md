@@ -7,7 +7,7 @@
 
 # MokoCassiopeia Template Files
 
-This directory contains template files for client customizations and custom code forks.
+This directory contains template files for client color customizations.
 
 ---
 
@@ -31,19 +31,15 @@ A comprehensive template for creating custom color schemes. This template includ
 
 ---
 
-### Client Fork README Template
+### Client Fork .gitignore Template
 
-**File**: `CLIENT_FORK_README_TEMPLATE.md`
+**File**: `gitignore-template`
 
-A simplified README template for client-specific forks. Use this as a starting point for documenting your customizations.
+A .gitignore template for client forks that ensures custom color files are tracked in the fork repository while maintaining proper ignore rules for other files.
 
 **Usage**:
-1. Copy this file to the root of your fork repository as `README.md`
-2. Replace `[CLIENT NAME]` with your client's name
-3. Fill in brand colors and contact information
-4. Add client-specific notes and configurations
-
-**For Comprehensive Fork Setup**: See [CLIENT_FORK_README.md](../CLIENT_FORK_README.md) for the complete client fork guide.
+- Automatically applied when using the client fork creation workflow
+- Can be manually copied to `.gitignore` in client fork repositories
 
 ---
 
@@ -53,9 +49,9 @@ A simplified README template for client-specific forks. Use this as a starting p
 
 If you're creating a custom fork of MokoCassiopeia for a specific client:
 
-1. **Start with the full guide**: Read [CLIENT_FORK_README.md](../CLIENT_FORK_README.md)
+1. **Use the automated workflow**: See [CLIENT_FORK_WORKFLOW.md](../docs/CLIENT_FORK_WORKFLOW.md)
 2. **Set up custom colors**: Use `colors_custom.css` as your starting point
-3. **Document your fork**: Copy `CLIENT_FORK_README_TEMPLATE.md` to your fork
+3. **Test thoroughly**: Verify colors in both light and dark modes
 
 ### Custom Colors Only
 
@@ -70,12 +66,13 @@ If you just need custom colors without forking:
 ## 📚 Additional Resources
 
 - **[Main README](../README.md)** - MokoCassiopeia features and installation
-- **[Client Fork Guide](../CLIENT_FORK_README.md)** - Complete guide for client forks
+- **[Client Fork Workflow](../docs/CLIENT_FORK_WORKFLOW.md)** - Automated fork setup guide
 - **[CSS Variables Reference](../docs/CSS_VARIABLES.md)** - All available CSS variables
 - **[Development Guide](../docs/JOOMLA_DEVELOPMENT.md)** - Development workflows
 
 ---
 
 **Template Directory**: `/templates/`  
-**Version**: 03.06.03  
+**Version**: 03.08.04  
+**Scope**: Colors only  
 **Maintained by**: Moko Consulting

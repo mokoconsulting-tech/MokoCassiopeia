@@ -2,26 +2,25 @@
 
  SPDX-License-Identifier: GPL-3.0-or-later
 
- BRIEF: Documentation for client fork creation workflow
+ BRIEF: Documentation for client fork creation workflow (colors only)
  -->
 
-# Client Fork Creation Workflow
+# Client Fork Creation Workflow (Colors Only)
 
-This document explains how to use the automated client fork creation tools to set up a new client-specific fork of MokoCassiopeia.
+This document explains how to use the automated client fork creation tools to set up a new client-specific fork of MokoCassiopeia for custom color branding.
 
 ---
 
 ## Overview
 
-The client fork creation workflow automates the process of preparing a repository for a client-specific fork. It performs the following actions:
+The client fork creation workflow automates the process of preparing a repository for a client-specific color fork. It performs the following actions:
 
 1. ✅ Copies `templates/colors_custom.css` to `src/media/css/colors/light/colors_custom.css`
 2. ✅ Copies `templates/colors_custom.css` to `src/media/css/colors/dark/colors_custom.css`
-3. ✅ Replaces `README.md` with customized `CLIENT_FORK_README.md`
-4. ✅ Removes `CLIENT_FORK_README.md` from root
-5. ✅ Removes `templates/CLIENT_FORK_README_TEMPLATE.md`
-6. ✅ Updates `templates/README.md` to remove fork template references
-7. ✅ Keeps `templates/colors_custom.css` as a template for reference
+3. ✅ Applies client fork `.gitignore` template that tracks custom color files
+4. ✅ Keeps `templates/colors_custom.css` as a reference template
+
+**Scope**: Client forks are limited to custom color branding only. All other customizations should be made through Joomla's template settings.
 
 ---
 
@@ -39,7 +38,7 @@ The client fork creation workflow automates the process of preparing a repositor
    - Click on the "Actions" tab
 
 2. **Run the Workflow**
-   - Select "Create Client Fork" from the workflow list
+   - Select "Create Client Fork (Colors Only)" from the workflow list
    - Click "Run workflow"
    - Fill in the required inputs:
      - **Client Name**: Full client name (e.g., "Acme Corporation")
@@ -54,8 +53,8 @@ The client fork creation workflow automates the process of preparing a repositor
 4. **Review the Branch**
    - Navigate to the new branch: `client-fork/{client-slug}`
    - Review the changes made
-   - The README will be customized with the client name
-   - Custom color files will be in place
+   - Custom color files will be in place and tracked
+   - Upstream README and documentation remain unchanged
 
 5. **Create Client Repository**
    - Create a new repository for the client
@@ -69,8 +68,8 @@ The client fork creation workflow automates the process of preparing a repositor
 
 - ✅ **Safe Confirmation**: Requires typing "CONFIRM" to prevent accidental runs
 - ✅ **Automated Branch Creation**: Creates a properly named branch automatically
-- ✅ **Customized README**: Automatically fills in client name and date
-- ✅ **Git Tracking**: Commits all changes with a descriptive message
+- ✅ **Color File Setup**: Copies color templates to both light and dark directories
+- ✅ **Git Tracking**: Custom colors tracked via client fork .gitignore
 - ✅ **Summary Report**: Provides a complete summary of actions taken
 
 ---
@@ -137,28 +136,22 @@ The client fork creation workflow automates the process of preparing a repositor
 ### Files Created
 
 ```
-src/media/css/colors/light/colors_custom.css   [NEW]
-src/media/css/colors/dark/colors_custom.css    [NEW]
+src/media/css/colors/light/colors_custom.css   [NEW - TRACKED]
+src/media/css/colors/dark/colors_custom.css    [NEW - TRACKED]
 ```
 
 ### Files Modified
 
 ```
-README.md                                        [REPLACED]
-templates/README.md                              [UPDATED]
+.gitignore                                       [REPLACED with client fork template]
 ```
 
-### Files Removed
+### Files Kept Unchanged
 
 ```
-CLIENT_FORK_README.md                            [DELETED]
-templates/CLIENT_FORK_README_TEMPLATE.md         [DELETED]
-```
-
-### Files Kept
-
-```
-templates/colors_custom.css                      [UNCHANGED]
+README.md                                        [UNCHANGED - upstream docs]
+templates/colors_custom.css                      [UNCHANGED - reference template]
+All other repository files                       [UNCHANGED]
 ```
 
 ---
@@ -172,26 +165,26 @@ After running the workflow or script, you should:
    - Edit `src/media/css/colors/dark/colors_custom.css`
    - Update CSS variables to match client branding
 
-2. **Update README**
-   - Fill in client-specific contact information
-   - Add custom notes or configurations
-   - Update fork URL references
-
-3. **Test Locally**
+2. **Test Locally**
    - Install the template in a local Joomla instance
    - Test light and dark modes
    - Verify custom colors appear correctly
+
+3. **Enable Custom Palette in Joomla**
+   - Log into Joomla admin
+   - Navigate to System → Site Templates → MokoCassiopeia
+   - Under Theme tab, set palette to "Custom"
+   - Save and test
 
 4. **Create Client Repository**
    - Create a new repository for the client
    - Push the prepared branch to the new repo
    - Set up appropriate access controls
 
-5. **Enable Custom Palette in Joomla**
-   - Log into Joomla admin
-   - Navigate to System → Site Templates → MokoCassiopeia
-   - Under Theme tab, set palette to "Custom"
-   - Save and test
+5. **Document Customizations**
+   - Add a note to the repository about custom colors
+   - Document the client's brand color palette
+   - Keep reference for future updates
 
 ---
 
@@ -203,7 +196,7 @@ After running the workflow or script, you should:
 
 **Solution**: Make sure you type "CONFIRM" (in all caps) in the confirmation field.
 
-### Script Says "CLIENT_FORK_README.md not found"
+### Script Says "colors_custom.css not found"
 
 **Problem**: Script can't find required files.
 
@@ -235,6 +228,16 @@ git branch -D client-fork/{client-slug}
 ./scripts/create-client-fork.sh "Client Name - Division"
 ```
 
+### How to Make Other Customizations
+
+**Problem**: Need more than just color customization.
+
+**Solution**: Use Joomla's built-in template customization options:
+- System → Site Templates → MokoCassiopeia → Custom Code tab
+- Add custom HTML/CSS/JS through the template settings
+- Use Joomla's module positions and layout options
+- For extensive customizations, consider a full template fork (not recommended)
+
 ---
 
 ## Examples
@@ -248,7 +251,8 @@ git branch -D client-fork/{client-slug}
 
 This creates:
 - Branch: `client-fork/acme-corporation`
-- README title: "Acme Corporation - MokoCassiopeia Custom Fork"
+- Custom colors tracked in the fork
+- Upstream README and docs preserved
 
 ### Example 2: Client with Multiple Words
 
@@ -259,18 +263,18 @@ This creates:
 
 This creates:
 - Branch: `client-fork/global-tech-solutions-inc`
-- README title: "Global Tech Solutions Inc - MokoCassiopeia Custom Fork"
+- Custom color files in `src/media/css/colors/`
 
 ### Example 3: Using GitHub Actions
 
-1. Go to Actions → Create Client Fork
+1. Go to Actions → Create Client Fork (Colors Only)
 2. Enter: "Mountain View Medical Center"
 3. Enter: "CONFIRM"
 4. Click "Run workflow"
 
 Result:
 - Branch: `client-fork/mountain-view-medical-center`
-- README title: "Mountain View Medical Center - MokoCassiopeia Custom Fork"
+- Color files ready for customization
 
 ---
 
@@ -283,26 +287,37 @@ Result:
    - Don't merge client fork branches back to main
 
 3. **Custom Colors**:
-   - Document color choices in README
+   - Document color choices in a README note or commit message
    - Keep a backup of custom color files
-   - Test in both light and dark modes
+   - Test in both light and dark modes before deployment
 
 4. **Version Tracking**:
-   - Note the upstream version in fork README
+   - Note the upstream version in your fork documentation
    - Track when you last synced with upstream
+   - Use semantic versioning for your fork releases
 
 5. **Security**:
    - Don't commit client-specific credentials
-   - Review custom code before deployment
    - Keep client forks private if they contain sensitive branding
+   - Regularly sync with upstream for security patches
+
+6. **Syncing with Upstream**:
+   - Periodically merge upstream updates to get bug fixes
+   - Test thoroughly after merging upstream changes
+   - Custom colors won't conflict with upstream updates
+
+7. **Limited Scope**:
+   - Forks are for colors only
+   - Use Joomla's template settings for other customizations
+   - Avoid modifying core template files
 
 ---
 
 ## Related Documentation
 
-- **[CLIENT_FORK_README.md](../CLIENT_FORK_README.md)** - Full client fork guide
-- **[CSS Variables](../docs/CSS_VARIABLES.md)** - Complete CSS variable reference
+- **[CSS Variables](../docs/CSS_VARIABLES.md)** - Complete CSS variable reference for color customization
 - **[Main README](../README.md)** - MokoCassiopeia documentation
+- **[Quick Start](../docs/QUICK_START.md)** - Installation and setup guide
 
 ---
 
@@ -315,6 +330,7 @@ For issues with the workflow or script:
 
 ---
 
-**Document Version**: 1.0  
-**Last Updated**: 2026-02-20  
+**Document Version**: 2.0  
+**Last Updated**: 2026-03-04  
+**Scope**: Colors only  
 **Maintained by**: Moko Consulting
