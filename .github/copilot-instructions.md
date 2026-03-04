@@ -326,11 +326,11 @@ cd scripts
 
 ## Client Forks
 
-For client-specific customizations:
-- Use `CLIENT_FORK_README.md` template
-- Follow fork workflow in `docs/CLIENT_FORK_WORKFLOW.md`
-- Keep custom color files in `media/.../css/colors/` (gitignored)
-- Document client-specific changes separately
+For client-specific color customizations:
+- Use automated workflow in `docs/CLIENT_FORK_WORKFLOW.md`
+- Custom color files tracked via client fork .gitignore template
+- Use Joomla's template settings for other customizations (Custom Code tab)
+- Limited scope: colors only
 
 ## License Compliance
 

@@ -102,12 +102,11 @@ For end-user documentation, installation instructions, and feature guides, see t
   * Complete setup automation in minutes
   * Post-setup customization guide
 
-* **[Client Fork Guide](../CLIENT_FORK_README.md)** - Comprehensive guide for client custom code forks
-  * Setting up custom branding and colors
-  * Maintaining fork-specific customizations
+* **[Client Fork Workflow Guide](./CLIENT_FORK_WORKFLOW.md)** - Automated setup for client color customizations
+  * Setting up custom brand colors for light and dark modes
+  * .gitignore template for tracking custom colors
   * Syncing with upstream MokoCassiopeia
-  * Deployment and development workflows
-  * Template README for client forks
+  * Limited scope: colors only (use Joomla's template settings for other customizations)
 
 ## Project Structure
 
@@ -120,6 +119,7 @@ moko-cassiopeia/
 │   ├── JOOMLA_DEVELOPMENT.md # Joomla-specific development guide
 │   ├── CSS_VARIABLES.md    # CSS variables reference
 │   ├── MODULE_OVERRIDES.md # Module & component overrides guide
+│   ├── CLIENT_FORK_WORKFLOW.md # Client fork creation workflow
 │   └── ROADMAP.md          # Version-specific roadmap
 ├── src/                     # Template source code (Joomla template root)
 │   ├── component.php       # Component template
@@ -131,8 +131,8 @@ moko-cassiopeia/
 │   ├── media/              # Assets (CSS, JS, images, fonts)
 │   │   ├── css/            # Stylesheets
 │   │   │   └── colors/     # Color schemes
-│   │   │       ├── light/  # Light mode color files (colors_standard.css, colors_custom.css)
-│   │   │       └── dark/   # Dark mode color files (colors_standard.css, colors_custom.css)
+│   │   │       ├── light/  # Light mode color files (colors_standard.css)
+│   │   │       └── dark/   # Dark mode color files (colors_standard.css)
 │   │   ├── js/             # JavaScript files
 │   │   ├── images/         # Image assets
 │   │   └── fonts/          # Font files
@@ -145,11 +145,10 @@ moko-cassiopeia/
 │           └── en-US/     # English (US) system translations
 ├── templates/               # Template files for customization
 │   ├── colors_custom.css       # Custom color palette template (copy to src/media/css/colors/)
-│   ├── CLIENT_FORK_README_TEMPLATE.md # Template for client fork docs
+│   ├── gitignore-template      # .gitignore template for client forks
 │   └── README.md               # Guide to using templates
 ├── scripts/                 # Build and utility scripts
 ├── tests/                   # Automated tests
-├── CLIENT_FORK_README.md    # Client fork guide
 └── .github/                # GitHub configuration and workflows
 ```
 

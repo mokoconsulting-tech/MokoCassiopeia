@@ -543,4 +543,4 @@ Must-read before contributing:
 - **CHANGELOG.md** - Version history and release notes
 - **GOVERNANCE.md** - Project governance model and decision-making
 - **CODE_OF_CONDUCT.md** - Community standards and expectations
-- **CLIENT_FORK_README.md** - Guide for client-specific customization forks
+- **CLIENT_FORK_WORKFLOW.md** - Automated setup for client color customizations
