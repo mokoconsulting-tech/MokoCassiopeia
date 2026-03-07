@@ -94,20 +94,6 @@ This directory contains comprehensive documentation for the MokoCassiopeia Jooml
 
 For end-user documentation, installation instructions, and feature guides, see the main [README.md](../README.md) in the repository root.
 
-### Client Fork Documentation
-
-* **[Client Fork Workflow](CLIENT_FORK_WORKFLOW.md)** - Automated client fork creation
-  * GitHub Actions workflow for instant fork setup
-  * Local bash script alternative
-  * Complete setup automation in minutes
-  * Post-setup customization guide
-
-* **[Client Fork Workflow Guide](./CLIENT_FORK_WORKFLOW.md)** - Automated setup for client color customizations
-  * Setting up custom brand colors for light and dark modes
-  * .gitignore template for tracking custom colors
-  * Syncing with upstream MokoCassiopeia
-  * Limited scope: colors only (use Joomla's template settings for other customizations)
-
 ## Project Structure
 
 ```
@@ -119,7 +105,6 @@ moko-cassiopeia/
 │   ├── JOOMLA_DEVELOPMENT.md # Joomla-specific development guide
 │   ├── CSS_VARIABLES.md    # CSS variables reference
 │   ├── MODULE_OVERRIDES.md # Module & component overrides guide
-│   ├── CLIENT_FORK_WORKFLOW.md # Client fork creation workflow
 │   └── ROADMAP.md          # Version-specific roadmap
 ├── src/                     # Template source code (Joomla template root)
 │   ├── component.php       # Component template
@@ -143,10 +128,8 @@ moko-cassiopeia/
 │       └── language/       # Backend language files
 │           ├── en-GB/     # English (UK) system translations
 │           └── en-US/     # English (US) system translations
-├── templates/               # Template files for customization
-│   ├── colors_custom.css       # Custom color palette template (copy to src/media/css/colors/)
-│   ├── gitignore-template      # .gitignore template for client forks
-│   └── README.md               # Guide to using templates
+├── templates/               # Reserved for future template files
+│   └── README.md               # Templates directory guide
 ├── scripts/                 # Build and utility scripts
 ├── tests/                   # Automated tests
 └── .github/                # GitHub configuration and workflows

@@ -37,19 +37,6 @@ This directory contains utility scripts for building, releasing, and managing th
 
 ---
 
-### create-client-fork.sh
-
-**Purpose**: Create a customized client fork of MokoCassiopeia.
-
-**Usage**:
-```bash
-./scripts/create-client-fork.sh
-```
-
-See the script documentation for details on creating client-specific forks.
-
----
-
 ## Automated Workflows
 
 The repository includes GitHub Actions workflows that automate the build and release process:
@@ -253,8 +240,7 @@ Check:
 ```
 scripts/
 ├── README.md              # This file
-├── build-release.sh       # Local build script
-└── create-client-fork.sh  # Client fork creation script
+└── build-release.sh       # Local build script
 
 .github/workflows/
 ├── release.yml            # Automated release workflow

@@ -328,16 +328,6 @@ See [Joomla Development Guide](./docs/JOOMLA_DEVELOPMENT.md) for packaging instr
 - **[CSS Variables Reference](./docs/CSS_VARIABLES.md)** - Complete CSS customization guide
 - **[Documentation Index](./docs/README.md)** - All documentation links
 
-### Customization Resources
-
-- **[Template Files](./templates/)** - Ready-to-use templates for customization
-  - `colors_custom.css` - Custom color palette template
-  - `gitignore-template` - .gitignore template for client forks
-
-### Client Forks
-
-- **[Client Fork Workflow Guide](./docs/CLIENT_FORK_WORKFLOW.md)** - Automated setup for client color customizations
-
 ### Governance
 
 - **[Contributing](./CONTRIBUTING.md)** - How to contribute
@@ -404,19 +394,9 @@ We welcome contributions! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for gu
 
 See [Workflow Guide](./docs/WORKFLOW_GUIDE.md) for detailed Git workflow.
 
-### Client Custom Forks
+### Customizations
 
-Creating a custom fork for client-specific color branding?
-
-**Automated Workflow**: Use our streamlined workflow to create a client fork in minutes:
-- **[Client Fork Workflow Guide](./docs/CLIENT_FORK_WORKFLOW.md)** - Automated GitHub Actions workflow or local bash script
-
-**What You Get**:
-- Custom color files set up for light and dark modes
-- .gitignore configured to track your custom colors
-- Clean separation from upstream for easy syncing
-
-**For Other Customizations**: Use Joomla's built-in template settings (System → Site Templates → MokoCassiopeia → Custom Code tab) for HTML/CSS/JS customizations.
+For template customizations, use Joomla's built-in template settings (System → Site Templates → MokoCassiopeia → Custom Code tab) for HTML/CSS/JS customizations.
 
 ---
 

@@ -324,14 +324,6 @@ cd scripts
 - Use Joomla's security features (CSRF tokens, etc.)
 - Keep dependencies updated
 
-## Client Forks
-
-For client-specific color customizations:
-- Use automated workflow in `docs/CLIENT_FORK_WORKFLOW.md`
-- Custom color files tracked via client fork .gitignore template
-- Use Joomla's template settings for other customizations (Custom Code tab)
-- Limited scope: colors only
-
 ## License Compliance
 
 All code contributions must be:

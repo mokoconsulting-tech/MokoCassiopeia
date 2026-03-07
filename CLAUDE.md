@@ -8,7 +8,7 @@ MokoCassiopeia is a modern, lightweight Joomla template that extends Cassiopeia 
 MokoCassiopeia/
 ├── .github/              # GitHub workflows (CI, testing, release), Copilot instructions
 ├── docs/                 # Comprehensive documentation (guides, philosophy, CSS reference)
-├── scripts/              # Build scripts (build-release.sh, create-client-fork.sh)
+├── scripts/              # Build scripts (build-release.sh)
 ├── src/                  # MAIN WORKING DIRECTORY: template source files
 │   ├── index.php         # Main template rendering file
 │   ├── templateDetails.xml  # Joomla manifest (metadata, params, files)
@@ -198,7 +198,7 @@ From `phpcs.xml`:
 
 - **Alternative layouts**: Descriptive name + `.php` (e.g., `mobile.php`, `mainmenu.php`, `toc-left.php`)
 - **NEVER use**: `default.php` (replaces core layout—FORBIDDEN)
-- **Scripts**: Lowercase with hyphens (e.g., `build-release.sh`, `create-client-fork.sh`)
+- **Scripts**: Lowercase with hyphens (e.g., `build-release.sh`)
 
 ## Primary Language
 
@@ -543,4 +543,3 @@ Must-read before contributing:
 - **CHANGELOG.md** - Version history and release notes
 - **GOVERNANCE.md** - Project governance model and decision-making
 - **CODE_OF_CONDUCT.md** - Community standards and expectations
-- **CLIENT_FORK_WORKFLOW.md** - Automated setup for client color customizations
