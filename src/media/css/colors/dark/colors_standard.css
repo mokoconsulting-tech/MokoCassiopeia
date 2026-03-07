@@ -236,6 +236,22 @@ color-scheme: dark;
 --taba-btn-blue: #3d75a8;
 --taba-btn-red: #c43620;
 --taba-btn-gray: #6a7080;
+--taba-msg-bg: #1e2430;
+--toc-link-color: #9fa6ad;
+--toc-link-active-color: #91a4ff;
+--choices-disabled-bg: #2b323b;
+--choices-input-bg: var(--body-bg);
+--choices-border-light: #48525d;
+--choices-arrow-color: #9fa6ad;
+--choices-inner-bg: #1a2027;
+--choices-focused-border: #5472ff;
+--choices-dropdown-bg: var(--body-bg);
+--choices-item-bg: #1a5f75;
+--choices-item-border: #1a748f;
+--choices-item-hover-bg: #1a748f;
+--choices-item-hover-border: #1a8aa8;
+--choices-item-disabled-bg: #48525d;
+--choices-item-disabled-border: #36404a;
 
 /* ===== STANDARD COLORS ===== */
 --blue: #91a4ff;
