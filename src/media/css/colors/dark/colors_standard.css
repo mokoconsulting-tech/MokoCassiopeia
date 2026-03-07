@@ -177,6 +177,32 @@ color-scheme: dark;
 --alert-light-link-color: #f0f4f8;
 --alert-dark-link-color: #9fa6ad;
 
+/* ===== LIST GROUP ITEM COLORS ===== */
+--list-group-item-primary-color: #8ca3ff;
+--list-group-item-primary-bg: #1a2550;
+--list-group-item-primary-active-bg: #223066;
+--list-group-item-secondary-color: #9fa6ad;
+--list-group-item-secondary-bg: #2b323b;
+--list-group-item-secondary-active-bg: #363d47;
+--list-group-item-success-color: #a0e5b3;
+--list-group-item-success-bg: #1e3d2d;
+--list-group-item-success-active-bg: #275538;
+--list-group-item-info-color: #8eccf2;
+--list-group-item-info-bg: #1a3448;
+--list-group-item-info-active-bg: #234459;
+--list-group-item-warning-color: #ffe4a0;
+--list-group-item-warning-bg: #4a3410;
+--list-group-item-warning-active-bg: #5c4216;
+--list-group-item-danger-color: #ffa8a3;
+--list-group-item-danger-bg: #4a1e1c;
+--list-group-item-danger-active-bg: #5c2823;
+--list-group-item-light-color: #e9ecef;
+--list-group-item-light-bg: #1e2430;
+--list-group-item-light-active-bg: #282f3d;
+--list-group-item-dark-color: #48525d;
+--list-group-item-dark-bg: #0e1318;
+--list-group-item-dark-active-bg: #161b22;
+
 /* ===== STANDARD COLORS ===== */
 --blue: #91a4ff;
 --indigo: #b19cff;
