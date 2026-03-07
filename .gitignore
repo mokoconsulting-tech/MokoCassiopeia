@@ -212,6 +212,10 @@ htdocs/logs/
 src/media/css/colors/light/colors_custom.css
 src/media/css/colors/dark/colors_custom.css
 
+# Ignore user customization files to prevent local development overrides
+src/media/css/user.css
+src/media/js/user.js
+
 # ============================================================
 # Joomla Core
 # ============================================================
