@@ -194,6 +194,25 @@ color-scheme: dark;
 --white-rgb: 255, 255, 255;
 --black-rgb: 0, 0, 0;
 
+/* ===== OPACITY UTILITIES ===== */
+--opacity-0: 0;
+--opacity-5: 0.05;
+--opacity-10: 0.1;
+--opacity-15: 0.15;
+--opacity-20: 0.2;
+--opacity-25: 0.25;
+--opacity-30: 0.3;
+--opacity-50: 0.5;
+--opacity-75: 0.75;
+--opacity-100: 1;
+
+/* ===== COMMON SHADOW COLORS ===== */
+--shadow-color-light: rgba(var(--black-rgb), var(--opacity-30));
+--shadow-color-medium: rgba(var(--black-rgb), var(--opacity-50));
+--shadow-color-dark: rgba(var(--black-rgb), var(--opacity-75));
+--border-color-translucent: rgba(var(--white-rgb), var(--opacity-10));
+--highlight-translucent: rgba(var(--white-rgb), var(--opacity-5));
+
 /* ===== HEADER BACKGROUND ===== */
 --header-background-image: url('../../../../../../media/templates/site/mokocassiopeia/images/bg.svg');
 --header-background-attachment: fixed;

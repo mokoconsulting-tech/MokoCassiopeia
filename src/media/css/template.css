@@ -2336,11 +2336,11 @@ progress {
 	--table-border-color: var(--border-color);
 	--table-accent-bg: transparent;
 	--table-striped-color: var(--body-color);
-	--table-striped-bg: rgba(0, 0, 0, 0.05);
+	--table-striped-bg: rgba(var(--black-rgb), var(--opacity-5));
 	--table-active-color: var(--body-color);
-	--table-active-bg: rgba(0, 0, 0, 0.1);
+	--table-active-bg: rgba(var(--black-rgb), var(--opacity-10));
 	--table-active-color: var(--body-color);
-	--table-active-bg: rgba(0, 0, 0, 0.075);
+	--table-active-bg: rgba(var(--black-rgb), 0.075);
 	width: 100%;
 	margin-bottom: 1rem;
 	color: var(--table-color);
@@ -3882,7 +3882,7 @@ fieldset:disabled .btn {
 	--dropdown-inner-border-radius: calc(0.25rem - 1px);
 	--dropdown-divider-bg: var(--border-color-translucent);
 	--dropdown-divider-margin-y: 0.5rem;
-	--dropdown-box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+	--dropdown-box-shadow: 0 0.5rem 1rem var(--shadow-color-light);
 	--dropdown-link-color: hsl(210, 11%, 15%);
 	--dropdown-link-active-color: #1f2226;
 	--dropdown-link-active-bg: hsl(210, 16%, 93%);
@@ -5744,7 +5744,7 @@ fieldset:disabled .btn {
 	--progress-font-size: 0.75rem;
 	--progress-bg: hsl(210, 16%, 93%);
 	--progress-border-radius: 0.25rem;
-	--progress-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.075);
+	--progress-box-shadow: inset 0 1px 2px rgba(var(--black-rgb), 0.075);
 	--progress-bar-color: var(--body-color);
 	--progress-bar-bg: hsl(240, 98%, 17%);
 	--progress-bar-transition: width 0.6s ease;
@@ -5808,7 +5808,7 @@ fieldset:disabled .btn {
 .list-group {
 	--list-group-color: hsl(210, 11%, 15%);
 	--list-group-bg: var(--body-color);
-	--list-group-border-color: rgba(0, 0, 0, 0.125);
+	--list-group-border-color: rgba(var(--black-rgb), 0.125);
 	--list-group-border-width: 1px;
 	--list-group-border-radius: 0.25rem;
 	--list-group-item-padding-x: 1rem;
@@ -6304,10 +6304,10 @@ fieldset:disabled .btn {
 	--toast-border-width: 1px;
 	--toast-border-color: var(--border-color-translucent);
 	--toast-border-radius: 0.25rem;
-	--toast-box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+	--toast-box-shadow: 0 0.5rem 1rem var(--shadow-color-light);
 	--toast-header-color: hsl(210, 7%, 46%);
-	--toast-header-bg: rgba(255, 255, 255, 0.85);
-	--toast-header-border-color: rgba(0, 0, 0, 0.05);
+	--toast-header-bg: rgba(var(--white-rgb), 0.85);
+	--toast-header-border-color: rgba(var(--black-rgb), var(--opacity-5));
 	width: var(--toast-max-width);
 	max-width: 100%;
 	font-size: var(--toast-font-size);
@@ -15846,7 +15846,7 @@ body:not(.has-sidebar-right) .site-grid .container-component {
 
 .form-select:focus,
 .custom-select:focus {
-	border-color: #000;
+	border-color: var(--black);
 	-webkit-box-shadow: 0 0 0 0.25rem rgba(1, 1, 86, 0.25);
 	box-shadow: 0 0 0 0.25rem rgba(1, 1, 86, 0.25);
 }
@@ -17181,7 +17181,7 @@ code {
 	height: 34px;
 	cursor: pointer;
 	border: 3px solid var(--gab-gray3);
-	background-color: #FFF;
+	background-color: var(--white);
 	border-radius: 17px;
 }
 
@@ -17206,16 +17206,16 @@ code {
 .openai_logo_sm {
 	width: 22px;
 	height: 22px;
-	background-color: #FFF;
-	border: 3px solid #FFF;
+	background-color: var(--white);
+	border: 3px solid var(--white);
 	border-radius: 11px;
 }
 
 .openai_logo_md {
 	width: 34px;
 	height: 34px;
-	background-color: #FFF;
-	border: 4px solid #FFF;
+	background-color: var(--white);
+	border: 4px solid var(--white);
 	border-radius: 17px;
 }
 
@@ -17257,7 +17257,7 @@ code {
 	width: 100%;
 	outline: none;
 	cursor: pointer;
-	color: #FFF;
+	color: var(--white);
 	background-color: var(--gab-red);
 	padding: 0.375rem;
 	border-radius: 6px;
@@ -17288,7 +17288,7 @@ code {
 	outline: none;
 	cursor: pointer;
 	text-align: left;
-	color: #FFF;
+	color: var(--white);
 	background-color: var(--gab-red);
 	padding: 0.375rem;
 	border-radius: 6px;
@@ -17301,7 +17301,7 @@ code {
 	padding-left: 0.0625rem;
 	width: 16px;
 	height: 16px;
-	color: #000;
+	color: var(--black);
 	font-size: 10px;
 	text-align: center;
 	background-color: var(--gab-gray2);
@@ -17315,7 +17315,7 @@ code {
 .iframe_list {
 	width: 100%;
 	height: 100%;
-	background-color: #FFF;
+	background-color: var(--white);
 	border: 4px solid var(--gab-red);
 	border-radius: 6px;
 }
@@ -17323,7 +17323,7 @@ code {
 .iframe_messages {
 	width: 100%;
 	height: 100%;
-	background-color: #FFF;
+	background-color: var(--white);
 	border: 4px solid var(--gab-red);
 	border-radius: 6px;
 }
@@ -17349,7 +17349,7 @@ code {
 	float: left;
 	cursor: pointer;
 	padding: 0.125rem;
-	background-color: #FFF;
+	background-color: var(--white);
 }
 
 .emoji:hover {
@@ -17373,7 +17373,7 @@ code {
 	height: 30px;
 	font-size: 20px;
 	text-align: center;
-	color: #FFF;
+	color: var(--white);
 	background-color: var(--gab-orange);
 	border-radius: 15px;
 }
@@ -17384,7 +17384,7 @@ code {
 	height: 30px;
 	font-size: 20px;
 	text-align: center;
-	color: #FFF;
+	color: var(--white);
 	background-color: var(--gab-gray2);
 	border-radius: 15px;
 }
@@ -17495,7 +17495,7 @@ code {
 .window-title-com {
 	margin-left: 0.3125rem;
 	display: inline-block;
-	color: #000;
+	color: var(--black);
 }
 
 .window-icon {
@@ -17597,8 +17597,8 @@ code {
 }
 
 .taba-user {
-	border: 1px solid #FFF;
-	background-color: #FFF;
+	border: 1px solid var(--white);
+	background-color: var(--white);
 	padding: 0.375rem;
 	border-radius: 6px;
 	word-wrap: break-word;
