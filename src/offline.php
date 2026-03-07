@@ -135,7 +135,6 @@ if (class_exists('\Joomla\Component\Users\Site\Helper\RouteHelper')) {
 <head>
 	<jdoc:include type="head" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
 	<?php if ($params_theme_enabled) : ?>
 	<script>

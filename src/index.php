@@ -149,8 +149,6 @@ $fontStyles = '';
 
 if ($params_FontScheme) {
 	if (stripos($params_FontScheme, 'https://') === 0) {
-		$this->getPreloadManager()->preconnect('https://fonts.googleapis.com/', ['crossorigin' => 'anonymous']);
-		$this->getPreloadManager()->preconnect('https://fonts.gstatic.com/', ['crossorigin' => 'anonymous']);
 		$this->getPreloadManager()->preload($params_FontScheme, ['as' => 'style', 'crossorigin' => 'anonymous']);
 		$wa->registerAndUseStyle('fontscheme.current', $params_FontScheme, [], [
 			'media' => 'print',
