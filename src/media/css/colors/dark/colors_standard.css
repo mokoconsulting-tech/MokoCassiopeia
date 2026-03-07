@@ -203,6 +203,34 @@ color-scheme: dark;
 --list-group-item-dark-bg: #0e1318;
 --list-group-item-dark-active-bg: #161b22;
 
+/* ===== LINK UTILITY COLORS ===== */
+--link-primary-color: hsl(240, 98%, 50%);
+--link-primary-hover-color: hsl(240, 98%, 45%);
+--link-secondary-color: hsl(210, 15%, 70%);
+--link-secondary-hover-color: hsl(210, 15%, 65%);
+--link-success-color: hsl(120, 40%, 60%);
+--link-success-hover-color: hsl(120, 40%, 55%);
+--link-info-color: hsl(207, 60%, 65%);
+--link-info-hover-color: hsl(207, 60%, 60%);
+--link-warning-color: hsl(38, 100%, 65%);
+--link-warning-hover-color: hsl(38, 100%, 60%);
+--link-danger-color: hsl(3, 85%, 65%);
+--link-danger-hover-color: hsl(3, 85%, 60%);
+--link-light-color: hsl(210, 20%, 90%);
+--link-light-hover-color: hsl(210, 20%, 85%);
+--link-dark-color: hsl(210, 10%, 35%);
+--link-dark-hover-color: hsl(210, 10%, 30%);
+
+/* ===== COMPONENT-SPECIFIC COLORS ===== */
+--mod-finder-link-hover: #5a6470;
+--form-legend-color: #9fa6ad;
+--border-gray: #3a4250;
+--subhead-color: #9fa6ad;
+--box-shadow-gray: #1a2027;
+--btn-active-text-gray: #7a8490;
+--indicator-success-bg: var(--success);
+--item-list-color: #2a2f34;
+
 /* ===== STANDARD COLORS ===== */
 --blue: #91a4ff;
 --indigo: #b19cff;

@@ -8290,75 +8290,75 @@ fieldset:disabled .btn {
 }
 
 .link-primary {
-	color: hsl(240, 98%, 17%) ;
+	color: var(--link-primary-color);
 }
 
 .link-primary:active,
 .link-primary:focus {
-	color: #010145 ;
+	color: var(--link-primary-hover-color);
 }
 
 .link-secondary {
-	color: hsl(210, 7%, 46%) ;
+	color: var(--link-secondary-color);
 }
 
 .link-secondary:active,
 .link-secondary:focus {
-	color: #575e65 ;
+	color: var(--link-secondary-hover-color);
 }
 
 .link-success {
-	color: hsl(120, 32%, 39%) ;
+	color: var(--link-success-color);
 }
 
 .link-success:active,
 .link-success:focus {
-	color: #366936 ;
+	color: var(--link-success-hover-color);
 }
 
 .link-info {
-	color: hsl(207, 49%, 37%) ;
+	color: var(--link-info-color);
 }
 
 .link-info:active,
 .link-info:focus {
-	color: #264f71 ;
+	color: var(--link-info-hover-color);
 }
 
 .link-warning {
-	color: hsl(34, 100%, 34%) ;
+	color: var(--link-warning-color);
 }
 
 .link-warning:active,
 .link-warning:focus {
-	color: #8a4e00 ;
+	color: var(--link-warning-hover-color);
 }
 
 .link-danger {
-	color: hsl(3, 75%, 37%) ;
+	color: var(--link-danger-color);
 }
 
 .link-danger:active,
 .link-danger:focus {
-	color: #841913 ;
+	color: var(--link-danger-hover-color);
 }
 
 .link-light {
-	color: hsl(210, 17%, 98%) ;
+	color: var(--link-light-color);
 }
 
 .link-light:active,
 .link-light:focus {
-	color: #fafbfc ;
+	color: var(--link-light-hover-color);
 }
 
 .link-dark {
-	color: hsl(210, 10%, 23%) ;
+	color: var(--link-dark-color);
 }
 
 .link-dark:active,
 .link-dark:focus {
-	color: #2a2f34 ;
+	color: var(--link-dark-hover-color);
 }
 
 .ratio {
@@ -14598,7 +14598,7 @@ li.current a {
 
 .container-header .mod-finder a:active,
 .container-header .mod-finder a:focus {
-	color: #e6e6e6;
+	color: var(--mod-finder-link-hover);
 }
 
 .container-header .mod-finder .awesomplete {
@@ -14912,9 +14912,9 @@ iframe {
 	width: 100%;
 	padding: 1vw 2vw;
 	margin-bottom: 1rem;
-	color: #495057;
+	color: var(--form-legend-color);
 	background-color: var(--body-color);
-	border: 1px solid #b2bfcd;
+	border: 1px solid var(--border-gray);
 }
 
 .options-form>legend {
@@ -14922,7 +14922,7 @@ iframe {
 	width: auto;
 	padding: 0 0.5rem;
 	font-weight: 700;
-	color: #495057;
+	color: var(--form-legend-color);
 	background-color: var(--body-color);
 }
 
@@ -15375,10 +15375,10 @@ joomla-alert {
 	width: auto;
 	min-height: 43px;
 	padding: 0.25rem;
-	color: #495057;
+	color: var(--subhead-color);
 	background: var(--body-color);
-	-webkit-box-shadow: -3px -2px 22px #ddd;
-	box-shadow: -3px -2px 22px #ddd;
+	-webkit-box-shadow: -3px -2px 22px var(--box-shadow-gray);
+	box-shadow: -3px -2px 22px var(--box-shadow-gray);
 }
 
 .subhead .row {
@@ -15412,12 +15412,12 @@ joomla-alert {
 }
 
 .subhead .btn {
-	--subhead-btn-accent: #495057;
+	--subhead-btn-accent: var(--subhead-color);
 	padding: 0 1rem;
 	margin: 0.3125rem 0;
 	font-size: 1rem;
 	line-height: 2.45rem;
-	color: #495057;
+	color: var(--subhead-color);
 	background: var(--body-color);
 	border-color: hsl(210, 11%, 71%);
 }
@@ -16770,7 +16770,7 @@ body:not(.has-sidebar-right) .site-grid .container-component {
 .btn.show,
 .btn:first-child:active,
 :not(.btn-check)+.btn:active {
-	color: #A0A0A0;
+	color: var(--btn-active-text-gray);
 }
 
 .form-control,
@@ -17225,7 +17225,7 @@ code {
 	left: -2px;
 	width: 12px;
 	height: 12px;
-	background-color: #448344;
+	background-color: var(--indicator-success-bg);
 	border-radius: 6px;
 }
 
@@ -17235,7 +17235,7 @@ code {
 	left: 0px;
 	width: 12px;
 	height: 12px;
-	background-color: #448344;
+	background-color: var(--indicator-success-bg);
 	border-radius: 6px;
 }
 
@@ -17421,7 +17421,7 @@ code {
 
 .item-list {
 	display: inline-block;
-	color: #F5F5F5;
+	color: var(--item-list-color);
 	margin-top: 0.3125rem;
 	width: 50px;
 	height: 50px;
@@ -17451,7 +17451,7 @@ code {
 	right: -2px;
 	width: 18px;
 	height: 18px;
-	color: #FFF;
+	color: var(--white);
 	font-size: 11px;
 	font-weight: bold;
 	text-align: center;
@@ -17465,7 +17465,7 @@ code {
 	right: -2px;
 	width: 18px;
 	height: 18px;
-	color: #FFF;
+	color: var(--white);
 	font-size: 11px;
 	font-weight: bold;
 	text-align: center;
@@ -17489,7 +17489,7 @@ code {
 .window-title {
 	margin-left: 0.3125rem;
 	display: inline-block;
-	color: #FFF;
+	color: var(--white);
 }
 
 .window-title-com {
@@ -17500,7 +17500,7 @@ code {
 
 .window-icon {
 	display: inline-block;
-	color: #FFF;
+	color: var(--white);
 }
 
 .window-header {

@@ -202,6 +202,34 @@ color-scheme: light;
 --list-group-item-dark-bg: #d7d8d9;
 --list-group-item-dark-active-bg: #c2c2c3;
 
+/* ===== LINK UTILITY COLORS ===== */
+--link-primary-color: hsl(240, 98%, 17%);
+--link-primary-hover-color: #010145;
+--link-secondary-color: hsl(210, 7%, 46%);
+--link-secondary-hover-color: #575e65;
+--link-success-color: hsl(120, 32%, 39%);
+--link-success-hover-color: #366936;
+--link-info-color: hsl(207, 49%, 37%);
+--link-info-hover-color: #264f71;
+--link-warning-color: hsl(34, 100%, 34%);
+--link-warning-hover-color: #8a4e00;
+--link-danger-color: hsl(3, 75%, 37%);
+--link-danger-hover-color: #841913;
+--link-light-color: hsl(210, 17%, 98%);
+--link-light-hover-color: #fafbfc;
+--link-dark-color: hsl(210, 10%, 23%);
+--link-dark-hover-color: #2a2f34;
+
+/* ===== COMPONENT-SPECIFIC COLORS ===== */
+--mod-finder-link-hover: #e6e6e6;
+--form-legend-color: #495057;
+--border-gray: #b2bfcd;
+--subhead-color: #495057;
+--box-shadow-gray: #ddd;
+--btn-active-text-gray: #A0A0A0;
+--indicator-success-bg: var(--success);
+--item-list-color: #F5F5F5;
+
 /* ===== STANDARD COLORS ===== */
 --blue: #010156;
 --indigo: #6812f3;
