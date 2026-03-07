@@ -2729,11 +2729,11 @@ progress {
 }
 
 .form-control:active:not(:disabled):not([readonly])::-webkit-file-upload-button {
-	background-color: #dee1e4;
+	background-color: var(--input-file-button-active-bg);
 }
 
 .form-control:active:not(:disabled):not([readonly])::file-selector-button {
-	background-color: #dee1e4;
+	background-color: var(--input-file-button-active-bg);
 }
 
 .form-control-plaintext {
@@ -2878,7 +2878,7 @@ textarea.form-control-lg {
 
 .form-select:focus,
 .custom-select:focus {
-	border-color: #8894aa;
+	border-color: var(--input-focus-border-color);
 	outline: 0;
 	-webkit-box-shadow: 0 0 0 0.25rem rgba(1, 1, 86, 0.25);
 	box-shadow: 0 0 0 0.25rem rgba(1, 1, 86, 0.25);
@@ -2974,7 +2974,7 @@ textarea.form-control-lg {
 }
 
 .form-check-input:focus {
-	border-color: #8894aa;
+	border-color: var(--input-focus-border-color);
 	outline: 0;
 	-webkit-box-shadow: 0 0 0 0.25rem rgba(1, 1, 86, 0.25);
 	box-shadow: 0 0 0 0.25rem rgba(1, 1, 86, 0.25);
@@ -3123,7 +3123,7 @@ textarea.form-control-lg {
 }
 
 .form-range::-webkit-slider-thumb:active {
-	background-color: #b8bfcc;
+	background-color: var(--form-range-thumb-active-bg);
 }
 
 .form-range::-webkit-slider-runnable-track {
@@ -3156,7 +3156,7 @@ textarea.form-control-lg {
 }
 
 .form-range::-moz-range-thumb:active {
-	background-color: #b8bfcc;
+	background-color: var(--form-range-thumb-active-bg);
 }
 
 .form-range::-moz-range-track {
@@ -5278,7 +5278,7 @@ fieldset:disabled .btn {
 	--accordion-btn-icon-transform: rotate(-180deg);
 	--accordion-btn-icon-transition: transform 0.2s ease-in-out;
 	--accordion-btn-active-icon: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%230f244d'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
-	--accordion-btn-focus-border-color: #8894aa;
+	--accordion-btn-focus-border-color: var(--input-focus-border-color);
 	--accordion-btn-focus-box-shadow: 0 0 0 0.25rem rgba(1, 1, 86, 0.25);
 	--accordion-body-padding-x: 1.25rem;
 	--accordion-body-padding-y: 1rem;
@@ -5654,7 +5654,7 @@ fieldset:disabled .btn {
 }
 
 .alert-primary .alert-link {
-	color: #01012a;
+	color: var(--alert-primary-link-color);
 }
 
 .alert-secondary {
@@ -5664,7 +5664,7 @@ fieldset:disabled .btn {
 }
 
 .alert-secondary .alert-link {
-	color: #34383d;
+	color: var(--alert-secondary-link-color);
 }
 
 .alert-success {
@@ -5674,7 +5674,7 @@ fieldset:disabled .btn {
 }
 
 .alert-success .alert-link {
-	color: #213f21;
+	color: var(--alert-success-link-color);
 }
 
 .alert-info {
@@ -5684,7 +5684,7 @@ fieldset:disabled .btn {
 }
 
 .alert-info .alert-link {
-	color: #172f44;
+	color: var(--alert-info-link-color);
 }
 
 .alert-warning {
@@ -5694,7 +5694,7 @@ fieldset:disabled .btn {
 }
 
 .alert-warning .alert-link {
-	color: #532f00;
+	color: var(--alert-warning-link-color);
 }
 
 .alert-danger {
@@ -5704,7 +5704,7 @@ fieldset:disabled .btn {
 }
 
 .alert-danger .alert-link {
-	color: #4f0f0b;
+	color: var(--alert-danger-link-color);
 }
 
 .alert-light {
@@ -5714,7 +5714,7 @@ fieldset:disabled .btn {
 }
 
 .alert-light .alert-link {
-	color: #505050;
+	color: var(--alert-light-link-color);
 }
 
 .alert-dark {
@@ -5724,7 +5724,7 @@ fieldset:disabled .btn {
 }
 
 .alert-dark .alert-link {
-	color: #1a1c1f;
+	color: var(--alert-dark-link-color);
 }
 
 @-webkit-keyframes progress-bar-stripes {
@@ -16181,7 +16181,7 @@ body:not(.has-sidebar-right) .site-grid .container-component {
 }
 
 .chosen-container.chosen-container-single .chosen-single:focus {
-	border-color: #8894aa;
+	border-color: var(--input-focus-border-color);
 	outline: none;
 }
 
@@ -18037,7 +18037,7 @@ nav[data-toggle=toc] .nav-link.active+ul{
 	border-radius: 0.25rem;
 }
 .choices.is-focused {
-	border-color: #8894aa;
+	border-color: var(--input-focus-border-color);
 	-webkit-box-shadow: 0 0 0 0.25rem rgba(1, 1, 86, 0.25);
 					box-shadow: 0 0 0 0.25rem rgba(1, 1, 86, 0.25);
 }

@@ -166,6 +166,16 @@ color-scheme: light;
 --light-border-subtle: #eaedf0;
 --dark-border-subtle: #adb5bd;
 
+/* ===== ALERT LINK COLORS ===== */
+--alert-primary-link-color: #01012a;
+--alert-secondary-link-color: #34383d;
+--alert-success-link-color: #213f21;
+--alert-info-link-color: #172f44;
+--alert-warning-link-color: #532f00;
+--alert-danger-link-color: #4f0f0b;
+--alert-light-link-color: #505050;
+--alert-dark-link-color: #1a1c1f;
+
 /* ===== STANDARD COLORS ===== */
 --blue: #010156;
 --indigo: #6812f3;
@@ -314,6 +324,8 @@ color-scheme: light;
 --input-placeholder-color: hsl(210, 7%, 46%);
 --input-disabled-bg: hsl(210, 16%, 93%);
 --input-disabled-border-color: hsl(210, 14%, 83%);
+--input-file-button-active-bg: #dee1e4;
+--form-range-thumb-active-bg: #b8bfcc;
 --form-valid-color: #448344;
 --form-valid-border-color: #448344;
 --form-invalid-color: #a51f18;
