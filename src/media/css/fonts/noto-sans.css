@@ -13,6 +13,20 @@
  BRIEF: Noto Sans font family definitions (self-hosted)
  */
 
+/*
+ * IMPORTANT: Font files must be downloaded separately
+ * 
+ * This CSS file references Noto Sans font files that must be manually downloaded
+ * and placed in the fonts directory. See GOOGLE_FONTS_README.md in the fonts
+ * directory for download instructions.
+ * 
+ * Required files:
+ * - noto-sans-v36-latin-100.woff2
+ * - noto-sans-v36-latin-300.woff2
+ * - noto-sans-v36-latin-regular.woff2
+ * - noto-sans-v36-latin-700.woff2
+ */
+
 /* Noto Sans Thin (100) */
 @font-face {
 	font-family: 'Noto Sans';

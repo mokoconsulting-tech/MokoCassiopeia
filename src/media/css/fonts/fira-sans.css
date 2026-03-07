@@ -13,6 +13,20 @@
  BRIEF: Fira Sans font family definitions (self-hosted)
  */
 
+/*
+ * IMPORTANT: Font files must be downloaded separately
+ * 
+ * This CSS file references Fira Sans font files that must be manually downloaded
+ * and placed in the fonts directory. See GOOGLE_FONTS_README.md in the fonts
+ * directory for download instructions.
+ * 
+ * Required files:
+ * - fira-sans-v17-latin-100.woff2
+ * - fira-sans-v17-latin-300.woff2
+ * - fira-sans-v17-latin-regular.woff2
+ * - fira-sans-v17-latin-700.woff2
+ */
+
 /* Fira Sans Thin (100) */
 @font-face {
 	font-family: 'Fira Sans';

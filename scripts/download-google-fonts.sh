@@ -84,9 +84,9 @@ download_font "roboto" "https://fonts.googleapis.com/css2?family=Roboto:wght@100
 download_font "noto-sans" "https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100;300;400;700&display=swap" "Noto Sans"
 download_font "fira-sans" "https://fonts.googleapis.com/css2?family=Fira+Sans:wght@100;300;400;700&display=swap" "Fira Sans"
 
-echo -e "${GREEN}╔═══════════════════════════════════════════╗${NC}"
-echo -e "${GREEN}║  ✓ All fonts downloaded successfully!       ║${NC}"
-echo -e "${GREEN}╚═══════════════════════════════════════════╝${NC}"
+echo -e "${GREEN}╔════════════════════════════════════════════╗${NC}"
+echo -e "${GREEN}║  ✓ All fonts downloaded successfully!    ║${NC}"
+echo -e "${GREEN}╚════════════════════════════════════════════╝${NC}"
 echo ""
 echo -e "Font files saved to: ${BLUE}$(pwd)${NC}"
 echo ""

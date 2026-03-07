@@ -206,7 +206,7 @@
 						<option value="media/templates/site/mokocassiopeia/css/fonts/fira-sans.css">Fira Sans (local)</option>
 					</group>
 				</field>
-				<field name="noteFontScheme" type="note" description="TPL_MOKOCASSIOPEIA_FONT_NOTE_TEXT" class="alert alert-info" />
+				<field name="noteFontScheme" type="note" description="TPL_MOKOCASSIOPEIA_FONT_NOTE_TEXT" class="alert alert-warning" />
 
 				<!-- Branding & Icons -->
 				<field name="theme_sep_brand" type="spacer" label="Branding &amp; Icons" hr="false" class="text fw-bold" />
