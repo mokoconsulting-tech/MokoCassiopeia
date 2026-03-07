@@ -481,6 +481,210 @@ color-scheme: dark;
 	--btn-active-border-color: #12203f;
 }
 
+.btn-success {
+	--btn-color: hsl(0, 0%, 100%);
+	--btn-bg: hsl(120, 35%, 45%);
+	--btn-border-color: hsl(120, 35%, 45%);
+	--btn-hover-color: hsl(0, 0%, 100%);
+	--btn-hover-bg: hsl(120, 35%, 40%);
+	--btn-hover-border-color: hsl(120, 35%, 38%);
+	--btn-focus-shadow-rgb: 96, 180, 96;
+	--btn-active-color: hsl(0, 0%, 100%);
+	--btn-active-bg: hsl(120, 35%, 38%);
+	--btn-active-border-color: hsl(120, 35%, 36%);
+	--btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+	--btn-disabled-color: hsl(0, 0%, 100%);
+	--btn-disabled-bg: hsl(120, 35%, 45%);
+	--btn-disabled-border-color: hsl(120, 35%, 45%);
+}
+
+.btn-info {
+	--btn-color: hsl(0, 0%, 100%);
+	--btn-bg: hsl(207, 55%, 55%);
+	--btn-border-color: hsl(207, 55%, 55%);
+	--btn-hover-color: hsl(0, 0%, 100%);
+	--btn-hover-bg: hsl(207, 55%, 50%);
+	--btn-hover-border-color: hsl(207, 55%, 48%);
+	--btn-focus-shadow-rgb: 100, 160, 210);
+	--btn-active-color: hsl(0, 0%, 100%);
+	--btn-active-bg: hsl(207, 55%, 48%);
+	--btn-active-border-color: hsl(207, 55%, 46%);
+	--btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+	--btn-disabled-color: hsl(0, 0%, 100%);
+	--btn-disabled-bg: hsl(207, 55%, 55%);
+	--btn-disabled-border-color: hsl(207, 55%, 55%);
+}
+
+.btn-warning {
+	--btn-color: hsl(0, 0%, 0%);
+	--btn-bg: hsl(38, 100%, 50%);
+	--btn-border-color: hsl(38, 100%, 50%);
+	--btn-hover-color: hsl(0, 0%, 0%);
+	--btn-hover-bg: hsl(38, 100%, 45%);
+	--btn-hover-border-color: hsl(38, 100%, 43%);
+	--btn-focus-shadow-rgb: 220, 170, 40;
+	--btn-active-color: hsl(0, 0%, 0%);
+	--btn-active-bg: hsl(38, 100%, 43%);
+	--btn-active-border-color: hsl(38, 100%, 41%);
+	--btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+	--btn-disabled-color: hsl(0, 0%, 0%);
+	--btn-disabled-bg: hsl(38, 100%, 50%);
+	--btn-disabled-border-color: hsl(38, 100%, 50%);
+}
+
+.btn-danger {
+	--btn-color: hsl(0, 0%, 100%);
+	--btn-bg: hsl(3, 82%, 50%);
+	--btn-border-color: hsl(3, 82%, 50%);
+	--btn-hover-color: hsl(0, 0%, 100%);
+	--btn-hover-bg: hsl(3, 82%, 45%);
+	--btn-hover-border-color: hsl(3, 82%, 43%);
+	--btn-focus-shadow-rgb: 220, 80, 80;
+	--btn-active-color: hsl(0, 0%, 100%);
+	--btn-active-bg: hsl(3, 82%, 43%);
+	--btn-active-border-color: hsl(3, 82%, 41%);
+	--btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+	--btn-disabled-color: hsl(0, 0%, 100%);
+	--btn-disabled-bg: hsl(3, 82%, 50%);
+	--btn-disabled-border-color: hsl(3, 82%, 50%);
+}
+
+.btn-light {
+	--btn-color: hsl(0, 0%, 0%);
+	--btn-bg: hsl(210, 17%, 85%);
+	--btn-border-color: hsl(210, 17%, 85%);
+	--btn-hover-color: hsl(0, 0%, 0%);
+	--btn-hover-bg: hsl(210, 17%, 80%);
+	--btn-hover-border-color: hsl(210, 17%, 78%);
+	--btn-focus-shadow-rgb: 200, 205, 210;
+	--btn-active-color: hsl(0, 0%, 0%);
+	--btn-active-bg: hsl(210, 17%, 78%);
+	--btn-active-border-color: hsl(210, 17%, 76%);
+	--btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+	--btn-disabled-color: hsl(0, 0%, 0%);
+	--btn-disabled-bg: hsl(210, 17%, 85%);
+	--btn-disabled-border-color: hsl(210, 17%, 85%);
+}
+
+.btn-dark {
+	--btn-color: hsl(0, 0%, 100%);
+	--btn-bg: hsl(210, 10%, 20%);
+	--btn-border-color: hsl(210, 10%, 20%);
+	--btn-hover-color: hsl(0, 0%, 100%);
+	--btn-hover-bg: hsl(210, 10%, 18%);
+	--btn-hover-border-color: hsl(210, 10%, 16%);
+	--btn-focus-shadow-rgb: 60, 65, 70;
+	--btn-active-color: hsl(0, 0%, 100%);
+	--btn-active-bg: hsl(210, 10%, 16%);
+	--btn-active-border-color: hsl(210, 10%, 14%);
+	--btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+	--btn-disabled-color: hsl(0, 0%, 100%);
+	--btn-disabled-bg: hsl(210, 10%, 20%);
+	--btn-disabled-border-color: hsl(210, 10%, 20%);
+}
+
+.btn-outline-primary {
+	--btn-color: hsl(240, 98%, 40%);
+	--btn-border-color: hsl(240, 98%, 40%);
+	--btn-hover-color: hsl(0, 0%, 100%);
+	--btn-hover-bg: hsl(240, 98%, 40%);
+	--btn-hover-border-color: hsl(240, 98%, 40%);
+	--btn-focus-shadow-rgb: 80, 80, 180;
+	--btn-active-color: hsl(0, 0%, 100%);
+	--btn-active-bg: hsl(240, 98%, 40%);
+	--btn-active-border-color: hsl(240, 98%, 40%);
+	--btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+	--btn-disabled-color: hsl(240, 98%, 40%);
+	--btn-disabled-bg: transparent;
+	--btn-disabled-border-color: hsl(240, 98%, 40%);
+	--gradient: none;
+}
+
+.btn-outline-secondary {
+	--btn-color: hsl(210, 20%, 60%);
+	--btn-border-color: hsl(210, 20%, 60%);
+	--btn-hover-color: hsl(0, 0%, 0%);
+	--btn-hover-bg: hsl(210, 20%, 60%);
+	--btn-hover-border-color: hsl(210, 20%, 60%);
+	--btn-focus-shadow-rgb: 120, 140, 160;
+	--btn-active-color: hsl(0, 0%, 0%);
+	--btn-active-bg: hsl(210, 20%, 60%);
+	--btn-active-border-color: hsl(210, 20%, 60%);
+	--btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+	--btn-disabled-color: hsl(210, 20%, 60%);
+	--btn-disabled-bg: transparent;
+	--btn-disabled-border-color: hsl(210, 20%, 60%);
+	--gradient: none;
+}
+
+.btn-outline-success {
+	--btn-color: hsl(120, 35%, 55%);
+	--btn-border-color: hsl(120, 35%, 55%);
+	--btn-hover-color: hsl(0, 0%, 0%);
+	--btn-hover-bg: hsl(120, 35%, 55%);
+	--btn-hover-border-color: hsl(120, 35%, 55%);
+	--btn-focus-shadow-rgb: 100, 190, 100;
+	--btn-active-color: hsl(0, 0%, 0%);
+	--btn-active-bg: hsl(120, 35%, 55%);
+	--btn-active-border-color: hsl(120, 35%, 55%);
+	--btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+	--btn-disabled-color: hsl(120, 35%, 55%);
+	--btn-disabled-bg: transparent;
+	--btn-disabled-border-color: hsl(120, 35%, 55%);
+	--gradient: none;
+}
+
+.btn-outline-info {
+	--btn-color: hsl(207, 55%, 65%);
+	--btn-border-color: hsl(207, 55%, 65%);
+	--btn-hover-color: hsl(0, 0%, 0%);
+	--btn-hover-bg: hsl(207, 55%, 65%);
+	--btn-hover-border-color: hsl(207, 55%, 65%);
+	--btn-focus-shadow-rgb: 110, 170, 220;
+	--btn-active-color: hsl(0, 0%, 0%);
+	--btn-active-bg: hsl(207, 55%, 65%);
+	--btn-active-border-color: hsl(207, 55%, 65%);
+	--btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+	--btn-disabled-color: hsl(207, 55%, 65%);
+	--btn-disabled-bg: transparent;
+	--btn-disabled-border-color: hsl(207, 55%, 65%);
+	--gradient: none;
+}
+
+.btn-outline-warning {
+	--btn-color: hsl(38, 100%, 60%);
+	--btn-border-color: hsl(38, 100%, 60%);
+	--btn-hover-color: hsl(0, 0%, 0%);
+	--btn-hover-bg: hsl(38, 100%, 60%);
+	--btn-hover-border-color: hsl(38, 100%, 60%);
+	--btn-focus-shadow-rgb: 240, 190, 70;
+	--btn-active-color: hsl(0, 0%, 0%);
+	--btn-active-bg: hsl(38, 100%, 60%);
+	--btn-active-border-color: hsl(38, 100%, 60%);
+	--btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+	--btn-disabled-color: hsl(38, 100%, 60%);
+	--btn-disabled-bg: transparent;
+	--btn-disabled-border-color: hsl(38, 100%, 60%);
+	--gradient: none;
+}
+
+.btn-outline-danger {
+	--btn-color: hsl(3, 82%, 60%);
+	--btn-border-color: hsl(3, 82%, 60%);
+	--btn-hover-color: hsl(0, 0%, 0%);
+	--btn-hover-bg: hsl(3, 82%, 60%);
+	--btn-hover-border-color: hsl(3, 82%, 60%);
+	--btn-focus-shadow-rgb: 240, 100, 100;
+	--btn-active-color: hsl(0, 0%, 0%);
+	--btn-active-bg: hsl(3, 82%, 60%);
+	--btn-active-border-color: hsl(3, 82%, 60%);
+	--btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+	--btn-disabled-color: hsl(3, 82%, 60%);
+	--btn-disabled-bg: transparent;
+	--btn-disabled-border-color: hsl(3, 82%, 60%);
+	--gradient: none;
+}
+
 /* Outline buttons on dark: keep readable borders */
 .btn-outline-light {
 	--btn-color: #e6ebf1;
@@ -491,6 +695,23 @@ color-scheme: dark;
 	--btn-active-color: #111;
 	--btn-active-bg: #d7dce2;
 	--btn-active-border-color: #d7dce2;
+	--gradient: none;
+}
+
+.btn-outline-dark {
+	--btn-color: hsl(210, 10%, 30%);
+	--btn-border-color: hsl(210, 10%, 30%);
+	--btn-hover-color: hsl(0, 0%, 100%);
+	--btn-hover-bg: hsl(210, 10%, 30%);
+	--btn-hover-border-color: hsl(210, 10%, 30%);
+	--btn-focus-shadow-rgb: 70, 75, 80;
+	--btn-active-color: hsl(0, 0%, 100%);
+	--btn-active-bg: hsl(210, 10%, 30%);
+	--btn-active-border-color: hsl(210, 10%, 30%);
+	--btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+	--btn-disabled-color: hsl(210, 10%, 30%);
+	--btn-disabled-bg: transparent;
+	--btn-disabled-border-color: hsl(210, 10%, 30%);
 	--gradient: none;
 }
 
@@ -509,9 +730,4 @@ color-scheme: dark;
 	--btn-box-shadow: none;
 	--btn-focus-shadow-rgb: 84, 114, 255;
 	text-decoration: underline;
-}
-
-.btn-secondary {
-	--btn-color: var(--color-hover);
-	--btn-bg: var(--nav-bg-color);
 }
