@@ -16,6 +16,18 @@
 
 This directory should contain self-hosted Google Font files to eliminate CDN dependencies.
 
+## ⚠️ Manual Download Required
+
+The Google Font `.woff2` files are **NOT included** in the repository and must be downloaded manually before using non-default font schemes.
+
+**Currently Available:**
+- ✅ Osaka font (local TTF file, included)
+
+**Requires Manual Download:**
+- ❌ Roboto fonts (4 weight variants)
+- ❌ Noto Sans fonts (4 weight variants)
+- ❌ Fira Sans fonts (4 weight variants)
+
 ## Required Font Files
 
 Download the following `.woff2` font files and place them in this directory:
