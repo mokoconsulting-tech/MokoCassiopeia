@@ -251,6 +251,8 @@ color-scheme: light;
 --choices-item-hover-border: #008fa1;
 --choices-item-disabled-bg: #aaaaaa;
 --choices-item-disabled-border: #919191;
+--choices-item-highlighted: #f2f2f2;
+--choices-input-inner-bg: #f9f9f9;
 
 /* ===== STANDARD COLORS ===== */
 --blue: #010156;

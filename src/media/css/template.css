@@ -17871,9 +17871,9 @@ nav[data-toggle=toc] .nav-link.active+ul{
 	font-weight: 500;
 	margin-right: 0.234375rem;
 	margin-bottom: 0.234375rem;
-	background-color: #00bcd4;
-	border: 1px solid #00a5bb;
-	color: #fff;
+	background-color: var(--choices-item-bg);
+	border: 1px solid var(--choices-item-border);
+	color: var(--white);
 	word-break: break-all;
 	-webkit-box-sizing: border-box;
 					box-sizing: border-box;
@@ -17886,12 +17886,12 @@ nav[data-toggle=toc] .nav-link.active+ul{
 	margin-left: 0.234375rem;
 }
 .choices__list--multiple .choices__item.is-highlighted {
-	background-color: #00a5bb;
-	border: 1px solid #008fa1;
+	background-color: var(--choices-item-hover-bg);
+	border: 1px solid var(--choices-item-hover-border);
 }
 .is-disabled .choices__list--multiple .choices__item {
-	background-color: #aaaaaa;
-	border: 1px solid #919191;
+	background-color: var(--choices-item-disabled-bg);
+	border: 1px solid var(--choices-item-disabled-border);
 }
 
 .choices__list--dropdown {
@@ -17962,7 +17962,7 @@ nav[data-toggle=toc] .nav-link.active+ul{
 	}
 }
 .choices__list--dropdown .choices__item--selectable.is-highlighted {
-	background-color: #f2f2f2;
+	background-color: var(--choices-item-highlighted);
 }
 .choices__list--dropdown .choices__item--selectable.is-highlighted::after {
 	opacity: 0.5;
@@ -18011,7 +18011,7 @@ nav[data-toggle=toc] .nav-link.active+ul{
 .choices__input {
 	display: inline-block;
 	vertical-align: baseline;
-	background-color: #f9f9f9;
+	background-color: var(--choices-input-inner-bg);
 	font-size: 14px;
 	margin-bottom: 0.3125rem;
 	border: 0;
@@ -21980,7 +21980,7 @@ margin: 1rem 0;
 display: inline-block;
 padding: 0.25rem 0.75rem;
 background: var(--primary-color, #007bff);
-color: #fff;
+color: var(--white);
 border-radius: 1rem;
 font-size: 0.8125rem;
 font-weight: 500;
@@ -21995,7 +21995,7 @@ display: inline-block;
 padding: 0.625rem 1.25rem;
 min-height: 44px;
 background: var(--btn-primary-bg, #007bff);
-color: #fff;
+color: var(--white);
 border: none;
 border-radius: var(--border-radius, 0.375rem);
 text-decoration: none;
@@ -22007,7 +22007,7 @@ cursor: pointer;
 
 .jem-eventslist__button:hover {
 background: var(--btn-primary-hover-bg, #0056b3);
-color: #fff;
+color: var(--white);
 text-decoration: none;
 }
 
@@ -22136,7 +22136,7 @@ margin-top: 0.5rem;
 display: inline-block;
 padding: 0.25rem 0.75rem;
 background: var(--primary-color, #007bff);
-color: #fff;
+color: var(--white);
 border-radius: 1rem;
 font-size: 0.8125rem;
 font-weight: 500;
@@ -22193,7 +22193,7 @@ display: inline-block;
 padding: 0.625rem 1.25rem;
 min-height: 44px;
 background: var(--btn-secondary-bg, #6c757d);
-color: #fff;
+color: var(--white);
 border: none;
 border-radius: var(--border-radius, 0.375rem);
 text-decoration: none;
@@ -22205,7 +22205,7 @@ cursor: pointer;
 
 .jem-event__button:hover {
 background: var(--btn-secondary-hover-bg, #5a6268);
-color: #fff;
+color: var(--white);
 text-decoration: none;
 }
 
@@ -22250,7 +22250,7 @@ justify-content: center;
 width: 44px;
 height: 44px;
 background: var(--btn-primary-bg, #007bff);
-color: #fff;
+color: var(--white);
 border: none;
 border-radius: 50%;
 text-decoration: none;
@@ -22260,7 +22260,7 @@ transition: background-color 0.2s ease;
 
 .jem-calendar__nav-button:hover {
 background: var(--btn-primary-hover-bg, #0056b3);
-color: #fff;
+color: var(--white);
 }
 
 .jem-calendar__current-month {
@@ -22306,7 +22306,7 @@ flex-direction: column;
 align-items: center;
 justify-content: center;
 padding: 0.5rem;
-background: #fff;
+background: var(--white);
 border: 1px solid var(--border-color, #dee2e6);
 border-radius: var(--border-radius, 0.375rem);
 cursor: pointer;
@@ -22345,7 +22345,7 @@ justify-content: center;
 min-width: 1.25rem;
 height: 1.25rem;
 background: var(--primary-color, #007bff);
-color: #fff;
+color: var(--white);
 border-radius: 50%;
 font-size: 0.6875rem;
 font-weight: 600;
@@ -22542,7 +22542,7 @@ display: inline-block;
 padding: 0.625rem 1.25rem;
 min-height: 44px;
 background: var(--btn-primary-bg, #007bff);
-color: #fff;
+color: var(--white);
 border: none;
 border-radius: var(--border-radius, 0.375rem);
 text-decoration: none;
@@ -22553,7 +22553,7 @@ transition: background-color 0.2s ease;
 
 .jem-venue__map-link:hover {
 background: var(--btn-primary-hover-bg, #0056b3);
-color: #fff;
+color: var(--white);
 text-decoration: none;
 }
 
@@ -22612,7 +22612,7 @@ display: inline-block;
 padding: 0.625rem 1.25rem;
 min-height: 44px;
 background: var(--btn-secondary-bg, #6c757d);
-color: #fff;
+color: var(--white);
 border: none;
 border-radius: var(--border-radius, 0.375rem);
 text-decoration: none;
@@ -22624,7 +22624,7 @@ cursor: pointer;
 
 .jem-venue__button:hover {
 background: var(--btn-secondary-hover-bg, #5a6268);
-color: #fff;
+color: var(--white);
 text-decoration: none;
 }
 
@@ -22728,7 +22728,7 @@ display: inline-block;
 padding: 0.625rem 1.25rem;
 min-height: 44px;
 background: var(--btn-primary-bg, #007bff);
-color: #fff;
+color: var(--white);
 border: none;
 border-radius: var(--border-radius, 0.375rem);
 text-decoration: none;
@@ -22740,7 +22740,7 @@ cursor: pointer;
 
 .jem-categories__button:hover {
 background: var(--btn-primary-hover-bg, #0056b3);
-color: #fff;
+color: var(--white);
 text-decoration: none;
 }
 

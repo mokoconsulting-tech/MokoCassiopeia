@@ -252,6 +252,8 @@ color-scheme: dark;
 --choices-item-hover-border: #1a8aa8;
 --choices-item-disabled-bg: #48525d;
 --choices-item-disabled-border: #36404a;
+--choices-item-highlighted: #2b323b;
+--choices-input-inner-bg: #1a2027;
 
 /* ===== STANDARD COLORS ===== */
 --blue: #91a4ff;
