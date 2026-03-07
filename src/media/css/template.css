@@ -17455,7 +17455,7 @@ code {
 	font-size: 11px;
 	font-weight: bold;
 	text-align: center;
-	background-color: #a51f18;
+	background-color: var(--notification-badge-bg);
 	border-radius: 9px;
 }
 
@@ -17469,7 +17469,7 @@ code {
 	font-size: 11px;
 	font-weight: bold;
 	text-align: center;
-	background-color: #a51f18;
+	background-color: var(--notification-badge-bg);
 	border-radius: 9px;
 }
 
@@ -17524,7 +17524,7 @@ code {
 	display: block;
 	width: 100%;
 	height: calc(100% - 80px);
-	background-color: #DDD;
+	background-color: var(--content-bg-gray);
 }
 
 .content-footer {
@@ -17532,7 +17532,7 @@ code {
 	padding: 0.3125rem;
 	width: 100%;
 	height: 40px;
-	background-color: #DDD;
+	background-color: var(--content-bg-gray);
 	border-radius: 0px 0px 8px 8px;
 }
 
@@ -17543,7 +17543,7 @@ code {
 	float: right;
 	width: 24px;
 	height: 24px;
-	background-color: #DDD;
+	background-color: var(--content-bg-gray);
 	border-radius: 12px;
 }
 
@@ -17557,16 +17557,16 @@ code {
 }
 
 .taba-self {
-	border: 1px solid #FFF;
-	background-color: #7ac143;
+	border: 1px solid var(--white);
+	background-color: var(--taba-btn-green);
 	padding: 0.375rem;
 	padding-top: 0.5625rem;
 	border-radius: 10px;
 }
 
 .taba-others {
-	border: 1px solid #FFF;
-	background-color: #5091cd;
+	border: 1px solid var(--white);
+	background-color: var(--taba-btn-blue);
 	padding: 0.375rem;
 	padding-top: 0.5625rem;
 	border-radius: 10px;
@@ -17575,7 +17575,7 @@ code {
 
 
 .taba-bot {
-	border: 1px solid #FFF;
+	border: 1px solid var(--white);
 	background-color: var(--gab-gray3);
 	padding: 0.375rem;
 	padding-top: 0.5625rem;
@@ -17583,15 +17583,15 @@ code {
 }
 
 .taba-dice {
-	border: 1px solid #FFF;
-	background-color: #f44321;
+	border: 1px solid var(--white);
+	background-color: var(--taba-btn-red);
 	padding: 0.375rem;
 	border-radius: 10px;
 }
 
 .taba-emoji {
-	border: 1px solid #FFF;
-	background-color: #5091cd;
+	border: 1px solid var(--white);
+	background-color: var(--taba-btn-blue);
 	padding: 0.375rem;
 	border-radius: 10px;
 }
@@ -17626,8 +17626,8 @@ code {
 }
 
 .taba-msgsystem {
-	border: 1px solid #FFF;
-	background-color: #AAA;
+	border: 1px solid var(--white);
+	background-color: var(--taba-btn-gray);
 	padding: 0.375rem;
 	border-radius: 10px;
 }

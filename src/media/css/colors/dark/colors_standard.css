@@ -230,6 +230,12 @@ color-scheme: dark;
 --btn-active-text-gray: #7a8490;
 --indicator-success-bg: var(--success);
 --item-list-color: #2a2f34;
+--notification-badge-bg: var(--danger);
+--content-bg-gray: #2b323b;
+--taba-btn-green: #5a9c2f;
+--taba-btn-blue: #3d75a8;
+--taba-btn-red: #c43620;
+--taba-btn-gray: #6a7080;
 
 /* ===== STANDARD COLORS ===== */
 --blue: #91a4ff;

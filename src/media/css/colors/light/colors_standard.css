@@ -229,6 +229,12 @@ color-scheme: light;
 --btn-active-text-gray: #A0A0A0;
 --indicator-success-bg: var(--success);
 --item-list-color: #F5F5F5;
+--notification-badge-bg: var(--danger);
+--content-bg-gray: #DDD;
+--taba-btn-green: #7ac143;
+--taba-btn-blue: #5091cd;
+--taba-btn-red: #f44321;
+--taba-btn-gray: #AAA;
 
 /* ===== STANDARD COLORS ===== */
 --blue: #010156;
