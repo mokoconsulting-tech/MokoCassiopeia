@@ -17,9 +17,9 @@ NC='\033[0m' # No Color
 # Target directory
 FONTS_DIR="../src/media/fonts"
 
-echo -e "${BLUE}╔═══════════════════════════════════════════╗${NC}"
+echo -e "${BLUE}╔════════════════════════════════════════════════╗${NC}"
 echo -e "${BLUE}║  Google Fonts Downloader for MokoCassiopeia  ║${NC}"
-echo -e "${BLUE}╚═══════════════════════════════════════════╝${NC}"
+echo -e "${BLUE}╚════════════════════════════════════════════════╝${NC}"
 echo ""
 
 # Check if fonts directory exists

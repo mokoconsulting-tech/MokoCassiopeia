@@ -1,3 +1,17 @@
+<!--
+ Copyright (C) 2026 Moko Consulting <hello@mokoconsulting.tech>
+ 
+ SPDX-License-Identifier: GPL-3.0-or-later
+ 
+ # FILE INFORMATION
+ DEFGROUP: Joomla.Template.Site
+ INGROUP: MokoCassiopeia.Documentation
+ REPO: https://github.com/mokoconsulting-tech/MokoCassiopeia
+ FILE: src/media/fonts/GOOGLE_FONTS_README.md
+ VERSION: 03.08.04
+ BRIEF: Instructions for downloading Google Fonts for self-hosting
+-->
+
 # Google Fonts - Download Instructions
 
 This directory should contain self-hosted Google Font files to eliminate CDN dependencies.
