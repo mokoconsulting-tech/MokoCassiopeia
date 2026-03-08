@@ -32,18 +32,11 @@ $input = $app->getInput();
 $document = $app->getDocument();
 $wa    = $document->getWebAssetManager();
 
-// Template params
-$params_LightColorName          = (string) $this->params->get('colorLightName', 'standard'); // standard|custom
-
-$params_DarkColorName          = (string) $this->params->get('colorDarkName', 'standard'); // standard|custom
-
+// Template params - Component uses minimal configuration
 $params_googletagmanager   = $this->params->get('googletagmanager', false);
 $params_googletagmanagerid = $this->params->get('googletagmanagerid', null);
 $params_googleanalytics    = $this->params->get('googleanalytics', false);
 $params_googleanalyticsid  = $this->params->get('googleanalyticsid', null);
-$params_custom_head_start  = $this->params->get('custom_head_start', null);
-$params_custom_head_end    = $this->params->get('custom_head_end', null);
-$params_developmentmode = $this->params->get('developmentmode', false);
 
 // Detecting Active Variables
 $option    = $input->getCmd('option', '');
@@ -71,116 +64,11 @@ $templatePath = 'media/templates/site/mokocassiopeia';
 // Core template CSS
 $wa->useStyle('template.base');   // css/template.css
 
-// Load theme palette stylesheets based on configuration
+// Component always uses light theme only (no theme switching)
 $wa->useStyle('template.light.standard');      // css/theme/light.standard.css
-$wa->useStyle('template.dark.standard');       // css/theme/dark.standard.css
-
-// Load custom palettes only if selected in template configuration AND files exist
-if ($params_LightColorName === 'custom' && file_exists(JPATH_ROOT . '/media/templates/site/mokocassiopeia/css/theme/light.custom.css'))
-{
-	$wa->useStyle('template.light.custom');
-}
-if ($params_DarkColorName === 'custom' && file_exists(JPATH_ROOT . '/media/templates/site/mokocassiopeia/css/theme/dark.custom.css'))
-{
-	$wa->useStyle('template.dark.custom');
-}
-
-// Scripts
-$wa->useScript('template.js');
 
 // Load Osaka font for site title
 $wa->useStyle('template.font.osaka');
-
-/**
- * VirtueMart detection:
- * - Component must exist and be enabled
- */
-$isVirtueMartActive = ComponentHelper::isEnabled('com_virtuemart', true);
-
-if ($isVirtueMartActive) {
-    /**
-     * Load a VirtueMart-specific stylesheet defined in your template manifest.
-     * This assumes you defined an asset named "template.virtuemart".
-     */
-    $wa->useStyle('vendor.vm');
-}
-
-// Font scheme (external or local) + CSS custom properties
-$params_FontScheme = $this->params->get('useFontScheme', false);
-$fontStyles = '';
-
-if ($params_FontScheme) {
-	if (stripos($params_FontScheme, 'https://') === 0) {
-		$this->getPreloadManager()->preload($params_FontScheme, ['as' => 'style', 'crossorigin' => 'anonymous']);
-		$wa->registerAndUseStyle('fontscheme.current', $params_FontScheme, [], [
-			'media' => 'print',
-			'rel' => 'lazy-stylesheet',
-			'onload' => 'this.media=\'all\'',
-			'crossorigin' => 'anonymous'
-		]);
-
-		if (preg_match_all('/family=([^?:]*):/i', $params_FontScheme, $matches) > 0) {
-			$fontStyles  = '--font-family-body: "' . str_replace('+', ' ', $matches[1][0]) . '", sans-serif;' . "\n";
-			$fontStyles .= '--font-family-headings: "' . str_replace('+', ' ', isset($matches[1][1]) ? $matches[1][1] : $matches[1][0]) . '", sans-serif;' . "\n";
-			$fontStyles .= '--font-weight-normal: 400;' . "\n";
-			$fontStyles .= '--font-weight-headings: 700;';
-		}
-	} else {
-		$wa->registerAndUseStyle('fontscheme.current', $params_FontScheme, ['version' => 'auto'], [
-			'media' => 'print',
-			'rel' => 'lazy-stylesheet',
-			'onload' => 'this.media=\'all\''
-		]);
-		$this->getPreloadManager()->preload(
-			$wa->getAsset('style', 'fontscheme.current')->getUri() . '?' . $this->getMediaVersion(),
-			['as' => 'style']
-		);
-	}
-}
-
-// Meta
-$this->setMetaData('viewport', 'width=device-width, initial-scale=1');
-
-if ($this->params->get('faKitCode')) {
-	$faKit = "https://kit.fontawesome.com/" . $this->params->get('faKitCode') . ".js";
-	HTMLHelper::_('script', $faKit, ['crossorigin' => 'anonymous']);
-} else {
-		try {
-			if($params_developmentmode){
-				$wa->useStyle('vendor.fa7free.all');
-				$wa->useStyle('vendor.fa7free.brands');
-				$wa->useStyle('vendor.fa7free.fontawesome');
-				$wa->useStyle('vendor.fa7free.regular');
-				$wa->useStyle('vendor.fa7free.solid');
-			} else {
-				$wa->useStyle('vendor.fa7free.all.min');
-				$wa->useStyle('vendor.fa7free.brands.min');
-				$wa->useStyle('vendor.fa7free.fontawesome.min');
-				$wa->useStyle('vendor.fa7free.regular.min');
-				$wa->useStyle('vendor.fa7free.solid.min');
-			}
-	} catch (\Throwable $e) {
-		if($params_developmentmode){
-			$wa->registerAndUseStyle('vendor.fa7free.all.dynamic', $templatePath . '/vendor/fa7free/css/all.css');
-			$wa->registerAndUseStyle('vendor.fa7free.brands.dynamic', $templatePath . '/vendor/fa7free/css/brands.css');
-			$wa->registerAndUseStyle('vendor.fa7free.fontawesome.dynamic', $templatePath . '/vendor/fa7free/css/fontawesome.css');
-			$wa->registerAndUseStyle('vendor.fa7free.regular.dynamic', $templatePath . '/vendor/fa7free/css/regular.css');
-			$wa->registerAndUseStyle('vendor.fa7free.solid.dynamic', $templatePath . '/vendor/fa7free/css/solid.css');
-		} else {
-			$wa->registerAndUseStyle('vendor.fa7free.all.min.dynamic', $templatePath . '/vendor/fa7free/css/all.min.css');
-				$wa->registerAndUseStyle('vendor.fa7free.brands.min.dynamic', $templatePath . '/vendor/fa7free/css/brands.min.css');
-				$wa->registerAndUseStyle('vendor.fa7free.fontawesome.min.dynamic', $templatePath . '/vendor/fa7free/css/fontawesome.min.css');
-				$wa->registerAndUseStyle('vendor.fa7free.regular.min.dynamic', $templatePath . '/vendor/fa7free/css/regular.min.css');
-				$wa->registerAndUseStyle('vendor.fa7free.solid.min.dynamic', $templatePath . '/vendor/fa7free/css/solid.min.css');
-		}
-
-	}
-}
-$params_leftIcon           = htmlspecialchars($this->params->get('drawerLeftIcon', 'fa-solid fa-chevron-left'), ENT_COMPAT, 'UTF-8');
-$params_rightIcon          = htmlspecialchars($this->params->get('drawerRightIcon', 'fa-solid fa-chevron-right'), ENT_COMPAT, 'UTF-8');
-
-// Theme params
-$params_theme_enabled      = $this->params->get('theme_enabled', 1);
 
 // Brand: logo from params OR siteTitle
 // -------------------------------------
@@ -204,32 +92,14 @@ if ($logoFile !== '') {
 			   . '</span>';
 }
 
-// Load user assets last (after all other styles and scripts)
-$wa->useStyle('template.user');   // css/user.css
-$wa->useScript('user.js');         // js/user.js
 ?>
 <!DOCTYPE html>
-<html class="component" lang="<?php echo $this->language; ?>" dir="<?php echo $this->direction; ?>">
+<html class="component" lang="<?php echo $this->language; ?>" dir="<?php echo $this->direction; ?>" data-bs-theme="light">
 <head>
 	<jdoc:include type="metas" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<jdoc:include type="styles" />
 	<jdoc:include type="scripts" />
-
-	<?php if ($params_theme_enabled) : ?>
-	<script>
-	  // Early theme application to avoid FOUC
-	  (function () {
-		try {
-		  var stored = localStorage.getItem('theme');
-		  var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-		  var theme = stored ? stored : (prefersDark ? 'dark' : 'light');
-		  document.documentElement.setAttribute('data-bs-theme', theme);
-		  document.documentElement.setAttribute('data-aria-theme', theme);
-		} catch (e) {}
-	  })();
-	</script>
-	<?php endif; ?>
 </head>
 <body class="<?php echo $this->direction === 'rtl' ? 'rtl' : ''; ?>">
 <?php if (!empty($params_googletagmanager) && !empty($params_googletagmanagerid)) :
