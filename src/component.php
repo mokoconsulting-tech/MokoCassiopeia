@@ -182,6 +182,28 @@ $params_rightIcon          = htmlspecialchars($this->params->get('drawerRightIco
 // Theme params
 $params_theme_enabled      = $this->params->get('theme_enabled', 1);
 
+// Brand: logo from params OR siteTitle
+// -------------------------------------
+$brandHtml = '';
+$logoFile  = (string) $this->params->get('logoFile');
+
+if ($logoFile !== '') {
+	$brandHtml = HTMLHelper::_(
+		'image',
+		Uri::root(false) . htmlspecialchars($logoFile, ENT_QUOTES, 'UTF-8'),
+		$sitename,
+		['class' => 'logo d-inline-block', 'loading' => 'eager', 'decoding' => 'async'],
+		false,
+		0
+	);
+} else {
+	// If no logo file, show the title (defaults to "MokoCassiopeia" if not set)
+	$siteTitle = $this->params->get('siteTitle', 'MokoCassiopeia');
+	$brandHtml = '<span class="site-title" title="' . $sitename . '">'
+			   . htmlspecialchars($siteTitle, ENT_COMPAT, 'UTF-8')
+			   . '</span>';
+}
+
 // Load user assets last (after all other styles and scripts)
 $wa->useStyle('template.user');   // css/user.css
 $wa->useScript('user.js');         // js/user.js
@@ -262,6 +284,14 @@ $wa->useScript('user.js');         // js/user.js
 	</script>
 	<!-- End Google Analytics -->
 <?php endif; ?>
+
+	<?php if ($this->params->get('brand', 1)) : ?>
+		<div class="navbar-brand">
+			<a class="brand-logo" href="<?php echo $this->baseurl; ?>/">
+				<?php echo $brandHtml; ?>
+			</a>
+		</div>
+	<?php endif; ?>
 
 	<jdoc:include type="message" />
 	<jdoc:include type="component" />
