@@ -208,8 +208,8 @@ Access template configuration via **System → Site Templates → MokoCassiopeia
 MokoCassiopeia supports custom theme schemes:
 
 1. **Copy template files** from `/templates/` directory:
-   - `theme_custom_light.css` → `media/templates/site/mokocassiopeia/css/theme/light.custom.css`
-   - `theme_custom_dark.css` → `media/templates/site/mokocassiopeia/css/theme/dark.custom.css`
+   - `light.custom.css` → `media/templates/site/mokocassiopeia/css/theme/light.custom.css`
+   - `dark.custom.css` → `media/templates/site/mokocassiopeia/css/theme/dark.custom.css`
 2. **Customize** the CSS variables to match your brand colors
 3. **Enable in Joomla**: System → Site Templates → MokoCassiopeia → Theme tab → Set palette to "Custom"
 4. **Save** and view your site with custom colors

@@ -192,7 +192,7 @@ From `phpcs.xml`:
 - **Classes**: Kebab-case (e.g., `.theme-toggle`, `.fab-button`)
 - **IDs**: Kebab-case (e.g., `#main-content`)
 - **CSS Variables**: Kebab-case with double hyphen prefix (e.g., `--color-primary`, `--body-bg`)
-- **Files**: Lowercase with underscores for variants (e.g., `colors_standard.css`, `colors_custom_light.css`)
+- **Files**: Lowercase with dots and descriptive names (e.g., `light.standard.css`, `dark.custom.css`, `light.custom.css`)
 
 ### General File Naming
 

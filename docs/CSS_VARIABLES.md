@@ -46,8 +46,8 @@ This document provides a complete reference of all CSS variables available in th
 To create custom color schemes:
 
 1. **Copy template files** from `./templates/` directory:
-   - `theme_custom_light.css` → `media/templates/site/mokocassiopeia/css/theme/light.custom.css`
-   - `theme_custom_dark.css` → `media/templates/site/mokocassiopeia/css/theme/dark.custom.css`
+   - `light.custom.css` → `media/templates/site/mokocassiopeia/css/theme/light.custom.css`
+   - `dark.custom.css` → `media/templates/site/mokocassiopeia/css/theme/dark.custom.css`
 
 2. **Edit the variables** in the copied files to match your brand
 
@@ -638,7 +638,7 @@ To customize button colors in your custom color palette:
 }
 ```
 
-See `templates/colors_custom_light.css` and `templates/colors_custom_dark.css` for complete examples.
+See `templates/light.custom.css` and `templates/dark.custom.css` for complete examples.
 
 ---
 
