@@ -77,15 +77,15 @@
 			"attributes": {"media": "all"}
 		},
 		{
-			"name": "template.light.colors_custom",
+			"name": "template.light.custom",
 			"type": "style",
-			"uri": "media/templates/site/mokocassiopeia/css/colors/light/colors_custom.css",
+			"uri": "media/templates/site/mokocassiopeia/css/theme/light.custom.css",
 			"attributes": {"media": "all"}
 		},
 		{
-			"name": "template.light.colors_custom.min",
+			"name": "template.light.custom.min",
 			"type": "style",
-			"uri": "media/templates/site/mokocassiopeia/css/colors/light/colors_custom.min.css",
+			"uri": "media/templates/site/mokocassiopeia/css/theme/light.custom.min.css",
 			"attributes": {"media": "all"}
 		},
 		{
@@ -101,26 +101,26 @@
 			"attributes": {"media": "all"}
 		},
 		{
-			"name": "template.dark.colors_alternative",
+			"name": "template.dark.alternative",
 			"type": "style",
-			"uri": "media/templates/site/mokocassiopeia/css/colors/dark/colors_alternative.css",
+			"uri": "media/templates/site/mokocassiopeia/css/theme/dark.alternative.css",
 			"attributes": {"media": "all"}
 		},
 		{
-			"name": "template.dark.colors_alternative.min",
+			"name": "template.dark.alternative.min",
 			"type": "style",
-			"uri": "media/templates/site/mokocassiopeia/css/colors/dark/colors_alternative.min.css"
+			"uri": "media/templates/site/mokocassiopeia/css/theme/dark.alternative.min.css"
 		},
 		{
-			"name": "template.dark.colors_custom",
+			"name": "template.dark.custom",
 			"type": "style",
-			"uri": "media/templates/site/mokocassiopeia/css/colors/dark/colors_custom.css",
+			"uri": "media/templates/site/mokocassiopeia/css/theme/dark.custom.css",
 			"attributes": {"media": "all"}
 		},
 		{
-			"name": "template.dark.colors_custom.min",
+			"name": "template.dark.custom.min",
 			"type": "style",
-			"uri": "media/templates/site/mokocassiopeia/css/colors/dark/colors_custom.min.css",
+			"uri": "media/templates/site/mokocassiopeia/css/theme/dark.custom.min.css",
 			"attributes": {"media": "all"}
 		},
 		{

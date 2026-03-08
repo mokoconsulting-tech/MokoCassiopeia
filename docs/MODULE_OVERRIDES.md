@@ -587,7 +587,7 @@ cp -r src/html/mod_virtuemart_cart src/html/mod_virtuemart_cart_original
 Override CSS variables in your custom color scheme:
 
 ```css
-/* src/media/css/colors/light/colors_custom.css */
+/* src/media/css/theme/light.custom.css */
 :root {
 	--vm-price-color: #28a745;
 	--vm-cart-bg: #f8f9fa;

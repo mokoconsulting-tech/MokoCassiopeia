@@ -9,7 +9,7 @@
 
 This directory contains template files for custom color schemes that can be copied to your template installation.
 
-## Custom Color Palette Templates
+## Custom Theme Palette Templates
 
 Template files are provided for both light and dark themes with complete Bootstrap button definitions:
 
@@ -17,18 +17,18 @@ Template files are provided for both light and dark themes with complete Bootstr
 
 | File | Theme | Description |
 |------|-------|-------------|
-| `colors_custom_light.css` | Light | Custom light theme with all Bootstrap button variants |
-| `colors_custom_dark.css` | Dark | Custom dark theme with all Bootstrap button variants |
+| `theme_custom_light.css` | Light | Custom light theme with all Bootstrap button variants |
+| `theme_custom_dark.css` | Dark | Custom dark theme with all Bootstrap button variants |
 
-### Using Custom Color Templates
+### Using Custom Theme Templates
 
-1. **Copy** the template file to your template's CSS directory:
+1. **Copy** the template file to your template's CSS theme directory:
    ```bash
    # For light theme
-   cp templates/colors_custom_light.css src/media/css/colors/light/colors_custom.css
+   cp templates/theme_custom_light.css src/media/css/theme/light.custom.css
    
    # For dark theme
-   cp templates/colors_custom_dark.css src/media/css/colors/dark/colors_custom.css
+   cp templates/theme_custom_dark.css src/media/css/theme/dark.custom.css
    ```
 
 2. **Customize** the CSS variables in your copied file:
@@ -37,12 +37,12 @@ Template files are provided for both light and dark themes with complete Bootstr
    - Update button variants if needed
 
 3. **Register** in `src/joomla.asset.json`:
-   - Ensure `template.light.colors_custom` and `template.dark.colors_custom` assets are defined
+   - Ensure `template.light.custom` and `template.dark.custom` assets are defined
    - Already configured by default in the asset manifest
 
 4. **Activate** via Joomla admin:
    - Go to System → Site Templates → MokoCassiopeia
-   - Select "Custom" in the Color Palette dropdown
+   - Select "Custom" in the Theme Palette dropdown
    - Save and check your site
 
 ### Bootstrap Button Variants Included
@@ -57,7 +57,7 @@ All template files include complete definitions for:
 
 Each button variant includes hover, active, focus, and disabled states using CSS variables.
 
-## Color System Features
+## Theme System Features
 
 ### CSS Variable Structure
 

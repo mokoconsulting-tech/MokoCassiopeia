@@ -208,9 +208,9 @@ htdocs/logs/
 # ============================================================
 # Template Customizations
 # ============================================================
-# Ignore custom color scheme files to prevent fork-specific customizations
-src/media/css/colors/light/colors_custom.css
-src/media/css/colors/dark/colors_custom.css
+# Ignore custom theme files to prevent fork-specific customizations
+src/media/css/theme/light.custom.css
+src/media/css/theme/dark.custom.css
 
 # Ignore user customization files to prevent local development overrides
 src/media/css/user.css

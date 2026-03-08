@@ -10,7 +10,7 @@
  # FILE INFORMATION
  DEFGROUP: Joomla.Template.Site
  INGROUP: MokoCassiopeia.Templates
- PATH: ./templates/colors_custom_light.css
+ PATH: ./templates/theme_custom_light.css
  VERSION: 03.08.04
  BRIEF: Custom light theme color template with Bootstrap button definitions
  */
@@ -19,10 +19,10 @@
  * CUSTOM LIGHT THEME TEMPLATE
  * 
  * Copy this file to:
- *   src/media/css/colors/light/colors_custom.css
+ *   src/media/css/theme/light.custom.css
  * 
  * Then register it in src/joomla.asset.json under
- * template.light.colors_custom asset.
+ * template.light.custom asset.
  * --------------------------------------------- */
 
 :root[data-bs-theme="light"] {
