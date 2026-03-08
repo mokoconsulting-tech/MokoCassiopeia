@@ -52,9 +52,16 @@ $colorKey = (string) ($params->get('colors', 'standard') ?: 'standard');
 $colorKey = preg_replace('~[^a-z0-9_-]~i', '', $colorKey);
 $doc->addStyleSheet($base . 'colors_' . $colorKey . $assetSuffix . '.css', ['version' => 'auto'], ['id' => 'moko-colors']);
 
+/* Load user.css for custom user overrides */
+$doc->addStyleSheet($base . 'user' . $assetSuffix . '.css', ['version' => 'auto'], ['id' => 'moko-user']);
+
 /* Bootstrap CSS/JS for accordion behavior; safe to keep. */
 HTMLHelper::_('bootstrap.loadCss', true, $doc);
 HTMLHelper::_('bootstrap.framework');
+
+/* Load template.js for theme switcher and other functionality */
+$jsBase = rtrim(Uri::root(true), '/') . '/templates/' . $this->template . '/js/';
+$doc->addScript($jsBase . 'template' . $assetSuffix . '.js', ['version' => 'auto', 'defer' => true], ['id' => 'moko-template-js']);
 
 /* -----------------------
    Title + Meta (Include Site Name in Page Titles)
