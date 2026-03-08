@@ -29,9 +29,9 @@ $params = $this->params;
 $wa     = $this->getWebAssetManager();
 
 // Template params
-$params_LightColorName          = (string) $params->get('colorLightName', 'standard'); // standard|alternative|custom
+$params_LightColorName          = (string) $params->get('colorLightName', 'standard'); // standard|custom
 
-$params_DarkColorName          = (string) $params->get('colorDarkName', 'standard'); // standard|alternative|custom
+$params_DarkColorName          = (string) $params->get('colorDarkName', 'standard'); // standard|custom
 
 $params_googletagmanager   = $params->get('googletagmanager', false);
 $params_googletagmanagerid = $params->get('googletagmanagerid', '');

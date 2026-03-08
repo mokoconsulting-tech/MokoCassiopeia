@@ -100,17 +100,7 @@
 			"uri": "media/templates/site/mokocassiopeia/css/theme/dark.standard.min.css",
 			"attributes": {"media": "all"}
 		},
-		{
-			"name": "template.dark.alternative",
-			"type": "style",
-			"uri": "media/templates/site/mokocassiopeia/css/theme/dark.alternative.css",
-			"attributes": {"media": "all"}
-		},
-		{
-			"name": "template.dark.alternative.min",
-			"type": "style",
-			"uri": "media/templates/site/mokocassiopeia/css/theme/dark.alternative.min.css"
-		},
+
 		{
 			"name": "template.dark.custom",
 			"type": "style",

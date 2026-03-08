@@ -45,9 +45,9 @@ $document = $app->getDocument();
 $wa    = $document->getWebAssetManager();
 
 // Template params
-$params_LightColorName          = (string) $this->params->get('colorLightName', 'standard'); // standard|alternative|custom
+$params_LightColorName          = (string) $this->params->get('colorLightName', 'standard'); // standard|custom
 
-$params_DarkColorName          = (string) $this->params->get('colorDarkName', 'standard'); // standard|alternative|custom
+$params_DarkColorName          = (string) $this->params->get('colorDarkName', 'standard'); // standard|custom
 
 $params_googletagmanager   = $this->params->get('googletagmanager', false);
 $params_googletagmanagerid = $this->params->get('googletagmanagerid', null);
@@ -230,9 +230,16 @@ $params_rightIcon          = htmlspecialchars($this->params->get('drawerRightIco
 // Load all theme palette stylesheets (static loading for theme switcher compatibility)
 $wa->useStyle('template.light.standard');      // css/theme/light.standard.css
 $wa->useStyle('template.dark.standard');       // css/theme/dark.standard.css
-$wa->useStyle('template.light.custom');        // css/theme/light.custom.css
-$wa->useStyle('template.dark.custom');         // css/theme/dark.custom.css
-$wa->useStyle('template.dark.alternative');    // css/theme/dark.alternative.css
+
+// Load custom palettes if they exist (optional user customizations)
+if (file_exists(JPATH_ROOT . '/media/templates/site/mokocassiopeia/css/theme/light.custom.css'))
+{
+	$wa->useStyle('template.light.custom');
+}
+if (file_exists(JPATH_ROOT . '/media/templates/site/mokocassiopeia/css/theme/dark.custom.css'))
+{
+	$wa->useStyle('template.dark.custom');
+}
 
 $wa->useStyle('template.user');   // css/user.css
 ?>
