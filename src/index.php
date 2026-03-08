@@ -235,7 +235,7 @@ $wa->useStyle('template.user');   // css/user.css
 	<?php if (trim($params_custom_head_start)) : ?><?php echo $params_custom_head_start; ?><?php endif; ?>
 	<jdoc:include type="head" />
 
-	<!-- Theme Palettes: Always load standard themes, custom themes loaded if present -->
+	<!-- Theme Palettes: Hard-coded stylesheet loading (standard and custom) -->
 	<link rel="stylesheet" href="<?php echo Uri::root(true); ?>/media/templates/site/mokocassiopeia/css/theme/light.standard.css" media="all" />
 	<link rel="stylesheet" href="<?php echo Uri::root(true); ?>/media/templates/site/mokocassiopeia/css/theme/dark.standard.css" media="all" />
 	<link rel="stylesheet" href="<?php echo Uri::root(true); ?>/media/templates/site/mokocassiopeia/css/theme/light.custom.css" media="all" />
