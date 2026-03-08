@@ -100,7 +100,6 @@
 			"uri": "media/templates/site/mokocassiopeia/css/theme/dark.standard.min.css",
 			"attributes": {"media": "all"}
 		},
-
 		{
 			"name": "template.dark.custom",
 			"type": "style",

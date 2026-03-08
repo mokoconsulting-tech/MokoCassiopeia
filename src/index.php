@@ -227,16 +227,16 @@ if ($this->params->get('fA6KitCode')) {
 $params_leftIcon           = htmlspecialchars($this->params->get('drawerLeftIcon', 'fa-solid fa-chevron-left'), ENT_COMPAT, 'UTF-8');
 $params_rightIcon          = htmlspecialchars($this->params->get('drawerRightIcon', 'fa-solid fa-chevron-right'), ENT_COMPAT, 'UTF-8');
 
-// Load all theme palette stylesheets (static loading for theme switcher compatibility)
+// Load theme palette stylesheets based on configuration
 $wa->useStyle('template.light.standard');      // css/theme/light.standard.css
 $wa->useStyle('template.dark.standard');       // css/theme/dark.standard.css
 
-// Load custom palettes if they exist (optional user customizations)
-if (file_exists(JPATH_ROOT . '/media/templates/site/mokocassiopeia/css/theme/light.custom.css'))
+// Load custom palettes only if selected in template configuration AND files exist
+if ($params_LightColorName === 'custom' && file_exists(JPATH_ROOT . '/media/templates/site/mokocassiopeia/css/theme/light.custom.css'))
 {
 	$wa->useStyle('template.light.custom');
 }
-if (file_exists(JPATH_ROOT . '/media/templates/site/mokocassiopeia/css/theme/dark.custom.css'))
+if ($params_DarkColorName === 'custom' && file_exists(JPATH_ROOT . '/media/templates/site/mokocassiopeia/css/theme/dark.custom.css'))
 {
 	$wa->useStyle('template.dark.custom');
 }
