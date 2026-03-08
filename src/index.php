@@ -45,9 +45,9 @@ $document = $app->getDocument();
 $wa    = $document->getWebAssetManager();
 
 // Template params
-$params_LightColorName          = (string) $this->params->get('colorLightName', 'colors_standard'); // colors_standard|colors_alternative|colors_custom
+$params_LightColorName          = (string) $this->params->get('colorLightName', 'standard'); // standard|alternative|custom
 
-$params_DarkColorName          = (string) $this->params->get('colorDarkName', 'colors_standard'); // colors_standard|colors_alternative|colors_custom
+$params_DarkColorName          = (string) $this->params->get('colorDarkName', 'standard'); // standard|alternative|custom
 
 $params_googletagmanager   = $this->params->get('googletagmanager', false);
 $params_googletagmanagerid = $this->params->get('googletagmanagerid', null);
@@ -88,34 +88,20 @@ $templatePath = 'media/templates/site/mokocassiopeia';
 // Core template CSS
 $wa->useStyle('template.base');   // css/template.css
 
-// Color theme (light + optional dark)
-$colorLightKey  = strtolower(preg_replace('/[^a-z0-9_.-]/i', '', $params_LightColorName));
-$colorDarkKey  = strtolower(preg_replace('/[^a-z0-9_.-]/i', '', $params_DarkColorName));
-$lightKey  = 'template.light.' . $colorLightKey;
-$darkKey   = 'template.dark.' . $colorDarkKey;
+// Theme palettes (light + dark)
+// Always load standard theme, then load custom if selected
+$wa->useStyle('template.light.standard');
+$wa->useStyle('template.dark.standard');
 
-try {
-	$wa->useStyle('template.light.colors_standard');
-} catch (\Throwable $e) {
-	$wa->registerAndUseStyle('template.light.colors_standard', $templatePath . '/css/theme/light.standard.css');
+// Load custom or alternative themes if selected
+if ($params_LightColorName === 'custom') {
+	$wa->useStyle('template.light.custom');
 }
 
-try {
-	$wa->useStyle('template.dark.colors_standard');
-} catch (\Throwable $e) {
-	$wa->registerAndUseStyle('template.dark.colors_standard', $templatePath . '/css/theme/dark.standard.css');
-}
-
-try {
-	$wa->useStyle($lightKey);
-} catch (\Throwable $e) {
-	$wa->registerAndUseStyle('template.light.dynamic', $templatePath . '/css/theme/light.' . $colorLightKey . '.css');
-}
-
-try {
-	$wa->useStyle($darkKey);
-} catch (\Throwable $e) {
-	$wa->registerAndUseStyle('template.dark.dynamic', $templatePath . '/css/theme/dark.' . $colorDarkKey . '.css');
+if ($params_DarkColorName === 'custom') {
+	$wa->useStyle('template.dark.custom');
+} elseif ($params_DarkColorName === 'alternative') {
+	$wa->useStyle('template.dark.alternative');
 }
 
 // Scripts

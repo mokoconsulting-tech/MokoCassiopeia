@@ -29,9 +29,9 @@ $params = $this->params;
 $wa     = $this->getWebAssetManager();
 
 // Template params
-$params_LightColorName          = (string) $params->get('colorLightName', 'colors_standard'); // colors_standard|colors_alternative|colors_custom
+$params_LightColorName          = (string) $params->get('colorLightName', 'standard'); // standard|alternative|custom
 
-$params_DarkColorName          = (string) $params->get('colorDarkName', 'colors_standard'); // colors_standard|colors_alternative|colors_custom
+$params_DarkColorName          = (string) $params->get('colorDarkName', 'standard'); // standard|alternative|custom
 
 $params_googletagmanager   = $params->get('googletagmanager', false);
 $params_googletagmanagerid = $params->get('googletagmanagerid', '');
@@ -66,14 +66,14 @@ $colorDarkKey  = strtolower(preg_replace('/[^a-z0-9_.-]/i', '', $params_DarkColo
 $lightKey  = 'template.light.' . $colorLightKey;
 $darkKey   = 'template.dark.' . $colorDarkKey;
 try {
-	$wa->useStyle('template.light.colors_standard');
+	$wa->useStyle('template.light.standard');
 } catch (\Throwable $e) {
-	$wa->registerAndUseStyle('template.light.colors_standard', $templatePath . '/css/theme/light.standard.css');
+	$wa->registerAndUseStyle('template.light.standard', $templatePath . '/css/theme/light.standard.css');
 }
 try {
-	$wa->useStyle('template.dark.colors_standard');
+	$wa->useStyle('template.dark.standard');
 } catch (\Throwable $e) {
-	$wa->registerAndUseStyle('template.dark.colors_standard', $templatePath . '/css/theme/dark.standard.css');
+	$wa->registerAndUseStyle('template.dark.standard', $templatePath . '/css/theme/dark.standard.css');
 }
 try {
 	$wa->useStyle($lightKey);

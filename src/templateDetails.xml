@@ -187,13 +187,13 @@
 
 				<!-- Variables & Palettes -->
 				<field name="theme_sep_vars" type="spacer" label="Variables &amp; Palettes" hr="false" class="text fw-bold" />
-				<field name="colorLightName" type="list" label="TPL_MOKOCASSIOPEIA_COLOR_LIGHT_NAME_LABEL" hint="TPL_MOKOCASSIOPEIA_COLOR_LIGHT_NAME_DESC" default="colors_standard">
-					<option value="colors_standard">TPL_MOKOCASSIOPEIA_COLOR_NAME_STANDARD</option>
-					<option value="colors_custom">TPL_MOKOCASSIOPEIA_COLOR_NAME_CUSTOM</option>
+				<field name="colorLightName" type="list" label="TPL_MOKOCASSIOPEIA_COLOR_LIGHT_NAME_LABEL" hint="TPL_MOKOCASSIOPEIA_COLOR_LIGHT_NAME_DESC" default="standard">
+					<option value="standard">TPL_MOKOCASSIOPEIA_COLOR_NAME_STANDARD</option>
+					<option value="custom">TPL_MOKOCASSIOPEIA_COLOR_NAME_CUSTOM</option>
 				</field>
-				<field name="colorDarkName" type="list" label="TPL_MOKOCASSIOPEIA_COLOR_DARK_NAME_LABEL" hint="TPL_MOKOCASSIOPEIA_COLOR_DARK_NAME_DESC" default="colors_standard">
-					<option value="colors_standard">TPL_MOKOCASSIOPEIA_COLOR_NAME_STANDARD</option>
-					<option value="colors_custom">TPL_MOKOCASSIOPEIA_COLOR_NAME_CUSTOM</option>
+				<field name="colorDarkName" type="list" label="TPL_MOKOCASSIOPEIA_COLOR_DARK_NAME_LABEL" hint="TPL_MOKOCASSIOPEIA_COLOR_DARK_NAME_DESC" default="standard">
+					<option value="standard">TPL_MOKOCASSIOPEIA_COLOR_NAME_STANDARD</option>
+					<option value="custom">TPL_MOKOCASSIOPEIA_COLOR_NAME_CUSTOM</option>
 				</field>
 
 				<!-- Typography -->

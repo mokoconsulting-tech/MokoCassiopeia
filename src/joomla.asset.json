@@ -65,13 +65,13 @@
 			"attributes": {"media": "all"}
 		},
 		{
-			"name": "template.light.colors_standard",
+			"name": "template.light.standard",
 			"type": "style",
 			"uri": "media/templates/site/mokocassiopeia/css/theme/light.standard.css",
 			"attributes": {"media": "all"}
 		},
 		{
-			"name": "template.light.colors_standard.min",
+			"name": "template.light.standard.min",
 			"type": "style",
 			"uri": "media/templates/site/mokocassiopeia/css/theme/light.standard.min.css",
 			"attributes": {"media": "all"}
@@ -89,13 +89,13 @@
 			"attributes": {"media": "all"}
 		},
 		{
-			"name": "template.dark.colors_standard",
+			"name": "template.dark.standard",
 			"type": "style",
 			"uri": "media/templates/site/mokocassiopeia/css/theme/dark.standard.css",
 			"attributes": {"media": "all"}
 		},
 		{
-			"name": "template.dark.colors_standard.min",
+			"name": "template.dark.standard.min",
 			"type": "style",
 			"uri": "media/templates/site/mokocassiopeia/css/theme/dark.standard.min.css",
 			"attributes": {"media": "all"}

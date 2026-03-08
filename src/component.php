@@ -33,9 +33,9 @@ $document = $app->getDocument();
 $wa    = $document->getWebAssetManager();
 
 // Template params
-$params_LightColorName          = (string) $this->params->get('colorLightName', 'colors_standard'); // colors_standard|colors_alternative|colors_custom
+$params_LightColorName          = (string) $this->params->get('colorLightName', 'standard'); // standard|alternative|custom
 
-$params_DarkColorName          = (string) $this->params->get('colorDarkName', 'colors_standard'); // colors_standard|colors_alternative|colors_custom
+$params_DarkColorName          = (string) $this->params->get('colorDarkName', 'standard'); // standard|alternative|custom
 
 $params_googletagmanager   = $this->params->get('googletagmanager', false);
 $params_googletagmanagerid = $this->params->get('googletagmanagerid', null);
