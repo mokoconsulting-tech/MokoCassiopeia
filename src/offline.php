@@ -40,19 +40,32 @@ $params    = $this->params ?: $app->getTemplate(true)->params;
 $direction = $this->direction ?: 'ltr';
 
 /* -----------------------
-   Load ONLY template.css + colors_*.css (with min toggle)
+   Load ONLY template.css + theme palettes (with min toggle)
 ------------------------ */
 $useMin      = !((int) $params->get('development_mode', 0) === 1);
 $assetSuffix = $useMin ? '.min' : '';
 $base        = rtrim(Uri::root(true), '/') . '/templates/' . $this->template . '/css/';
+$jsBase      = rtrim(Uri::root(true), '/') . '/templates/' . $this->template . '/js/';
 
 $doc->addStyleSheet($base . 'template' . $assetSuffix . '.css', ['version' => 'auto'], ['id' => 'moko-template']);
-/* If you have a template param for color variant, set it here; defaults to 'standard' */
-$colorKey = (string) ($params->get('colors', 'standard') ?: 'standard');
-$colorKey = preg_replace('~[^a-z0-9_-]~i', '', $colorKey);
-$doc->addStyleSheet($base . 'colors_' . $colorKey . $assetSuffix . '.css', ['version' => 'auto'], ['id' => 'moko-colors']);
 
-/* Load user.css for custom user overrides */
+/* Load theme palettes */
+$doc->addStyleSheet($base . 'theme/light.standard' . $assetSuffix . '.css', ['version' => 'auto'], ['id' => 'moko-light-standard']);
+$doc->addStyleSheet($base . 'theme/dark.standard' . $assetSuffix . '.css', ['version' => 'auto'], ['id' => 'moko-dark-standard']);
+
+/* Load custom palettes only if selected in template configuration AND files exist */
+$params_LightColorName = (string) $params->get('colorLightName', 'standard');
+$params_DarkColorName = (string) $params->get('colorDarkName', 'standard');
+if ($params_LightColorName === 'custom' && file_exists(JPATH_ROOT . '/media/templates/site/mokocassiopeia/css/theme/light.custom.css'))
+{
+	$doc->addStyleSheet($base . 'theme/light.custom' . $assetSuffix . '.css', ['version' => 'auto'], ['id' => 'moko-light-custom']);
+}
+if ($params_DarkColorName === 'custom' && file_exists(JPATH_ROOT . '/media/templates/site/mokocassiopeia/css/theme/dark.custom.css'))
+{
+	$doc->addStyleSheet($base . 'theme/dark.custom' . $assetSuffix . '.css', ['version' => 'auto'], ['id' => 'moko-dark-custom']);
+}
+
+/* Load user assets last (after all other styles and scripts) */
 $doc->addStyleSheet($base . 'user' . $assetSuffix . '.css', ['version' => 'auto'], ['id' => 'moko-user']);
 
 /* Bootstrap CSS/JS for accordion behavior; safe to keep. */
@@ -60,8 +73,10 @@ HTMLHelper::_('bootstrap.loadCss', true, $doc);
 HTMLHelper::_('bootstrap.framework');
 
 /* Load template.js for theme switcher and other functionality */
-$jsBase = rtrim(Uri::root(true), '/') . '/templates/' . $this->template . '/js/';
 $doc->addScript($jsBase . 'template' . $assetSuffix . '.js', ['version' => 'auto', 'defer' => true], ['id' => 'moko-template-js']);
+
+/* Load user.js last for custom user scripts */
+$doc->addScript($jsBase . 'user' . $assetSuffix . '.js', ['version' => 'auto', 'defer' => true], ['id' => 'moko-user-js']);
 
 /* -----------------------
    Title + Meta (Include Site Name in Page Titles)

@@ -71,30 +71,18 @@ $templatePath = 'media/templates/site/mokocassiopeia';
 // Core template CSS
 $wa->useStyle('template.base');   // css/template.css
 
-// Color theme (light + optional dark)
-$colorLightKey  = strtolower(preg_replace('/[^a-z0-9_.-]/i', '', $params_LightColorName));
-$colorDarkKey  = strtolower(preg_replace('/[^a-z0-9_.-]/i', '', $params_DarkColorName));
-$lightKey  = 'template.light.' . $colorLightKey;
-$darkKey   = 'template.dark.' . $colorDarkKey;
-try {
-	$wa->useStyle('template.light.colors_standard');
-} catch (\Throwable $e) {
-	$wa->registerAndUseStyle('template.light.colors_standard', $templatePath . '/css/theme/light.standard.css');
+// Load theme palette stylesheets based on configuration
+$wa->useStyle('template.light.standard');      // css/theme/light.standard.css
+$wa->useStyle('template.dark.standard');       // css/theme/dark.standard.css
+
+// Load custom palettes only if selected in template configuration AND files exist
+if ($params_LightColorName === 'custom' && file_exists(JPATH_ROOT . '/media/templates/site/mokocassiopeia/css/theme/light.custom.css'))
+{
+	$wa->useStyle('template.light.custom');
 }
-try {
-	$wa->useStyle('template.dark.colors_standard');
-} catch (\Throwable $e) {
-	$wa->registerAndUseStyle('template.dark.colors_standard', $templatePath . '/css/theme/dark.standard.css');
-}
-try {
-	$wa->useStyle($lightKey);
-} catch (\Throwable $e) {
-	$wa->registerAndUseStyle('template.light.dynamic', $templatePath . '/css/theme/light.' . $colorLightKey . '.css');
-}
-try {
-	$wa->useStyle($darkKey);
-} catch (\Throwable $e) {
-	$wa->registerAndUseStyle('template.dark.dynamic', $templatePath . '/css/theme/dark.' . $colorDarkKey . '.css');
+if ($params_DarkColorName === 'custom' && file_exists(JPATH_ROOT . '/media/templates/site/mokocassiopeia/css/theme/dark.custom.css'))
+{
+	$wa->useStyle('template.dark.custom');
 }
 
 // Scripts
@@ -194,7 +182,9 @@ $params_rightIcon          = htmlspecialchars($this->params->get('drawerRightIco
 // Theme params
 $params_theme_enabled      = $this->params->get('theme_enabled', 1);
 
+// Load user assets last (after all other styles and scripts)
 $wa->useStyle('template.user');   // css/user.css
+$wa->useScript('user.js');         // js/user.js
 ?>
 <!DOCTYPE html>
 <html class="component" lang="<?php echo $this->language; ?>" dir="<?php echo $this->direction; ?>">

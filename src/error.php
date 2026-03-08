@@ -60,30 +60,18 @@ $templatePath = 'media/templates/site/mokocassiopeia';
 // Core template CSS
 $wa->useStyle('template.base');   // css/template.css
 
-// Color theme (light + optional dark)
-$colorLightKey  = strtolower(preg_replace('/[^a-z0-9_.-]/i', '', $params_LightColorName));
-$colorDarkKey  = strtolower(preg_replace('/[^a-z0-9_.-]/i', '', $params_DarkColorName));
-$lightKey  = 'template.light.' . $colorLightKey;
-$darkKey   = 'template.dark.' . $colorDarkKey;
-try {
-	$wa->useStyle('template.light.standard');
-} catch (\Throwable $e) {
-	$wa->registerAndUseStyle('template.light.standard', $templatePath . '/css/theme/light.standard.css');
+// Load theme palette stylesheets based on configuration
+$wa->useStyle('template.light.standard');      // css/theme/light.standard.css
+$wa->useStyle('template.dark.standard');       // css/theme/dark.standard.css
+
+// Load custom palettes only if selected in template configuration AND files exist
+if ($params_LightColorName === 'custom' && file_exists(JPATH_ROOT . '/media/templates/site/mokocassiopeia/css/theme/light.custom.css'))
+{
+	$wa->useStyle('template.light.custom');
 }
-try {
-	$wa->useStyle('template.dark.standard');
-} catch (\Throwable $e) {
-	$wa->registerAndUseStyle('template.dark.standard', $templatePath . '/css/theme/dark.standard.css');
-}
-try {
-	$wa->useStyle($lightKey);
-} catch (\Throwable $e) {
-	$wa->registerAndUseStyle('template.light.dynamic', $templatePath . '/css/theme/' . $colorLightKey . '.css');
-}
-try {
-	$wa->useStyle($darkKey);
-} catch (\Throwable $e) {
-	$wa->registerAndUseStyle('template.dark.dynamic', $templatePath . '/css/theme/' . $colorDarkKey . '.css');
+if ($params_DarkColorName === 'custom' && file_exists(JPATH_ROOT . '/media/templates/site/mokocassiopeia/css/theme/dark.custom.css'))
+{
+	$wa->useStyle('template.dark.custom');
 }
 
 // Scripts
@@ -137,8 +125,6 @@ if ($this->params->get('faKitCode')) {
 	}
 }
 
-$wa->useStyle('template.user');   // css/user.css
-
 // ------------------ Context (logo, bootstrap needs) ------------------
 $sitename = htmlspecialchars($app->get('sitename'), ENT_QUOTES, 'UTF-8');
 
@@ -170,6 +156,10 @@ $errorObj  = isset($this->error) && is_object($this->error) ? $this->error : nul
 $errorCode = $errorObj ? (int) $errorObj->getCode() : 500;
 $errorMsg  = $errorObj ? $errorObj->getMessage() : Text::_('JERROR_AN_ERROR_HAS_OCCURRED');
 $debugOn   = defined('JDEBUG') && JDEBUG;
+
+// Load user assets last (after all other styles and scripts)
+$wa->useStyle('template.user');   // css/user.css
+$wa->useScript('user.js');         // js/user.js
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo $this->language; ?>" dir="<?php echo $this->direction; ?>">

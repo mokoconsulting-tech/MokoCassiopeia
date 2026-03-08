@@ -241,7 +241,9 @@ if ($params_DarkColorName === 'custom' && file_exists(JPATH_ROOT . '/media/templ
 	$wa->useStyle('template.dark.custom');
 }
 
+// Load user assets last (after all other styles and scripts)
 $wa->useStyle('template.user');   // css/user.css
+$wa->useScript('user.js');         // js/user.js
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo $this->language; ?>" dir="<?php echo $this->direction; ?>">

@@ -47,6 +47,18 @@
 			"attributes": {"media": "all"}
 		},
 		{
+			"name": "user.js",
+			"type": "script",
+			"uri": "media/templates/site/mokocassiopeia/js/user.js",
+			"attributes": {"defer": true}
+		},
+		{
+			"name": "user.js.min",
+			"type": "script",
+			"uri": "media/templates/site/mokocassiopeia/js/user.min.js",
+			"attributes": {"defer": true}
+		},
+		{
 			"name": "template.font.osaka",
 			"type": "style",
 			"uri": "media/templates/site/mokocassiopeia/css/fonts/osaka.css",
