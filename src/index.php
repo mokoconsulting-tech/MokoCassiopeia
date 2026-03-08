@@ -227,6 +227,13 @@ if ($this->params->get('fA6KitCode')) {
 $params_leftIcon           = htmlspecialchars($this->params->get('drawerLeftIcon', 'fa-solid fa-chevron-left'), ENT_COMPAT, 'UTF-8');
 $params_rightIcon          = htmlspecialchars($this->params->get('drawerRightIcon', 'fa-solid fa-chevron-right'), ENT_COMPAT, 'UTF-8');
 
+// Load all theme palette stylesheets (static loading for theme switcher compatibility)
+$wa->useStyle('template.light.standard');      // css/theme/light.standard.css
+$wa->useStyle('template.dark.standard');       // css/theme/dark.standard.css
+$wa->useStyle('template.light.custom');        // css/theme/light.custom.css
+$wa->useStyle('template.dark.custom');         // css/theme/dark.custom.css
+$wa->useStyle('template.dark.alternative');    // css/theme/dark.alternative.css
+
 $wa->useStyle('template.user');   // css/user.css
 ?>
 <!DOCTYPE html>
@@ -234,13 +241,6 @@ $wa->useStyle('template.user');   // css/user.css
 <head>
 	<?php if (trim($params_custom_head_start)) : ?><?php echo $params_custom_head_start; ?><?php endif; ?>
 	<jdoc:include type="head" />
-
-	<!-- Theme Palettes: Hard-coded stylesheet loading (standard and custom) -->
-	<link rel="stylesheet" href="<?php echo Uri::root(true); ?>/media/templates/site/mokocassiopeia/css/theme/light.standard.css" media="all" />
-	<link rel="stylesheet" href="<?php echo Uri::root(true); ?>/media/templates/site/mokocassiopeia/css/theme/dark.standard.css" media="all" />
-	<link rel="stylesheet" href="<?php echo Uri::root(true); ?>/media/templates/site/mokocassiopeia/css/theme/light.custom.css" media="all" />
-	<link rel="stylesheet" href="<?php echo Uri::root(true); ?>/media/templates/site/mokocassiopeia/css/theme/dark.custom.css" media="all" />
-	<link rel="stylesheet" href="<?php echo Uri::root(true); ?>/media/templates/site/mokocassiopeia/css/theme/dark.alternative.css" media="all" />
 
 	<?php if ($params_theme_enabled) : ?>
 	<script>
