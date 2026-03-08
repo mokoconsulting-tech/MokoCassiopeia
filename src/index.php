@@ -88,22 +88,6 @@ $templatePath = 'media/templates/site/mokocassiopeia';
 // Core template CSS
 $wa->useStyle('template.base');   // css/template.css
 
-// Theme palettes (light + dark)
-// Always load standard theme, then load custom if selected
-$wa->useStyle('template.light.standard');
-$wa->useStyle('template.dark.standard');
-
-// Load custom or alternative themes if selected
-if ($params_LightColorName === 'custom') {
-	$wa->useStyle('template.light.custom');
-}
-
-if ($params_DarkColorName === 'custom') {
-	$wa->useStyle('template.dark.custom');
-} elseif ($params_DarkColorName === 'alternative') {
-	$wa->useStyle('template.dark.alternative');
-}
-
 // Scripts
 $wa->useScript('template.js');
 
@@ -250,6 +234,13 @@ $wa->useStyle('template.user');   // css/user.css
 <head>
 	<?php if (trim($params_custom_head_start)) : ?><?php echo $params_custom_head_start; ?><?php endif; ?>
 	<jdoc:include type="head" />
+
+	<!-- Theme Palettes: Always load standard themes, custom themes loaded if present -->
+	<link rel="stylesheet" href="<?php echo Uri::root(true); ?>/media/templates/site/mokocassiopeia/css/theme/light.standard.css" media="all" />
+	<link rel="stylesheet" href="<?php echo Uri::root(true); ?>/media/templates/site/mokocassiopeia/css/theme/dark.standard.css" media="all" />
+	<link rel="stylesheet" href="<?php echo Uri::root(true); ?>/media/templates/site/mokocassiopeia/css/theme/light.custom.css" media="all" />
+	<link rel="stylesheet" href="<?php echo Uri::root(true); ?>/media/templates/site/mokocassiopeia/css/theme/dark.custom.css" media="all" />
+	<link rel="stylesheet" href="<?php echo Uri::root(true); ?>/media/templates/site/mokocassiopeia/css/theme/dark.alternative.css" media="all" />
 
 	<?php if ($params_theme_enabled) : ?>
 	<script>

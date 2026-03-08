@@ -17,18 +17,18 @@ Template files are provided for both light and dark themes with complete Bootstr
 
 | File | Theme | Description |
 |------|-------|-------------|
-| `theme_custom_light.css` | Light | Custom light theme with all Bootstrap button variants |
-| `theme_custom_dark.css` | Dark | Custom dark theme with all Bootstrap button variants |
+| `light.custom.css` | Light | Custom light theme with all Bootstrap button variants |
+| `dark.custom.css` | Dark | Custom dark theme with all Bootstrap button variants |
 
 ### Using Custom Theme Templates
 
 1. **Copy** the template file to your template's CSS theme directory:
    ```bash
    # For light theme
-   cp templates/theme_custom_light.css src/media/css/theme/light.custom.css
+   cp templates/light.custom.css src/media/css/theme/light.custom.css
    
    # For dark theme
-   cp templates/theme_custom_dark.css src/media/css/theme/dark.custom.css
+   cp templates/dark.custom.css src/media/css/theme/dark.custom.css
    ```
 
 2. **Customize** the CSS variables in your copied file:
