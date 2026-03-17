@@ -1,0 +1,64 @@
+/* Copyright (C) 2026 Moko Consulting <hello@mokoconsulting.tech>
+
+ This file is part of a Moko Consulting project.
+
+ SPDX-License-Identifier: GPL-3.0-or-later
+
+
+ # FILE INFORMATION
+ DEFGROUP: Joomla.Template.Site
+ INGROUP: MokoCassiopeia.Styles
+ PATH: ./media/templates/site/mokocassiopeia/css/fonts/noto-sans.css
+ VERSION: 03.08.04
+ BRIEF: Noto Sans font family definitions (self-hosted)
+ */
+
+/*
+ * IMPORTANT: Font files must be downloaded separately
+ * 
+ * This CSS file references Noto Sans font files that must be manually downloaded
+ * and placed in the fonts directory. See GOOGLE_FONTS_README.md in the fonts
+ * directory for download instructions.
+ * 
+ * Required files:
+ * - noto-sans-v36-latin-100.woff2
+ * - noto-sans-v36-latin-300.woff2
+ * - noto-sans-v36-latin-regular.woff2
+ * - noto-sans-v36-latin-700.woff2
+ */
+
+/* Noto Sans Thin (100) */
+@font-face {
+	font-family: 'Noto Sans';
+	font-style: normal;
+	font-weight: 100;
+	font-display: swap;
+	src: url('../../fonts/noto-sans-v36-latin-100.woff2') format('woff2');
+}
+
+/* Noto Sans Light (300) */
+@font-face {
+	font-family: 'Noto Sans';
+	font-style: normal;
+	font-weight: 300;
+	font-display: swap;
+	src: url('../../fonts/noto-sans-v36-latin-300.woff2') format('woff2');
+}
+
+/* Noto Sans Regular (400) */
+@font-face {
+	font-family: 'Noto Sans';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url('../../fonts/noto-sans-v36-latin-regular.woff2') format('woff2');
+}
+
+/* Noto Sans Bold (700) */
+@font-face {
+	font-family: 'Noto Sans';
+	font-style: normal;
+	font-weight: 700;
+	font-display: swap;
+	src: url('../../fonts/noto-sans-v36-latin-700.woff2') format('woff2');
+}

@@ -96,6 +96,8 @@ MokoCassiopeia is a modern, lightweight enhancement layer built on top of Joomla
 
 ## 📦 Installation
 
+**Note**: MokoCassiopeia is a **standalone Joomla template extension** (not bundled as a package). Install it directly via Joomla's Extension Manager.
+
 ### Via Joomla Extension Manager
 
 1. Download the latest `mokocassiopeia-{version}.zip` from [Releases](https://github.com/mokoconsulting-tech/MokoCassiopeia/releases)
@@ -201,13 +203,13 @@ Access template configuration via **System → Site Templates → MokoCassiopeia
 - **Left Drawer Icon**: Font Awesome icon class (e.g., `fa-solid fa-chevron-right`)
 - **Right Drawer Icon**: Font Awesome icon class (e.g., `fa-solid fa-chevron-left`)
 
-### Custom Color Palettes
+### Custom Theme Palettes
 
-MokoCassiopeia supports custom color schemes:
+MokoCassiopeia supports custom theme schemes:
 
 1. **Copy template files** from `/templates/` directory:
-   - `colors_custom_light.css` → `media/templates/site/mokocassiopeia/css/colors/light/colors_custom.css`
-   - `colors_custom_dark.css` → `media/templates/site/mokocassiopeia/css/colors/dark/colors_custom.css`
+   - `light.custom.css` → `media/templates/site/mokocassiopeia/css/theme/light.custom.css`
+   - `dark.custom.css` → `media/templates/site/mokocassiopeia/css/theme/dark.custom.css`
 2. **Customize** the CSS variables to match your brand colors
 3. **Enable in Joomla**: System → Site Templates → MokoCassiopeia → Theme tab → Set palette to "Custom"
 4. **Save** and view your site with custom colors
@@ -326,16 +328,6 @@ See [Joomla Development Guide](./docs/JOOMLA_DEVELOPMENT.md) for packaging instr
 - **[CSS Variables Reference](./docs/CSS_VARIABLES.md)** - Complete CSS customization guide
 - **[Documentation Index](./docs/README.md)** - All documentation links
 
-### Customization Resources
-
-- **[Template Files](./templates/)** - Ready-to-use templates for customization
-  - `colors_custom.css` - Custom color palette template
-  - `CLIENT_FORK_README_TEMPLATE.md` - Template for client fork documentation
-
-### Client Forks
-
-- **[Client Fork Guide](./CLIENT_FORK_README.md)** - Comprehensive guide for creating and maintaining client custom code forks
-
 ### Governance
 
 - **[Contributing](./CONTRIBUTING.md)** - How to contribute
@@ -402,18 +394,9 @@ We welcome contributions! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for gu
 
 See [Workflow Guide](./docs/WORKFLOW_GUIDE.md) for detailed Git workflow.
 
-### Client Custom Forks
+### Customizations
 
-Creating a custom fork for client-specific branding and code?
-
-**Quick Setup**: Use our automated workflow to create a client fork in minutes:
-- **[Client Fork Workflow Guide](./docs/CLIENT_FORK_WORKFLOW.md)** - Automated GitHub Actions workflow or local bash script
-
-**Comprehensive Guide**: See our [Client Fork Guide](./CLIENT_FORK_README.md) for:
-- Setting up custom color schemes
-- Maintaining fork-specific customizations
-- Syncing with upstream updates
-- Deployment workflows
+For template customizations, use Joomla's built-in template settings (System → Site Templates → MokoCassiopeia → Custom Code tab) for HTML/CSS/JS customizations.
 
 ---
 

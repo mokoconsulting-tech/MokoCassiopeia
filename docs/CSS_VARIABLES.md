@@ -46,8 +46,8 @@ This document provides a complete reference of all CSS variables available in th
 To create custom color schemes:
 
 1. **Copy template files** from `./templates/` directory:
-   - `colors_custom_light.css` → `media/templates/site/mokocassiopeia/css/colors/light/colors_custom.css`
-   - `colors_custom_dark.css` → `media/templates/site/mokocassiopeia/css/colors/dark/colors_custom.css`
+   - `light.custom.css` → `media/templates/site/mokocassiopeia/css/theme/light.custom.css`
+   - `dark.custom.css` → `media/templates/site/mokocassiopeia/css/theme/dark.custom.css`
 
 2. **Edit the variables** in the copied files to match your brand
 
@@ -403,6 +403,51 @@ Available in 9 shades: `--gray-100` through `--gray-900`
 Light mode ranges from very light (`#f9fafb`) to very dark (`#22262a`).
 Dark mode ranges are inverted for better contrast on dark backgrounds.
 
+### Opacity Utilities
+
+**New in v03.08.04**: Opacity utility variables for creating translucent colors:
+
+- `--opacity-0`: `0` (fully transparent)
+- `--opacity-5`: `0.05`
+- `--opacity-10`: `0.1`
+- `--opacity-15`: `0.15`
+- `--opacity-20`: `0.2`
+- `--opacity-25`: `0.25`
+- `--opacity-30`: `0.3`
+- `--opacity-50`: `0.5`
+- `--opacity-75`: `0.75`
+- `--opacity-100`: `1` (fully opaque)
+
+**Usage Example:**
+```css
+background-color: rgba(var(--black-rgb), var(--opacity-10));
+border-color: rgba(var(--white-rgb), var(--opacity-25));
+```
+
+### Shadow Color Utilities
+
+**New in v03.08.04**: Pre-defined shadow color variables for consistent shadow styling:
+
+**Light Theme:**
+- `--shadow-color-light`: `rgba(var(--black-rgb), var(--opacity-15))` - Light shadows
+- `--shadow-color-medium`: `rgba(var(--black-rgb), var(--opacity-25))` - Medium shadows
+- `--shadow-color-dark`: `rgba(var(--black-rgb), var(--opacity-30))` - Dark shadows
+- `--border-color-translucent`: `rgba(var(--black-rgb), var(--opacity-10))` - Translucent borders
+- `--highlight-translucent`: `rgba(var(--white-rgb), var(--opacity-15))` - Highlight overlays
+
+**Dark Theme:**
+- `--shadow-color-light`: `rgba(var(--black-rgb), var(--opacity-30))` - Adjusted for dark backgrounds
+- `--shadow-color-medium`: `rgba(var(--black-rgb), var(--opacity-50))`
+- `--shadow-color-dark`: `rgba(var(--black-rgb), var(--opacity-75))`
+- `--border-color-translucent`: `rgba(var(--white-rgb), var(--opacity-10))`
+- `--highlight-translucent`: `rgba(var(--white-rgb), var(--opacity-5))`
+
+**Usage Example:**
+```css
+box-shadow: 0 0.5rem 1rem var(--shadow-color-light);
+border: 1px solid var(--border-color-translucent);
+```
+
 ---
 
 ## Body & Typography
@@ -532,6 +577,68 @@ Dark mode ranges are inverted for better contrast on dark backgrounds.
 #### `--box-shadow-inset`
 - **Default**: `inset 0 1px 2px rgba(0,0,0,.075)`
 - **Usage**: Inset/inner shadow
+
+---
+
+## Bootstrap Button Variants
+
+**New in v03.08.04**: Complete Bootstrap button color definitions for both light and dark themes.
+
+### Available Button Classes
+
+All button variants support hover, active, focus, and disabled states using CSS variables:
+
+**Solid Buttons:**
+- `.btn-primary` - Primary brand button
+- `.btn-secondary` - Secondary button
+- `.btn-success` - Success/positive action button  
+- `.btn-info` - Informational button
+- `.btn-warning` - Warning/caution button
+- `.btn-danger` - Danger/destructive action button
+- `.btn-light` - Light background button
+- `.btn-dark` - Dark background button
+
+**Outline Buttons:**
+- `.btn-outline-primary` through `.btn-outline-dark` - Outlined variants of above
+
+### Button CSS Variables
+
+Each button variant defines the following CSS variables:
+
+- `--btn-color`: Text color
+- `--btn-bg`: Background color
+- `--btn-border-color`: Border color
+- `--btn-hover-color`: Hover state text color
+- `--btn-hover-bg`: Hover state background
+- `--btn-hover-border-color`: Hover state border
+- `--btn-focus-shadow-rgb`: Focus ring RGB values
+- `--btn-active-color`: Active state text color
+- `--btn-active-bg`: Active state background
+- `--btn-active-border-color`: Active state border
+- `--btn-active-shadow`: Active state shadow
+- `--btn-disabled-color`: Disabled state text color
+- `--btn-disabled-bg`: Disabled state background
+- `--btn-disabled-border-color`: Disabled state border
+
+### Customizing Button Colors
+
+To customize button colors in your custom color palette:
+
+```css
+:root[data-bs-theme="light"] {
+  /* Override Bootstrap state colors */
+  --success: #28a745;
+  --danger: #dc3545;
+}
+
+.btn-primary {
+  --btn-bg: var(--color-primary);
+  --btn-border-color: var(--color-primary);
+  /* Other button states... */
+}
+```
+
+See `templates/light.custom.css` and `templates/dark.custom.css` for complete examples.
 
 ---
 
@@ -672,6 +779,35 @@ Dark mode ranges are inverted for better contrast on dark backgrounds.
   - Light: `#a51f18`
   - Dark: `#ff8e86`
 - `--form-invalid-border-color`: Matching border color
+
+### Form Control Enhancements
+
+**New in v03.08.04**: Additional form control color variables:
+
+#### `--input-file-button-active-bg`
+- **Light Mode**: `#dee1e4`
+- **Dark Mode**: `#2b3441`
+- **Usage**: Background color for file input button in active state
+
+#### `--form-range-thumb-active-bg`
+- **Light Mode**: `#b8bfcc`
+- **Dark Mode**: `#4a5766`
+- **Usage**: Background color for range slider thumb in active state
+
+### Alert Link Colors
+
+**New in v03.08.04**: Dedicated variables for alert link colors:
+
+- `--alert-primary-link-color`: Link color in primary alerts
+- `--alert-secondary-link-color`: Link color in secondary alerts
+- `--alert-success-link-color`: Link color in success alerts
+- `--alert-info-link-color`: Link color in info alerts
+- `--alert-warning-link-color`: Link color in warning alerts
+- `--alert-danger-link-color`: Link color in danger alerts
+- `--alert-light-link-color`: Link color in light alerts
+- `--alert-dark-link-color`: Link color in dark alerts
+
+These ensure optimal readability for links within alert boxes.
 
 ---
 

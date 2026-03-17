@@ -5,77 +5,113 @@
  BRIEF: Template files directory README
  -->
 
-# MokoCassiopeia Template Files
+# MokoCassiopeia Templates Directory
 
-This directory contains template files for client customizations and custom code forks.
+This directory contains template files for custom color schemes that can be copied to your template installation.
 
----
+## Custom Theme Palette Templates
 
-## 📁 Available Templates
+Template files are provided for both light and dark themes with complete Bootstrap button definitions:
 
-### Custom Color Scheme Template
+### Available Templates
 
-**File**: `colors_custom.css`
+| File | Theme | Description |
+|------|-------|-------------|
+| `light.custom.css` | Light | Custom light theme with all Bootstrap button variants |
+| `dark.custom.css` | Dark | Custom dark theme with all Bootstrap button variants |
 
-A comprehensive template for creating custom color schemes. This template includes all CSS variables used by MokoCassiopeia for both light and dark modes.
+### Using Custom Theme Templates
 
-**Usage**:
-1. Copy this file to either:
-   - `src/media/css/colors/light/colors_custom.css` (for light mode)
-   - `src/media/css/colors/dark/colors_custom.css` (for dark mode)
-2. Customize the CSS variables to match your brand colors
-3. Enable in Joomla: System → Site Templates → MokoCassiopeia → Theme tab
-4. Set the appropriate palette to "Custom"
+1. **Copy** the template file to your template's CSS theme directory:
+   ```bash
+   # For light theme
+   cp templates/light.custom.css src/media/css/theme/light.custom.css
+   
+   # For dark theme
+   cp templates/dark.custom.css src/media/css/theme/dark.custom.css
+   ```
 
-**Reference**: See [CSS Variables Documentation](../docs/CSS_VARIABLES.md) for complete variable reference.
+2. **Customize** the CSS variables in your copied file:
+   - Modify `--color-primary`, `--accent-color-primary`, etc. to match your brand
+   - Adjust Bootstrap state colors (`--success`, `--info`, `--warning`, `--danger`)
+   - Update button variants if needed
 
----
+3. **Register** in `src/joomla.asset.json`:
+   - Ensure `template.light.custom` and `template.dark.custom` assets are defined
+   - Already configured by default in the asset manifest
 
-### Client Fork README Template
+4. **Activate** via Joomla admin:
+   - Go to System → Site Templates → MokoCassiopeia
+   - Select "Custom" in the Theme Palette dropdown
+   - Save and check your site
 
-**File**: `CLIENT_FORK_README_TEMPLATE.md`
+### Bootstrap Button Variants Included
 
-A simplified README template for client-specific forks. Use this as a starting point for documenting your customizations.
+All template files include complete definitions for:
 
-**Usage**:
-1. Copy this file to the root of your fork repository as `README.md`
-2. Replace `[CLIENT NAME]` with your client's name
-3. Fill in brand colors and contact information
-4. Add client-specific notes and configurations
+**Solid Buttons:**
+- `.btn-primary`, `.btn-secondary`, `.btn-success`, `.btn-info`, `.btn-warning`, `.btn-danger`, `.btn-light`, `.btn-dark`
 
-**For Comprehensive Fork Setup**: See [CLIENT_FORK_README.md](../CLIENT_FORK_README.md) for the complete client fork guide.
+**Outline Buttons:**
+- `.btn-outline-primary`, `.btn-outline-secondary`, `.btn-outline-success`, `.btn-outline-info`, `.btn-outline-warning`, `.btn-outline-danger`, `.btn-outline-light`, `.btn-outline-dark`
 
----
+Each button variant includes hover, active, focus, and disabled states using CSS variables.
 
-## 🎯 When to Use These Templates
+## Theme System Features
 
-### Creating a Client Fork
+### CSS Variable Structure
 
-If you're creating a custom fork of MokoCassiopeia for a specific client:
+Colors are defined as CSS variables allowing easy customization:
 
-1. **Start with the full guide**: Read [CLIENT_FORK_README.md](../CLIENT_FORK_README.md)
-2. **Set up custom colors**: Use `colors_custom.css` as your starting point
-3. **Document your fork**: Copy `CLIENT_FORK_README_TEMPLATE.md` to your fork
+```css
+:root[data-bs-theme="light"] {
+  --color-primary: #0066cc;
+  --accent-color-primary: #3399ff;
+  --success: #28a745;
+  --danger: #dc3545;
+  /* ...and many more */
+}
+```
 
-### Custom Colors Only
+### Opacity Utilities
 
-If you just need custom colors without forking:
+Template includes opacity utility variables for creating translucent colors:
 
-1. Use the `colors_custom.css` template
-2. Follow the instructions in the [main README](../README.md#custom-color-palettes)
-3. Enable custom palette in Joomla template settings
+```css
+--opacity-5: 0.05;
+--opacity-10: 0.1;
+--opacity-15: 0.15;
+--opacity-25: 0.25;
+--opacity-50: 0.5;
+--opacity-75: 0.75;
+--opacity-100: 1;
+```
+
+Use with rgba():
+```css
+background-color: rgba(var(--black-rgb), var(--opacity-10));
+```
+
+### Shadow Color Utilities
+
+Pre-defined shadow color variables:
+
+```css
+--shadow-color-light: rgba(var(--black-rgb), var(--opacity-15));
+--shadow-color-medium: rgba(var(--black-rgb), var(--opacity-25));
+--shadow-color-dark: rgba(var(--black-rgb), var(--opacity-30));
+```
 
 ---
 
 ## 📚 Additional Resources
 
 - **[Main README](../README.md)** - MokoCassiopeia features and installation
-- **[Client Fork Guide](../CLIENT_FORK_README.md)** - Complete guide for client forks
 - **[CSS Variables Reference](../docs/CSS_VARIABLES.md)** - All available CSS variables
 - **[Development Guide](../docs/JOOMLA_DEVELOPMENT.md)** - Development workflows
 
 ---
 
 **Template Directory**: `/templates/`  
-**Version**: 03.06.03  
+**Version**: 03.08.04  
 **Maintained by**: Moko Consulting

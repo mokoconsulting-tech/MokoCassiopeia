@@ -8,16 +8,178 @@
  DEFGROUP: Joomla.Template.Site
  INGROUP: MokoCassiopeia.Documentation
  PATH: ./CHANGELOG.md
- VERSION: 03.08.00
+ VERSION: 03.08.03
  BRIEF: Changelog file documenting version history of MokoCassiopeia
  -->
 
-# Changelog — MokoCassiopeia (VERSION: 03.08.00)
+# Changelog — MokoCassiopeia (VERSION: 03.08.03)
 
 All notable changes to the MokoCassiopeia Joomla template are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [03.08.03] - 2026-02-27
+
+### Added - Main Menu Collapsible Dropdown Override
+
+**New feature**: Added responsive "Main Menu" mod_menu override with Bootstrap 5 collapsible dropdown functionality.
+
+#### What's New
+- **Main Menu module override** with full Bootstrap 5 responsive navbar
+- Collapsible hamburger menu for mobile devices
+- Multi-level dropdown support with hover on desktop, tap on mobile
+- WCAG 2.1 compliant touch targets (48px on mobile, 44px on desktop)
+- BEM naming convention: `.mod-menu-main__*`
+- **Appears as "Mainmenu" layout option** in Joomla admin module settings
+
+#### Files Added
+- `src/templates/html/mod_menu/mainmenu.php` - Main layout with Bootstrap navbar
+- `src/templates/html/mod_menu/mainmenu_component.php` - Component menu items
+- `src/templates/html/mod_menu/mainmenu_heading.php` - Heading menu items
+- `src/templates/html/mod_menu/mainmenu_separator.php` - Separator menu items
+- `src/templates/html/mod_menu/mainmenu_url.php` - URL menu items
+- `src/templates/html/mod_menu/index.html` - Security file
+
+#### Features
+- **Bootstrap 5 Navbar**: Uses Bootstrap's native navbar-nav structure
+- **Collapsible on Mobile**: Hamburger menu with smooth collapse animation
+- **Dropdown Menus**: Multi-level dropdown support with caret indicators
+- **Responsive Breakpoints**: Mobile-first design adapting at 768px and 992px
+- **Touch-Friendly**: 48px minimum touch targets on mobile
+- **Accessible**: ARIA labels and keyboard navigation support
+- **Active States**: Visual indicators for current and active menu items
+- **Alternative Layout**: Named `mainmenu.php` (not `default.php`) to appear as selectable layout option in Joomla admin
+
+#### CSS Architecture
+- 200+ lines of responsive CSS in template.css
+- BEM naming: `.mod-menu-main`, `.mod-menu-main__list`, `.mod-menu-main__link`
+- CSS variables integration for colors and borders
+- Hover effects on desktop, tap effects on mobile
+- Smooth transitions and animations
+
+#### Module Count Update
+- **Before**: 16 module overrides
+- **After**: 17 module overrides (added mod_menu "Main Menu")
+- **Component overrides**: Still 7 (unchanged)
+
+### Removed - mod_search Override
+
+**Cassiopeia approach**: Removed mod_search override to align with Cassiopeia template philosophy of not overriding standard Joomla modules.
+
+#### Reason for Removal
+- mod_search is a standard Joomla core module
+- Following Cassiopeia template approach: use core layouts for standard modules
+- Prevents potential language loading issues
+- Ensures compatibility with future Joomla updates
+- Core mod_search already includes responsive design and accessibility features
+
+#### Files Removed
+- `src/templates/html/mod_search/default.php` - Custom search module layout
+- `src/templates/html/mod_search/index.html` - Security file
+
+#### Module Count Update (After Removal)
+- **Before**: 17 module overrides
+- **After**: 16 module overrides (removed mod_search)
+- **Component overrides**: Still 7 (unchanged)
+
+### Removed - Documentation Cleanup
+
+**Documentation policy**: Removed all markdown files from `src/templates/html/` directory. All documentation belongs in `docs/` folder only.
+
+#### Files Removed (9 markdown files)
+- `src/templates/html/STANDARD_MODULES_README.md`
+- `src/templates/html/INDUSTRY_MODULES_README.md`
+- `src/templates/html/VIRTUEMART_MODULES_README.md`
+- `src/templates/html/mod_virtuemart_cart/README.md`
+- `src/templates/html/mod_virtuemart_category/README.md`
+- `src/templates/html/mod_virtuemart_currencies/README.md`
+- `src/templates/html/mod_virtuemart_manufacturer/README.md`
+- `src/templates/html/mod_virtuemart_product/README.md`
+- `src/templates/html/mod_search/README.md`
+
+**Note**: All module override documentation is consolidated in `docs/MODULE_OVERRIDES.md`. The `src/templates/html/` directory now contains only PHP override files and `index.html` security files.
+
+**Note**: Unlike the previously removed mod_menu override (v03.08.01), this new "Main Menu" override is properly structured based on Joomla core layouts and Bootstrap 5, ensuring language strings load correctly and menu functionality works as expected. The layout is named `mainmenu.php` (not `default.php`) to appear as an alternative layout option "Mainmenu" in the Joomla admin module dropdown selector, preserving Joomla's core default menu layout.
+
+## [03.08.02] - 2026-02-27
+
+### Removed - Fix Language Loading in All Module Overrides
+
+**Critical fix**: Removed standard Joomla module overrides to fix language string loading issues. Following Cassiopeia template approach.
+
+#### Problem
+- Default language strings not loading in module overrides (mod_breadcrumbs, mod_login, mod_articles_latest)
+- Language constants displayed instead of translated text (e.g., "MOD_LOGIN_VALUE_USERNAME" instead of "Username")
+- Custom overrides interfered with Joomla's module initialization and language loading process
+
+#### Solution - Cassiopeia Approach
+- **Removed** standard Joomla module overrides:
+  - `src/templates/html/mod_breadcrumbs/` (2 files)
+  - `src/templates/html/mod_login/` (2 files)
+  - `src/templates/html/mod_articles_latest/` (2 files)
+- Template now uses Joomla's core module layouts for standard modules
+- Language files load automatically via Joomla's module system
+- Custom styling can still be applied via CSS using module-specific classes
+- **Retained** third-party extension overrides where they add mobile-responsive value:
+  - VirtueMart modules (5): mod_virtuemart_cart, _category, _currencies, _manufacturer, _product
+  - Community Builder modules (2): mod_cblogin, mod_comprofilerOnline
+  - Other extensions (9): mod_acymailing, mod_hikashop_cart, mod_k2_content, mod_kunena*, mod_osmembership, mod_search
+
+#### Cassiopeia Template Philosophy
+- Cassiopeia (Joomla's default template) does NOT override standard module layouts
+- It relies on core Joomla module files and applies styling via CSS
+- Overrides are only created when structural changes are absolutely necessary
+- This ensures compatibility, automatic language loading, and easier maintenance
+
+#### Module Count Update
+- **Before**: 19 module overrides
+- **After**: 16 module overrides  
+- **Removed**: 3 standard Joomla modules (breadcrumbs, login, articles_latest)
+- **Component overrides**: Still 7 (unchanged)
+
+#### Files Removed
+- `src/templates/html/mod_breadcrumbs/default.php`
+- `src/templates/html/mod_breadcrumbs/index.html`
+- `src/templates/html/mod_login/default.php`
+- `src/templates/html/mod_login/index.html`
+- `src/templates/html/mod_articles_latest/default.php`
+- `src/templates/html/mod_articles_latest/index.html`
+
+**Note**: This follows Joomla best practices by using core layouts for standard modules. Styling is handled via CSS. Third-party extension overrides remain for mobile responsiveness.
+
+## [03.08.01] - 2026-02-27
+
+### Removed - Fix Breaking Overrides
+
+**Critical fix**: Removed mod_menu override that was causing menu links to break and language strings not to load.
+
+#### Problem
+- mod_menu override files (default.php, default_component.php, default_url.php) were attempting to load menu-specific layouts that don't exist in the template
+- This broke Joomla's core menu rendering system
+- Menu links were not functional
+- Language strings were not loading properly in menus
+
+#### Solution
+- **Removed** entire `src/templates/html/mod_menu/` directory (4 files)
+- Template now uses Joomla's default menu rendering
+- Custom styling can still be applied via CSS using `.mod-menu` class
+- All menu functionality restored to standard Joomla behavior
+
+#### Documentation Updates
+- Updated MODULE_OVERRIDES.md: Changed count from 20 to 19 module overrides, removed mod_menu section, added note about removal
+- Updated STANDARD_MODULES_README.md: Removed mod_menu documentation, renumbered remaining modules, updated file structure
+- Updated testing checklists to remove mod_menu references
+- **Added clarification**: MokoCassiopeia is a standalone template extension (not a package)
+- Updated updates.xml to version 03.08.01
+
+#### Files Removed
+- `src/templates/html/mod_menu/default.php`
+- `src/templates/html/mod_menu/default_component.php`
+- `src/templates/html/mod_menu/default_url.php`
+- `src/templates/html/mod_menu/index.html`
+
+**Note**: This is a patch release that removes problematic overrides to restore core functionality. Menu styling via CSS remains intact. MokoCassiopeia remains a standalone Joomla template extension (type="template"), not bundled as a package.
 
 ## [03.08.00] - 2026-02-22
 
