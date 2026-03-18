@@ -28,6 +28,23 @@
 	}
 }
 
+/* Smooth colour transition when the data-bs-theme attribute changes between light and dark.
+   Scoped to no-preference so users who opt out of motion also skip colour flashes. */
+@media (prefers-reduced-motion: no-preference) {
+	:root,
+	body,
+	.container-wrapper,
+	.container-main,
+	nav,
+	header,
+	footer {
+		transition:
+			background-color 0.3s ease,
+			color 0.3s ease,
+			border-color 0.3s ease;
+	}
+}
+
 @media print {
 
 	nav,
@@ -14094,6 +14111,7 @@ meter {
 	border-bottom: var(--hero-border-bottom, solid var(--accent-color-secondary));
 }
 
+/* Legacy: standard Cassiopeia banner with an explicit .overlay child */
 .container-banner .banner-overlay .overlay {
 	display: -webkit-box;
 	display: -ms-flexbox;
@@ -14113,6 +14131,11 @@ meter {
 	text-align: var(--hero-overlay-text-align, center);
 	color: var(--hero-overlay-text-color, var(--body-color));
 	background-color: var(--hero-overlay-bg, hsla(0, 0%, 0%, 0.5));
+}
+
+/* Hero layout (hero.php): outer wrapper — visual overlay is handled by the .overlay child */
+.container-banner .banner-overlay.custom-hero {
+	/* Selector kept as a customisation hook; see .banner-overlay .overlay for overlay styles */
 }
 
 .container-banner .banner-overlay .overlay .text-thin {
