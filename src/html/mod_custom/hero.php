@@ -29,7 +29,7 @@ if ($params->get('backgroundimage')) {
 }
 ?>
 
-<div class="mod-custom custom banner-overlay<?php echo $moduleclass ? ' ' . $moduleclass : ''; ?>" id="<?php echo $modId; ?>">
+<div class="mod-custom custom banner-overlay custom-hero<?php echo $moduleclass ? ' ' . $moduleclass : ''; ?>" id="<?php echo $modId; ?>">
     <div class="overlay">
         <?php echo $module->content; ?>
     </div>

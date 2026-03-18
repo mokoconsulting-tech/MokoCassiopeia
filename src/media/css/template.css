@@ -14091,6 +14091,8 @@ meter {
 	background-attachment: fixed;
 	background-position: top, center;
 	background-size: cover;
+	border-bottom: solid var(--accent-color-secondary);
+
 }
 
 .container-banner .banner-overlay .overlay {
