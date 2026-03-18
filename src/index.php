@@ -53,6 +53,7 @@ $params_googletagmanager   = $this->params->get('googletagmanager', false);
 $params_googletagmanagerid = $this->params->get('googletagmanagerid', null);
 $params_googleanalytics    = $this->params->get('googleanalytics', false);
 $params_googleanalyticsid  = $this->params->get('googleanalyticsid', null);
+$params_googlesitekey      = $this->params->get('googlesitekey', null);
 $params_custom_head_start  = $this->params->get('custom_head_start', null);
 $params_custom_head_end    = $this->params->get('custom_head_end', null);
 $params_developmentmode = $this->params->get('developmentmode', false);
@@ -188,6 +189,9 @@ $stickyHeader = $this->params->get('stickyHeader') ? 'position-sticky sticky-top
 
 // Meta
 $this->setMetaData('viewport', 'width=device-width, initial-scale=1');
+if (!empty($params_googlesitekey)) {
+	$this->setMetaData('google-site-verification', htmlspecialchars($params_googlesitekey, ENT_QUOTES, 'UTF-8'));
+}
 
 if ($this->params->get('fA6KitCode')) {
 	$faKit = "https://kit.fontawesome.com/" . $this->params->get('fA6KitCode') . ".js";

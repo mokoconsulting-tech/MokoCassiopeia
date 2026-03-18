@@ -37,6 +37,11 @@ $params_googletagmanager   = $this->params->get('googletagmanager', false);
 $params_googletagmanagerid = $this->params->get('googletagmanagerid', null);
 $params_googleanalytics    = $this->params->get('googleanalytics', false);
 $params_googleanalyticsid  = $this->params->get('googleanalyticsid', null);
+$params_googlesitekey      = $this->params->get('googlesitekey', null);
+
+if (!empty($params_googlesitekey)) {
+	$this->setMetaData('google-site-verification', htmlspecialchars($params_googlesitekey, ENT_QUOTES, 'UTF-8'));
+}
 
 // Detecting Active Variables
 $option    = $input->getCmd('option', '');
