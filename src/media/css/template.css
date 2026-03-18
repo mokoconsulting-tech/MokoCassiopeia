@@ -14085,14 +14085,13 @@ meter {
 }
 
 .container-banner .banner-overlay {
-	height: 70vh;
-	color: var(--body-color);
-	background-repeat: no-repeat;
-	background-attachment: fixed;
-	background-position: top, center;
-	background-size: cover;
-	border-bottom: solid var(--accent-color-secondary);
-
+	height: var(--hero-height, 70vh);
+	color: var(--hero-color, var(--body-color));
+	background-repeat: var(--hero-bg-repeat, no-repeat);
+	background-attachment: var(--hero-bg-attachment, fixed);
+	background-position: var(--hero-bg-position, top center);
+	background-size: var(--hero-bg-size, cover);
+	border-bottom: var(--hero-border-bottom, solid var(--accent-color-secondary));
 }
 
 .container-banner .banner-overlay .overlay {
@@ -14110,9 +14109,10 @@ meter {
 	-ms-flex-pack: center;
 	justify-content: center;
 	height: 100%;
-	padding: 1em;
-	text-align: center;
-	background-color: hsla(0, 0%, 0%, 0.5);
+	padding: var(--hero-overlay-padding, 1em);
+	text-align: var(--hero-overlay-text-align, center);
+	color: var(--hero-overlay-text-color, var(--body-color));
+	background-color: var(--hero-overlay-bg, hsla(0, 0%, 0%, 0.5));
 }
 
 .container-banner .banner-overlay .overlay .text-thin {
@@ -14782,8 +14782,6 @@ iframe {
   );
 }
 
-
-
 .container-topbar {
 	color: var(--body-color);
 	background-color: var(--color-primary);
@@ -14796,7 +14794,7 @@ iframe {
 
 .container-banner {
 	display: block;
-	margin: 0 0 2rem;
+	margin: 0;
 }
 
 .container-top-a,

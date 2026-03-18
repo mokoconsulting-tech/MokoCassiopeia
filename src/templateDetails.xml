@@ -263,6 +263,7 @@
 				<field name="css_vars_bootstrap_states" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_BS_STATES_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_BS_STATES_DESC" class="alert alert-light" />
 				<field name="css_vars_alert_list" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_ALERT_LIST_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_ALERT_LIST_DESC" class="alert alert-light" />
 				<field name="css_vars_colors" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_COLORS_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_COLORS_DESC" class="alert alert-light" />
+				<field name="css_vars_hero" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_HERO_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_HERO_DESC" class="alert alert-light" />
 				<field name="css_vars_header" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_HEADER_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_HEADER_DESC" class="alert alert-light" />
 				<field name="css_vars_containers" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_CONTAINERS_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_CONTAINERS_DESC" class="alert alert-light" />
 				<field name="css_vars_borders" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_BORDERS_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_BORDERS_DESC" class="alert alert-light" />

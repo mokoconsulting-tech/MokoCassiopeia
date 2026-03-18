@@ -520,6 +520,19 @@ color-scheme: dark;
 --gab-gray1: #868e96;
 --gab-gray2: #adb5bd;
 --gab-gray3: #ced4da;
+
+/* ===== HERO / BANNER OVERLAY ===== */
+--hero-height: 70vh;
+--hero-color: var(--body-color);
+--hero-bg-repeat: no-repeat;
+--hero-bg-attachment: fixed;
+--hero-bg-position: top center;
+--hero-bg-size: cover;
+--hero-border-bottom: solid var(--accent-color-secondary);
+--hero-overlay-bg: hsla(0, 0%, 0%, 0.3);
+--hero-overlay-padding: 1em;
+--hero-overlay-text-align: center;
+--hero-overlay-text-color: var(--body-color);
 }
 
 .btn {
