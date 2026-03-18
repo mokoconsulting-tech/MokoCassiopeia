@@ -135,11 +135,6 @@ form {
   padding-right: .5rem !important;
 }
 
-
-.offcanvas-body {
-	background-color: var(--offcanvas-color);
-}
-
 hr {
 	margin: 1rem 0;
 	color: inherit;
@@ -7437,7 +7432,7 @@ fieldset:disabled .btn {
 	--offcanvas-height: 30vh;
 	--offcanvas-padding-x: 1rem;
 	--offcanvas-padding-y: 1rem;
-	--offcanvas-color: ;
+	--offcanvas-color: color: var(--body-color);
 	--offcanvas-bg: var(--body-color);
 	--offcanvas-border-width: 1px;
 	--offcanvas-border-color: var(--border-color-translucent);
