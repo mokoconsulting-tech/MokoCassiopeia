@@ -1,0 +1,12 @@
+{
+	"name": "mokocassiopeia-build",
+	"private": true,
+	"description": "Build tooling for MokoCassiopeia Joomla template",
+	"scripts": {
+		"minify": "node scripts/minify.js"
+	},
+	"devDependencies": {
+		"clean-css": "^5.3.3",
+		"terser": "^5.39.0"
+	}
+}

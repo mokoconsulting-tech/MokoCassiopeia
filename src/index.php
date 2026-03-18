@@ -390,9 +390,9 @@ $wa->useScript('user.js');         // js/user.js
 						</div>
 					<?php endif; ?>
 				</div>
-				<?php if ($this->countModules('header-aside', true)) : ?>
-					<div class="container-header-aside">
-						<jdoc:include type="modules" name="header-aside" style="none" />
+				<?php if ($this->countModules('brand-aside', true)) : ?>
+					<div class="container-brand-aside">
+						<jdoc:include type="modules" name="brand-aside" style="none" />
 					</div>
 				<?php endif; ?>
 			</div>
