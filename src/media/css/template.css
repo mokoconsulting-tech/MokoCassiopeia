@@ -7424,16 +7424,7 @@ fieldset:disabled .btn {
 .offcanvas-lg,
 .offcanvas-md,
 .offcanvas-sm {
-	--offcanvas-zindex: 1045;
-	--offcanvas-width: 400px;
-	--offcanvas-height: 30vh;
-	--offcanvas-padding-x: 1rem;
-	--offcanvas-padding-y: 1rem;
-	--offcanvas-color: color: var(--body-color);
-	--offcanvas-bg: var(--body-color);
-	--offcanvas-border-width: 1px;
-	--offcanvas-border-color: var(--border-color-translucent);
-	--offcanvas-box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+	/* Values defined in light.standard.css / dark.standard.css under :root */
 }
 
 @media (max-width: 575.98px) {

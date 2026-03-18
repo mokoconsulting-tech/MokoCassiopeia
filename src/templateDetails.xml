@@ -272,6 +272,7 @@
 				<field name="css_vars_buttons" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_BUTTONS_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_BUTTONS_DESC" class="alert alert-light" />
 				<field name="css_vars_cards" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_CARDS_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_CARDS_DESC" class="alert alert-light" />
 				<field name="css_vars_components" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_COMPONENTS_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_COMPONENTS_DESC" class="alert alert-light" />
+				<field name="css_vars_offcanvas" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_OFFCANVAS_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_OFFCANVAS_DESC" class="alert alert-light" />
 				<field name="css_vars_virtuemart" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_VM_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_VM_DESC" class="alert alert-light" />
 				<field name="css_vars_gable" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_GABLE_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_GABLE_DESC" class="alert alert-light" />
 			</fieldset>

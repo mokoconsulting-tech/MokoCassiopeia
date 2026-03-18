@@ -533,6 +533,18 @@ color-scheme: dark;
 --hero-overlay-padding: 1em;
 --hero-overlay-text-align: center;
 --hero-overlay-text-color: var(--body-color);
+
+/* ===== OFFCANVAS ===== */
+--offcanvas-zindex: 1045;
+--offcanvas-width: 400px;
+--offcanvas-height: 30vh;
+--offcanvas-padding-x: 1rem;
+--offcanvas-padding-y: 1rem;
+--offcanvas-color: var(--body-color);
+--offcanvas-bg: var(--body-bg);
+--offcanvas-border-width: 1px;
+--offcanvas-border-color: var(--border-color-translucent);
+--offcanvas-box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.3);
 }
 
 .btn {
