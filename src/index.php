@@ -379,7 +379,7 @@ $wa->useScript('user.js');         // js/user.js
 		<?php endif; ?>
 
 		<?php if ($this->params->get('brand', 1)) : ?>
-			<div class="grid-child">
+			<div class="grid-child header-brand-wrap">
 				<div class="navbar-brand">
 					<a class="brand-logo" href="<?php echo $this->baseurl; ?>/">
 						<?php echo $brandHtml; ?>
@@ -390,6 +390,11 @@ $wa->useScript('user.js');         // js/user.js
 						</div>
 					<?php endif; ?>
 				</div>
+				<?php if ($this->countModules('header-aside', true)) : ?>
+					<div class="container-header-aside">
+						<jdoc:include type="modules" name="header-aside" style="none" />
+					</div>
+				<?php endif; ?>
 			</div>
 		<?php endif; ?>
 

@@ -14378,6 +14378,19 @@ fieldset>* {
 	white-space: normal;
 }
 
+/* Header aside: module position to the right of the logo */
+.header-brand-wrap {
+	display: flex;
+	align-items: center;
+	width: 100%;
+}
+
+.container-header-aside {
+	margin-inline-start: auto;
+	display: flex;
+	align-items: center;
+}
+
 .container-header .navbar-brand {
 	position: relative;
 	display: inline-block;
