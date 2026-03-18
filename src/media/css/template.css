@@ -2340,16 +2340,7 @@ progress {
 }
 
 .table {
-	--table-color: var(--body-color);
-	--table-bg: transparent;
-	--table-border-color: var(--border-color);
-	--table-accent-bg: transparent;
-	--table-striped-color: var(--body-color);
-	--table-striped-bg: rgba(var(--black-rgb), var(--opacity-5));
-	--table-active-color: var(--body-color);
-	--table-active-bg: rgba(var(--black-rgb), var(--opacity-10));
-	--table-active-color: var(--body-color);
-	--table-active-bg: rgba(var(--black-rgb), 0.075);
+	/* Values defined in light.standard.css / dark.standard.css */
 	width: 100%;
 	margin-bottom: 1rem;
 	color: var(--table-color);
@@ -6337,9 +6328,7 @@ fieldset:disabled .btn {
 }
 
 .modal-backdrop {
-	--backdrop-zindex: 1040;
-	--backdrop-bg: hsl(0, 0%, 0%);
-	--backdrop-opacity: 0.5;
+	/* Values defined in light.standard.css / dark.standard.css */
 	position: fixed;
 	top: 0;
 	left: 0;

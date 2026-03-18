@@ -765,6 +765,21 @@ color-scheme: dark;
 --nav-pills-border-radius: 0.25rem;
 --nav-pills-link-active-color: var(--body-color);
 --nav-pills-link-active-bg: hsl(240, 98%, 17%);
+
+/* ===== TABLE ===== */
+--table-color: var(--body-color);
+--table-bg: transparent;
+--table-border-color: var(--border-color);
+--table-accent-bg: transparent;
+--table-striped-color: var(--body-color);
+--table-striped-bg: rgba(var(--white-rgb), var(--opacity-5));
+--table-active-color: var(--body-color);
+--table-active-bg: rgba(var(--white-rgb), 0.1);
+
+/* ===== BACKDROP ===== */
+--backdrop-zindex: 1040;
+--backdrop-bg: hsl(0, 0%, 0%);
+--backdrop-opacity: 0.5;
 }
 
 .btn {
