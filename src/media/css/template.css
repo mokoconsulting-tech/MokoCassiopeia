@@ -3877,32 +3877,7 @@ fieldset:disabled .btn {
 }
 
 .dropdown-menu {
-	--dropdown-zindex: 1000;
-	--dropdown-min-width: 10rem;
-	--dropdown-padding-x: 0;
-	--dropdown-padding-y: 0.5rem;
-	--dropdown-spacer: 0.125rem;
-	--dropdown-font-size: 1rem;
-	--dropdown-color: hsl(210, 11%, 15%);
-	--dropdown-bg: var(--body-color);
-	--dropdown-border-color: var(--border-color-translucent);
-	--dropdown-border-radius: 0.25rem;
-	--dropdown-border-width: 1px;
-	--dropdown-inner-border-radius: calc(0.25rem - 1px);
-	--dropdown-divider-bg: var(--border-color-translucent);
-	--dropdown-divider-margin-y: 0.5rem;
-	--dropdown-box-shadow: 0 0.5rem 1rem var(--shadow-color-light);
-	--dropdown-link-color: hsl(210, 11%, 15%);
-	--dropdown-link-active-color: #1f2226;
-	--dropdown-link-active-bg: hsl(210, 16%, 93%);
-	--dropdown-link-active-color: var(--body-color);
-	--dropdown-link-active-bg: hsl(240, 98%, 17%);
-	--dropdown-link-disabled-color: hsl(210, 11%, 71%);
-	--dropdown-item-padding-x: 1rem;
-	--dropdown-item-padding-y: 0.25rem;
-	--dropdown-header-color: hsl(210, 7%, 46%);
-	--dropdown-header-padding-x: 1rem;
-	--dropdown-header-padding-y: 0.5rem;
+	/* Values defined in light.standard.css / dark.standard.css */
 	position: absolute;
 	z-index: var(--dropdown-zindex);
 	display: none;
@@ -4338,12 +4313,7 @@ fieldset:disabled .btn {
 }
 
 .nav {
-	--nav-link-padding-x: 1rem;
-	--nav-link-padding-y: 0.5rem;
-	--nav-link-font-weight: ;
-	--nav-link-color: var(--link-color);
-	--nav-link-active-color: var(--link-active-color);
-	--nav-link-disabled-color: hsl(210, 7%, 46%);
+	/* Values defined in light.standard.css / dark.standard.css */
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex;
@@ -4386,13 +4356,7 @@ fieldset:disabled .btn {
 }
 
 .nav-tabs {
-	--nav-tabs-border-width: 1px;
-	--nav-tabs-border-color: hsl(210, 14%, 89%);
-	--nav-tabs-border-radius: 0.25rem;
-	--nav-tabs-link-active-border-color: hsl(210, 16%, 93%) hsl(210, 16%, 93%) hsl(210, 14%, 89%);
-	--nav-tabs-link-active-color: hsl(210, 9%, 31%);
-	--nav-tabs-link-active-bg: var(--body-color);
-	--nav-tabs-link-active-border-color: hsl(210, 14%, 89%) hsl(210, 14%, 89%) var(--body-color);
+	/* Values defined in light.standard.css / dark.standard.css */
 	border-bottom: var(--nav-tabs-border-width) solid var(--nav-tabs-border-color);
 }
 
@@ -4431,9 +4395,7 @@ fieldset:disabled .btn {
 }
 
 .nav-pills {
-	--nav-pills-border-radius: 0.25rem;
-	--nav-pills-link-active-color: var(--body-color);
-	--nav-pills-link-active-bg: hsl(240, 98%, 17%);
+	/* Values defined in light.standard.css / dark.standard.css */
 }
 
 .nav-pills .nav-link {
@@ -5271,28 +5233,7 @@ fieldset:disabled .btn {
 }
 
 .accordion {
-	--accordion-color: hsl(210, 11%, 15%);
-	--accordion-bg: var(--body-color);
-	--accordion-transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, border-radius 0.15s ease;
-	--accordion-border-color: var(--border-color);
-	--accordion-border-width: 1px;
-	--accordion-border-radius: 0.25rem;
-	--accordion-inner-border-radius: calc(0.25rem - 1px);
-	--accordion-btn-padding-x: 1.25rem;
-	--accordion-btn-padding-y: 1rem;
-	--accordion-btn-color: hsl(210, 11%, 15%);
-	--accordion-btn-bg: var(--accordion-bg);
-	--accordion-btn-icon: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='hsl%28210, 11%, 15%%29'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
-	--accordion-btn-icon-width: 1.25rem;
-	--accordion-btn-icon-transform: rotate(-180deg);
-	--accordion-btn-icon-transition: transform 0.2s ease-in-out;
-	--accordion-btn-active-icon: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%230f244d'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
-	--accordion-btn-focus-border-color: var(--input-focus-border-color);
-	--accordion-btn-focus-box-shadow: 0 0 0 0.25rem rgba(1, 1, 86, 0.25);
-	--accordion-body-padding-x: 1.25rem;
-	--accordion-body-padding-y: 1rem;
-	--accordion-active-color: #0f244d;
-	--accordion-active-bg: #e7eaee;
+	/* Values defined in light.standard.css / dark.standard.css */
 }
 
 .accordion-button {
@@ -5440,14 +5381,7 @@ fieldset:disabled .btn {
 }
 
 .breadcrumb {
-	--breadcrumb-padding-x: 0;
-	--breadcrumb-padding-y: 0;
-	--breadcrumb-margin-bottom: 1rem;
-	--breadcrumb-bg: ;
-	--breadcrumb-border-radius: ;
-	--breadcrumb-divider-color: hsl(210, 7%, 46%);
-	--breadcrumb-item-padding-x: 0.5rem;
-	--breadcrumb-item-active-color: var(--link-color);
+	/* Values defined in light.standard.css / dark.standard.css */
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex;
@@ -5479,26 +5413,7 @@ fieldset:disabled .btn {
 }
 
 .pagination {
-	--pagination-padding-x: 0.75rem;
-	--pagination-padding-y: 0.375rem;
-	--pagination-font-size: 1rem;
-	--pagination-color: var(--link-color);
-	--pagination-bg: var(--body-color);
-	--pagination-border-width: 1px;
-	--pagination-border-color: hsl(210, 14%, 89%);
-	--pagination-border-radius: 0.25rem;
-	--pagination-active-color: var(--link-active-color);
-	--pagination-active-bg: hsl(210, 16%, 93%);
-	--pagination-active-border-color: hsl(210, 14%, 89%);
-	--pagination-focus-color: var(--link-active-color);
-	--pagination-focus-bg: hsl(210, 16%, 93%);
-	--pagination-focus-box-shadow: 0 0 0 0.25rem rgba(1, 1, 86, 0.25);
-	--pagination-active-color: var(--body-color);
-	--pagination-active-bg: hsl(240, 98%, 17%);
-	--pagination-active-border-color: hsl(240, 98%, 17%);
-	--pagination-disabled-color: hsl(210, 7%, 46%);
-	--pagination-disabled-bg: var(--body-color);
-	--pagination-disabled-border-color: hsl(210, 14%, 89%);
+	/* Values defined in light.standard.css / dark.standard.css */
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex;
@@ -5591,12 +5506,7 @@ fieldset:disabled .btn {
 }
 
 .badge {
-	--badge-padding-x: 0.65em;
-	--badge-padding-y: 0.35em;
-	--badge-font-size: 0.75em;
-	--badge-font-weight: 700;
-	--badge-color: var(--body-color);
-	--badge-border-radius: 0.25rem;
+	/* Values defined in light.standard.css / dark.standard.css */
 	display: inline-block;
 	padding: var(--badge-padding-y) var(--badge-padding-x);
 	font-size: var(--badge-font-size);
@@ -5619,14 +5529,7 @@ fieldset:disabled .btn {
 }
 
 .alert {
-	--alert-bg: transparent;
-	--alert-padding-x: 1rem;
-	--alert-padding-y: 1rem;
-	--alert-margin-bottom: 1rem;
-	--alert-color: inherit;
-	--alert-border-color: transparent;
-	--alert-border: 1px solid var(--alert-border-color);
-	--alert-border-radius: 0.25rem;
+	/* Values defined in light.standard.css / dark.standard.css */
 	position: relative;
 	padding: var(--alert-padding-y) var(--alert-padding-x);
 	margin-bottom: var(--alert-margin-bottom);
@@ -5749,14 +5652,7 @@ fieldset:disabled .btn {
 }
 
 .progress {
-	--progress-height: 1rem;
-	--progress-font-size: 0.75rem;
-	--progress-bg: hsl(210, 16%, 93%);
-	--progress-border-radius: 0.25rem;
-	--progress-box-shadow: inset 0 1px 2px rgba(var(--black-rgb), 0.075);
-	--progress-bar-color: var(--body-color);
-	--progress-bar-bg: hsl(240, 98%, 17%);
-	--progress-bar-transition: width 0.6s ease;
+	/* Values defined in light.standard.css / dark.standard.css */
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex;
@@ -5815,23 +5711,7 @@ fieldset:disabled .btn {
 }
 
 .list-group {
-	--list-group-color: hsl(210, 11%, 15%);
-	--list-group-bg: var(--body-color);
-	--list-group-border-color: rgba(var(--black-rgb), 0.125);
-	--list-group-border-width: 1px;
-	--list-group-border-radius: 0.25rem;
-	--list-group-item-padding-x: 1rem;
-	--list-group-item-padding-y: 0.5rem;
-	--list-group-action-color: hsl(210, 9%, 31%);
-	--list-group-action-active-color: hsl(210, 9%, 31%);
-	--list-group-action-active-bg: hsl(210, 17%, 98%);
-	--list-group-action-active-color: hsl(210, 11%, 15%);
-	--list-group-action-active-bg: hsl(210, 16%, 93%);
-	--list-group-disabled-color: hsl(210, 7%, 46%);
-	--list-group-disabled-bg: var(--body-color);
-	--list-group-active-color: var(--body-color);
-	--list-group-active-bg: hsl(240, 98%, 17%);
-	--list-group-active-border-color: hsl(240, 98%, 17%);
+	/* Values defined in light.standard.css / dark.standard.css */
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex;
@@ -6302,21 +6182,7 @@ fieldset:disabled .btn {
 }
 
 .toast {
-	--toast-zindex: 1090;
-	--toast-padding-x: 0.75rem;
-	--toast-padding-y: 0.5rem;
-	--toast-spacing: 1em;
-	--toast-max-width: 350px;
-	--toast-font-size: 0.875rem;
-	--toast-color: ;
-	--toast-bg: rgba(255, 255, 255, 0.85);
-	--toast-border-width: 1px;
-	--toast-border-color: var(--border-color-translucent);
-	--toast-border-radius: 0.25rem;
-	--toast-box-shadow: 0 0.5rem 1rem var(--shadow-color-light);
-	--toast-header-color: hsl(210, 7%, 46%);
-	--toast-header-bg: rgba(var(--white-rgb), 0.85);
-	--toast-header-border-color: rgba(var(--black-rgb), var(--opacity-5));
+	/* Values defined in light.standard.css / dark.standard.css */
 	width: var(--toast-max-width);
 	max-width: 100%;
 	font-size: var(--toast-font-size);
@@ -6380,27 +6246,7 @@ fieldset:disabled .btn {
 }
 
 .modal {
-	--modal-zindex: 1050;
-	--modal-width: 500px;
-	--modal-padding: 1rem;
-	--modal-margin: 0.5rem;
-	--modal-color: ;
-	--modal-bg: var(--body-color);
-	--modal-border-color: var(--border-color-translucent);
-	--modal-border-width: 1px;
-	--modal-border-radius: 0.3rem;
-	--modal-box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-	--modal-inner-border-radius: calc(0.3rem - 1px);
-	--modal-header-padding-x: 1rem;
-	--modal-header-padding-y: 1rem;
-	--modal-header-padding: 1rem 1rem;
-	--modal-header-border-color: var(--border-color);
-	--modal-header-border-width: 1px;
-	--modal-title-line-height: 1.5;
-	--modal-footer-gap: 0.5rem;
-	--modal-footer-bg: ;
-	--modal-footer-border-color: var(--border-color);
-	--modal-footer-border-width: 1px;
+	/* Values defined in light.standard.css / dark.standard.css */
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -6746,18 +6592,7 @@ fieldset:disabled .btn {
 }
 
 .tooltip {
-	--tooltip-zindex: 1070;
-	--tooltip-max-width: 200px;
-	--tooltip-padding-x: 0.5rem;
-	--tooltip-padding-y: 0.25rem;
-	--tooltip-margin: ;
-	--tooltip-font-size: 0.875rem;
-	--tooltip-color: var(--body-color);
-	--tooltip-bg: hsl(0, 0%, 0%);
-	--tooltip-border-radius: 0.25rem;
-	--tooltip-opacity: 0.9;
-	--tooltip-arrow-width: 0.8rem;
-	--tooltip-arrow-height: 0.4rem;
+	/* Values defined in light.standard.css / dark.standard.css */
 	z-index: var(--tooltip-zindex);
 	display: block;
 	padding: var(--tooltip-arrow-height);
@@ -6864,26 +6699,7 @@ fieldset:disabled .btn {
 }
 
 .popover {
-	--popover-zindex: 1060;
-	--popover-max-width: 276px;
-	--popover-font-size: 0.875rem;
-	--popover-bg: var(--body-color);
-	--popover-border-width: 1px;
-	--popover-border-color: var(--border-color-translucent);
-	--popover-border-radius: 0.3rem;
-	--popover-inner-border-radius: calc(0.3rem - 1px);
-	--popover-box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-	--popover-header-padding-x: 1rem;
-	--popover-header-padding-y: 0.5rem;
-	--popover-header-font-size: 1rem;
-	--popover-header-color: ;
-	--popover-header-bg: #f0f0f0;
-	--popover-body-padding-x: 1rem;
-	--popover-body-padding-y: 1rem;
-	--popover-body-color: hsl(210, 11%, 15%);
-	--popover-arrow-width: 1rem;
-	--popover-arrow-height: 0.5rem;
-	--popover-arrow-border: var(--popover-border-color);
+	/* Values defined in light.standard.css / dark.standard.css */
 	z-index: var(--popover-zindex);
 	display: block;
 	max-width: var(--popover-max-width);
@@ -7353,11 +7169,7 @@ fieldset:disabled .btn {
 }
 
 .spinner-border {
-	--spinner-width: 2rem;
-	--spinner-height: 2rem;
-	--spinner-vertical-align: -0.125em;
-	--spinner-border-width: 0.25em;
-	--spinner-animation-speed: 0.75s;
+	/* Values defined in light.standard.css / dark.standard.css */
 	--spinner-animation-name: spinner-border;
 	border: var(--spinner-border-width) solid currentcolor;
 	border-right-color: transparent;
@@ -7396,10 +7208,7 @@ fieldset:disabled .btn {
 }
 
 .spinner-grow {
-	--spinner-width: 2rem;
-	--spinner-height: 2rem;
-	--spinner-vertical-align: -0.125em;
-	--spinner-animation-speed: 0.75s;
+	/* Values defined in light.standard.css / dark.standard.css */
 	--spinner-animation-name: spinner-grow;
 	background-color: currentcolor;
 	opacity: 0;
