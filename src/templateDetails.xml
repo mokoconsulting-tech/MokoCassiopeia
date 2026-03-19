@@ -271,6 +271,23 @@
 				<field name="css_vars_forms" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_FORMS_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_FORMS_DESC" class="alert alert-light" />
 				<field name="css_vars_buttons" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_BUTTONS_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_BUTTONS_DESC" class="alert alert-light" />
 				<field name="css_vars_cards" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_CARDS_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_CARDS_DESC" class="alert alert-light" />
+				<field name="css_vars_accordion" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_ACCORDION_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_ACCORDION_DESC" class="alert alert-light" />
+				<field name="css_vars_alert_base" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_ALERT_BASE_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_ALERT_BASE_DESC" class="alert alert-light" />
+				<field name="css_vars_badge" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_BADGE_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_BADGE_DESC" class="alert alert-light" />
+				<field name="css_vars_breadcrumb" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_BREADCRUMB_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_BREADCRUMB_DESC" class="alert alert-light" />
+				<field name="css_vars_dropdown_menu" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_DROPDOWN_MENU_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_DROPDOWN_MENU_DESC" class="alert alert-light" />
+				<field name="css_vars_list_group" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_LIST_GROUP_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_LIST_GROUP_DESC" class="alert alert-light" />
+				<field name="css_vars_modal" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_MODAL_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_MODAL_DESC" class="alert alert-light" />
+				<field name="css_vars_backdrop" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_BACKDROP_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_BACKDROP_DESC" class="alert alert-light" />
+				<field name="css_vars_nav_tabs" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_NAV_TABS_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_NAV_TABS_DESC" class="alert alert-light" />
+				<field name="css_vars_nav_pills" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_NAV_PILLS_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_NAV_PILLS_DESC" class="alert alert-light" />
+				<field name="css_vars_pagination" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_PAGINATION_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_PAGINATION_DESC" class="alert alert-light" />
+				<field name="css_vars_popover" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_POPOVER_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_POPOVER_DESC" class="alert alert-light" />
+				<field name="css_vars_progress" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_PROGRESS_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_PROGRESS_DESC" class="alert alert-light" />
+				<field name="css_vars_spinner" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_SPINNER_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_SPINNER_DESC" class="alert alert-light" />
+				<field name="css_vars_table" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_TABLE_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_TABLE_DESC" class="alert alert-light" />
+				<field name="css_vars_toast" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_TOAST_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_TOAST_DESC" class="alert alert-light" />
+				<field name="css_vars_tooltip" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_TOOLTIP_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_TOOLTIP_DESC" class="alert alert-light" />
 				<field name="css_vars_components" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_COMPONENTS_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_COMPONENTS_DESC" class="alert alert-light" />
 				<field name="css_vars_offcanvas" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_OFFCANVAS_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_OFFCANVAS_DESC" class="alert alert-light" />
 				<field name="css_vars_virtuemart" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_VM_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_VM_DESC" class="alert alert-light" />
