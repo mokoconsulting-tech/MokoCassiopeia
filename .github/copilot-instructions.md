@@ -1,346 +1,285 @@
-# GitHub Copilot Instructions for MokoCassiopeia
-
-## Repository Context
-
-MokoCassiopeia is a modern, lightweight Joomla template that extends Cassiopeia (Joomla's default template). It follows a strict **non-replacement philosophy** for maximum upgrade compatibility.
-
-**Key Characteristics:**
-- Joomla 4.4.x and 5.x compatible
-- PHP 8.0+ required
-- Built on Cassiopeia template
-- Minimal core template overrides
-- Alternative layout naming convention (not default replacements)
-- GPL-3.0-or-later license
-
-## Project Structure
-
-```
-MokoCassiopeia/
-├── .github/              # GitHub workflows and configuration
-├── docs/                 # Comprehensive documentation
-├── scripts/              # Build and deployment scripts
-├── src/                  # Template source files (main working directory)
-│   ├── index.php         # Main template file
-│   ├── templateDetails.xml  # Joomla template manifest
-│   ├── joomla.asset.json    # Web Asset Manager configuration
-│   ├── language/         # Frontend language files (en-GB, en-US)
-│   ├── html/             # Alternative layout overrides
-│   └── media/            # CSS, JS, images, fonts, vendors
-├── templates/            # Custom color scheme templates
-└── tests/                # Codeception tests
-```
-
-## Critical Conventions
-
-### 1. Override Philosophy: Alternative Layouts Only
-
-**NEVER replace default layouts.** All overrides must use alternative layout names.
-
-✅ **Correct:**
-- `mobile.php` (alternative layout)
-- `mainmenu.php` (alternative layout for mod_menu)
-- `toc-left.php`, `toc-right.php` (alternative layouts with TOC)
-
-❌ **Incorrect:**
-- `default.php` (replaces core layout - FORBIDDEN)
-- Any file that replaces Cassiopeia's default behavior
-
-**Rationale:** Ensures Joomla core updates don't break the template and gives users choice.
-
-### 2. File Headers
-
-All source files must include standardized copyright headers:
-
-```php
-<?php
-/**
- * Copyright (C) 2026 Moko Consulting <hello@mokoconsulting.tech>
- * 
- * This file is part of a Moko Consulting project.
- * 
- * SPDX-License-Identifier: GPL-3.0-or-later
- * 
- * @defgroup   Joomla.Template.Site
- * @ingroup    MokoCassiopeia.Template
- * @brief      [Brief description]
- * @version    [Version number]
- */
-
-defined('_JEXEC') or die;
-```
-
-### 3. Language Files
-
-**Key Rules:**
-- Template metadata (name, description) goes in `.sys.ini` files ONLY
-- Frontend runtime strings go in `.ini` files
-- Language files location: `src/language/{locale}/`
-- NO `folder` attribute in `<languages>` section of templateDetails.xml
-- Paths must be relative from package root (e.g., `language/en-GB/tpl_mokocassiopeia.sys.ini`)
-
-**Example templateDetails.xml:**
-```xml
-<languages folder="language">
-    <language tag="en-GB">en-GB/tpl_mokocassiopeia.ini</language>
-    <language tag="en-GB">en-GB/tpl_mokocassiopeia.sys.ini</language>
-</languages>
-```
-
-### 4. Hardcoded XML Description
-
-The template description in `templateDetails.xml` is **hardcoded using CDATA**, not a language constant:
-
-```xml
-<description><![CDATA[Modern, lightweight Joomla template...]]></description>
-```
-
-**Rationale:** Ensures immediate availability during installation without language file dependency.
-
-### 5. Version Format
-
-Follow semantic versioning: `XX.YY.ZZ`
-- XX: Major version
-- YY: Minor version  
-- ZZ: Patch version
-
-**Examples:** `03.06.03`, `03.08.04`
-
-## Coding Standards
-
-### PHP
-
-- **PSR-12 compliant** where not conflicting with Joomla standards
-- **Joomla Coding Standards** for Joomla-specific code
-- Use `defined('_JEXEC') or die;` at the top of every PHP file
-- Type hints for PHP 8.0+ features
-- Strict types declarations where appropriate
-
-### JavaScript
-
-- **ES6+** syntax
-- Use `'use strict';`
-- Prefer `const` and `let` over `var`
-- Document functions with JSDoc comments
-- Integrate with Joomla's Web Asset Manager
-
-### CSS
-
-- **CSS Variables** for theming (see `docs/CSS_VARIABLES.md`)
-- Light/dark mode support via `data-bs-theme` attribute
-- Bootstrap 5 utility classes
-- Mobile-first responsive design
-- Namespace custom classes to avoid conflicts
-
-### Asset Management
-
-All assets must be registered in `joomla.asset.json`:
-
-```json
-{
-  "name": "template.mokocassiopeia.custom",
-  "version": "1.0.0",
-  "description": "Custom asset",
-  "license": "GPL-3.0-or-later",
-  "dependencies": ["core"],
-  "js": ["js/custom.js"],
-  "css": ["css/custom.css"]
-}
-```
-
-## Development Workflow
-
-### Branching Strategy
-
-- **Development:** Work on feature branches
-- **Branch naming:** `feature/description`, `fix/issue-description`
-- **Protected branches:** Cannot commit directly to `main` or version branches
-- See `docs/WORKFLOW_GUIDE.md` for complete workflow
-
-### Commit Messages
-
-```
-Brief summary (50 chars or less)
-
-Detailed explanation if needed:
-- What changed
-- Why it changed
-- Impact of the change
-```
-
-**Example:**
-```
-Fix language file installation paths in templateDetails.xml
-
-- Remove folder attribute from <languages> section
-- Update paths to be relative from package root
-- Ensures proper installation to JOOMLA_ROOT/language/
-```
-
-### Quality Checks
-
-Before committing:
-1. **PHP CodeSniffer:** `phpcs --standard=Joomla src/`
-2. **PHPStan:** Static analysis for PHP code
-3. **Pre-commit hooks:** Automatically run validation
-
-## Testing
-
-### Manual Testing
-- Test in Joomla 4.4.x and 5.x
-- Test on PHP 8.0, 8.1, 8.2
-- Test light/dark mode switching
-- Test responsive layouts (mobile/tablet/desktop)
-- Test alternative layouts activation
-
-### Test Environment
-- Use local Joomla installation
-- See `docs/JOOMLA_DEVELOPMENT.md` for setup
-
-## Documentation Standards
-
-### Markdown Files
-
-All documentation must include:
-
-1. **Copyright header**
-```markdown
-<!--
- Copyright (C) 2026 Moko Consulting <hello@mokoconsulting.tech>
- 
- SPDX-License-Identifier: GPL-3.0-or-later
- 
- # FILE INFORMATION
- DEFGROUP: [Group]
- INGROUP: [Subgroup]
- REPO: https://github.com/mokoconsulting-tech/MokoCassiopeia
- FILE: [filename]
- VERSION: [version]
- BRIEF: [Brief description]
--->
-```
-
-2. **Metadata section** (at end)
-3. **Revision history table** (at end)
-
-### Code Comments
-
-- Use DocBlocks for functions and classes
-- Explain "why" not just "what"
-- Keep comments up-to-date with code changes
-
-## Common Patterns
-
-### Theme System Integration
-
-Use CSS variables for colors:
-```css
-:root[data-bs-theme="light"] {
-  --color-primary: #1e40af;
-  --body-bg: #ffffff;
-}
-
-:root[data-bs-theme="dark"] {
-  --color-primary: #60a5fa;
-  --body-bg: #1f2937;
-}
-```
-
-### Alternative Layout Structure
-
-```php
-<?php
-/**
- * Alternative layout: mobile
- * Activated via: Advanced → Alternative Layout → "mobile"
- */
-defined('_JEXEC') or die;
-
-use Joomla\CMS\Layout\LayoutHelper;
-
-// Layout implementation
-?>
-```
-
-### JavaScript Asset Loading
-
-```javascript
-// Register in joomla.asset.json, then use:
-Joomla.getOptions('template.mokocassiopeia.options');
-```
-
-## Build and Release
-
-### Local Build
-```bash
-cd scripts
-./build-release.sh
-```
-
-### Automated Release
-- Tags trigger GitHub Actions workflow
-- Format: `XX.YY.ZZ`
-- Generates ZIP packages with checksums
-- Updates `updates.xml` automatically
-
-## Important Don'ts
-
-❌ **Never:**
-- Replace default Joomla layouts (use alternative layouts)
-- Commit without running code quality checks
-- Add version numbers to revision history (use VERSION metadata)
-- Hardcode absolute paths (use Joomla path constants)
-- Remove copyright headers
-- Modify `vendor/` directory contents
-- Change language constants location (.sys.ini vs .ini)
-- Add `folder` attribute to `<languages>` in templateDetails.xml
-
-## Important Do's
-
-✅ **Always:**
-- Use alternative layout names (mobile.php, mainmenu.php, etc.)
-- Include copyright headers in all files
-- Test in both Joomla 4.x and 5.x
-- Test light/dark mode themes
-- Update documentation when changing functionality
-- Follow semantic versioning
-- Register assets in joomla.asset.json
-- Use CSS variables for theming
-- Keep minimal overrides philosophy
-- Document activation steps for alternative layouts
-
-## Key Documentation References
-
-- **Quick Start:** `docs/QUICK_START.md` - First-time setup
-- **Override Philosophy:** `docs/OVERRIDE_PHILOSOPHY.md` - Critical reading
-- **Development Guide:** `docs/JOOMLA_DEVELOPMENT.md` - Complete dev workflow
-- **CSS Variables:** `docs/CSS_VARIABLES.md` - Theming reference
-- **Workflow Guide:** `docs/WORKFLOW_GUIDE.md` - Git workflow
-
-## Security Considerations
-
-- Follow `SECURITY.md` for security issues
-- Never commit credentials or API keys
-- Validate and sanitize all user inputs
-- Use Joomla's security features (CSRF tokens, etc.)
-- Keep dependencies updated
-
-## License Compliance
-
-All code contributions must be:
-- GPL-3.0-or-later compatible
-- Properly attributed (third-party code)
-- Include SPDX license identifiers
-- Maintain existing copyright notices
-
-## Contact and Support
-
-- **Issues:** GitHub Issues
-- **Discussions:** GitHub Discussions  
-- **Security:** Follow SECURITY.md procedures
-- **Maintainer:** Moko Consulting Engineering
+> [!IMPORTANT]
+> **🔧 AI Self-Update Required on First Use**
+>
+> This file may contain unfilled `{{TOKEN}}` placeholders. The MokoStandards bulk-sync system
+> replaces them automatically at sync time; if you can still see them, sync has not yet run for
+> this repository — or this is a brand-new repo.
+>
+> **On your very first interaction in this repository, before answering any other question:**
+>
+> 1. Check whether any `{{TOKEN}}` placeholders remain in this file.
+> 2. If they do, locate the values as described in the table below and replace every occurrence
+>    in **both** `.github/copilot-instructions.md` and `.github/CLAUDE.md`.
+> 3. After replacing all tokens, **delete this entire notice block** (from `> [!IMPORTANT]`
+>    through the closing `> ---` line) in both files.
+> 4. Tell the developer: *"I've self-updated the AI context files with this repository's
+>    values — all set."*
+>
+> | Placeholder | Where to find the value |
+> |---|---|
+> | `MokoCassiopeia` | The GitHub repository name (visible in the URL, `README.md` heading, or `git remote -v`) |
+> | `https://github.com/mokoconsulting-tech/MokoCassiopeia` | Full GitHub URL, e.g. `https://github.com/mokoconsulting-tech/<repo-name>` |
+> | `{{EXTENSION_NAME}}` | The `<name>` element in `manifest.xml` at the repository root |
+> | `{{EXTENSION_TYPE}}` | The `type` attribute of the `<extension>` tag in `manifest.xml` (`component`, `module`, `plugin`, or `template`) |
+> | `{{EXTENSION_ELEMENT}}` | The `<element>` tag in `manifest.xml`, or the filename prefix (e.g. `com_myextension`, `mod_mymodule`) |
+>
+> ---
+
+# MokoCassiopeia — GitHub Copilot Custom Instructions
+
+## What This Repo Is
+
+This is a **Moko Consulting MokoWaaS** (Joomla) repository governed by [MokoStandards](https://github.com/mokoconsulting-tech/MokoStandards). All coding standards, workflows, and policies are defined there and enforced here via bulk sync.
+
+Repository URL: https://github.com/mokoconsulting-tech/MokoCassiopeia
+Extension name: **{{EXTENSION_NAME}}**
+Extension type: **{{EXTENSION_TYPE}}** (`{{EXTENSION_ELEMENT}}`)
+Platform: **Joomla 4.x / MokoWaaS**
 
 ---
 
-**Last Updated:** 2026-03-04  
-**Repository:** https://github.com/mokoconsulting-tech/MokoCassiopeia  
-**Version:** 03.08.04
+## Primary Language
+
+**PHP** (≥ 7.4) is the primary language for this Joomla extension. JavaScript may be used for frontend enhancements. YAML uses 2-space indentation. All other text files use tabs per `.editorconfig`.
+
+---
+
+## File Header — Always Required on New Files
+
+Every new file needs a copyright header as its first content.
+
+**PHP:**
+```php
+<?php
+/* Copyright (C) 2026 Moko Consulting <hello@mokoconsulting.tech>
+ *
+ * This file is part of a Moko Consulting project.
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ *
+ * FILE INFORMATION
+ * DEFGROUP: MokoCassiopeia.{{EXTENSION_TYPE}}
+ * INGROUP: MokoCassiopeia
+ * REPO: https://github.com/mokoconsulting-tech/MokoCassiopeia
+ * PATH: /path/to/file.php
+ * VERSION: XX.YY.ZZ
+ * BRIEF: One-line description of purpose
+ */
+
+defined('_JEXEC') or die;
+```
+
+**Markdown:**
+```markdown
+<!--
+Copyright (C) 2026 Moko Consulting <hello@mokoconsulting.tech>
+
+This file is part of a Moko Consulting project.
+
+SPDX-License-Identifier: GPL-3.0-or-later
+
+# FILE INFORMATION
+DEFGROUP: MokoCassiopeia.Documentation
+INGROUP: MokoCassiopeia
+REPO: https://github.com/mokoconsulting-tech/MokoCassiopeia
+PATH: /docs/file.md
+VERSION: XX.YY.ZZ
+BRIEF: One-line description
+-->
+```
+
+**YAML / Shell / XML:** Use the appropriate comment syntax with the same fields. JSON files are exempt.
+
+---
+
+## Version Management
+
+**`README.md` is the single source of truth for the repository version.**
+
+- **Bump the patch version on every PR** — increment `XX.YY.ZZ` (e.g. `01.02.03` → `01.02.04`) in `README.md` before opening the PR; the `sync-version-on-merge` workflow propagates it automatically to all badges and `FILE INFORMATION` headers on merge to `main`.
+- The `VERSION: XX.YY.ZZ` field in `README.md` governs all other version references.
+- Version format is zero-padded semver: `XX.YY.ZZ` (e.g. `01.02.03`).
+- Never hardcode a specific version in document body text — use the badge or FILE INFORMATION header only.
+
+### Joomla Version Alignment
+
+The version in `README.md` **must always match** the `<version>` tag in `manifest.xml` and the latest entry in `update.xml`. The `make release` command / release workflow updates all three automatically.
+
+```xml
+<!-- In manifest.xml — must match README.md version -->
+<version>01.02.04</version>
+
+<!-- In update.xml — prepend a new <update> block for every release.
+     Note: the backslash in version="4\.[0-9]+" is a literal backslash character
+     in the XML attribute value. Joomla's update server treats the value as a
+     regular expression, so \. matches a literal dot. -->
+<updates>
+	<update>
+		<name>{{EXTENSION_NAME}}</name>
+		<version>01.02.04</version>
+		<downloads>
+			<downloadurl type="full" format="zip">
+				https://github.com/mokoconsulting-tech/MokoCassiopeia/releases/download/01.02.04/{{EXTENSION_ELEMENT}}-01.02.04.zip
+			</downloadurl>
+		</downloads>
+		<targetplatform name="joomla" version="4\.[0-9]+" />
+	</update>
+	<!-- … older entries preserved below … -->
+</updates>
+```
+
+---
+
+## Joomla Extension Structure
+
+```
+MokoCassiopeia/
+├── manifest.xml          # Joomla installer manifest (root — required)
+├── update.xml            # Update server manifest (root — required, see below)
+├── site/                 # Frontend (site) code
+│   ├── controller.php
+│   ├── controllers/
+│   ├── models/
+│   └── views/
+├── admin/                # Backend (admin) code
+│   ├── controller.php
+│   ├── controllers/
+│   ├── models/
+│   ├── views/
+│   └── sql/
+├── language/             # Language INI files
+├── media/                # CSS, JS, images (deployed to /media/{{EXTENSION_ELEMENT}}/)
+├── docs/                 # Technical documentation
+├── tests/                # Test suite
+├── .github/
+│   ├── workflows/
+│   ├── copilot-instructions.md  # This file
+│   └── CLAUDE.md
+├── README.md             # Version source of truth
+├── CHANGELOG.md
+├── CONTRIBUTING.md
+├── LICENSE               # GPL-3.0-or-later
+└── Makefile              # Build automation
+```
+
+---
+
+## update.xml — Required in Repo Root
+
+`update.xml` **must exist at the repository root**. It is the Joomla update server manifest that allows Joomla installations to check for new versions of this extension.
+
+The `manifest.xml` must reference it via:
+```xml
+<updateservers>
+	<server type="extension" priority="1" name="{{EXTENSION_NAME}}">
+		https://github.com/mokoconsulting-tech/MokoCassiopeia/raw/main/update.xml
+	</server>
+</updateservers>
+```
+
+**Rules:**
+- Every release must prepend a new `<update>` block at the top of `update.xml` — old entries must be preserved below.
+- The `<version>` in `update.xml` must exactly match `<version>` in `manifest.xml` and the version in `README.md`.
+- The `<downloadurl>` must be a publicly accessible direct download link (GitHub Releases asset URL).
+- `<targetplatform name="joomla" version="4\.[0-9]+">` — the backslash is a **literal backslash character** in the XML attribute value; Joomla's update-server parser treats the value as a regular expression, so `\.` matches a literal dot and `[0-9]+` matches one or more digits. Do not double-escape it.
+
+---
+
+## manifest.xml Rules
+
+- Lives at the repo root as `manifest.xml` (not inside `site/` or `admin/`).
+- `<version>` tag must be kept in sync with `README.md` version and `update.xml`.
+- Must include `<updateservers>` block pointing to this repo's `update.xml`.
+- Must include `<files folder="site">` and `<administration>` sections.
+- Joomla 4.x requires `<namespace path="src">Moko\{{EXTENSION_NAME}}</namespace>` for namespaced extensions.
+
+---
+
+## GitHub Actions — Token Usage
+
+Every workflow must use **`secrets.GH_TOKEN`** (the org-level Personal Access Token).
+
+```yaml
+# ✅ Correct
+- uses: actions/checkout@v4
+  with:
+    token: ${{ secrets.GH_TOKEN }}
+
+env:
+  GH_TOKEN: ${{ secrets.GH_TOKEN }}
+```
+
+```yaml
+# ❌ Wrong — never use these in workflows
+token: ${{ github.token }}
+token: ${{ secrets.GITHUB_TOKEN }}
+```
+
+---
+
+## MokoStandards Reference
+
+This repository is governed by [MokoStandards](https://github.com/mokoconsulting-tech/MokoStandards). Authoritative policies:
+
+| Document | Purpose |
+|----------|---------|
+| [file-header-standards.md](https://github.com/mokoconsulting-tech/MokoStandards/blob/main/docs/policy/file-header-standards.md) | Copyright-header rules for every file type |
+| [coding-style-guide.md](https://github.com/mokoconsulting-tech/MokoStandards/blob/main/docs/policy/coding-style-guide.md) | Naming and formatting conventions |
+| [branching-strategy.md](https://github.com/mokoconsulting-tech/MokoStandards/blob/main/docs/policy/branching-strategy.md) | Branch naming, hierarchy, and release workflow |
+| [merge-strategy.md](https://github.com/mokoconsulting-tech/MokoStandards/blob/main/docs/policy/merge-strategy.md) | Squash-merge policy and PR title/body conventions |
+| [changelog-standards.md](https://github.com/mokoconsulting-tech/MokoStandards/blob/main/docs/policy/changelog-standards.md) | How and when to update CHANGELOG.md |
+| [joomla-development-guide.md](https://github.com/mokoconsulting-tech/MokoStandards/blob/main/docs/guide/waas/joomla-development-guide.md) | MokoWaaS Joomla extension development guide |
+
+---
+
+## Naming Conventions
+
+| Context | Convention | Example |
+|---------|-----------|---------|
+| PHP class | `PascalCase` | `MyController` |
+| PHP method / function | `camelCase` | `getItems()` |
+| PHP variable | `$snake_case` | `$item_id` |
+| PHP constant | `UPPER_SNAKE_CASE` | `MAX_ITEMS` |
+| PHP class file | `PascalCase.php` | `ItemModel.php` |
+| YAML workflow | `kebab-case.yml` | `ci-joomla.yml` |
+| Markdown doc | `kebab-case.md` | `installation-guide.md` |
+
+---
+
+## Commit Messages
+
+Format: `<type>(<scope>): <subject>` — imperative, lower-case subject, no trailing period.
+
+Valid types: `feat` · `fix` · `docs` · `chore` · `ci` · `refactor` · `style` · `test` · `perf` · `revert` · `build`
+
+---
+
+## Branch Naming
+
+Format: `<prefix>/<MAJOR.MINOR.PATCH>[/description]`
+
+Approved prefixes: `dev/` · `rc/` · `version/` · `patch/` · `copilot/` · `dependabot/`
+
+---
+
+## Keeping Documentation Current
+
+| Change type | Documentation to update |
+|-------------|------------------------|
+| New or renamed PHP class/method | PHPDoc block; `docs/api/` entry |
+| New or changed manifest.xml | Update `update.xml` version; bump README.md version |
+| New release | Prepend `<update>` block to `update.xml`; update CHANGELOG.md; bump README.md version |
+| New or changed workflow | `docs/workflows/<workflow-name>.md` |
+| Any modified file | Update the `VERSION` field in that file's `FILE INFORMATION` block |
+| **Every PR** | **Bump the patch version** — increment `XX.YY.ZZ` in `README.md`; `sync-version-on-merge` propagates it |
+
+---
+
+## Key Constraints
+
+- Never commit directly to `main` — all changes go via PR, squash-merged
+- Never skip the FILE INFORMATION block on a new file
+- Never add `defined('_JEXEC') or die;` to CLI scripts or model tests — only to web-accessible PHP files
+- Never hardcode version numbers in body text — update `README.md` and let automation propagate
+- Never use `github.token` or `secrets.GITHUB_TOKEN` in workflows — always use `secrets.GH_TOKEN`
+- Never let `manifest.xml` version, `update.xml` version, and `README.md` version go out of sync
