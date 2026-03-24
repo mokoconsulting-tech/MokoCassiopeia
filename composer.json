@@ -1,0 +1,55 @@
+{
+    "name": "mokoconsulting-tech/mokocassiopeia",
+    "description": "MokoCassiopeia Joomla component by Moko Consulting",
+    "type": "joomla-component",
+    "version": "01.00.00",
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Moko Consulting",
+            "email": "hello@mokoconsulting.tech"
+        }
+    ],
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "require": {
+        "php": ">=8.1",
+        "mokoconsulting-tech/enterprise": "^4.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.5",
+        "phpstan/phpstan": "^2.0",
+        "squizlabs/php_codesniffer": "^4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "MokoConsulting\\MokoCassiopeia\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "MokoConsulting\\MokoCassiopeia\\Tests\\": "tests/"
+        }
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/mokoconsulting-tech/MokoStandards"
+        }
+    ],
+    "config": {
+        "sort-packages": true,
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "allow-plugins": {
+            "composer/installers": true
+        }
+    },
+    "scripts": {
+        "validate-manifest": "vendor/bin/validate-manifest --path .",
+        "build":             "vendor/bin/build-package --path .",
+        "test":              "phpunit",
+        "phpcs":             "phpcs --standard=vendor/mokoconsulting-tech/enterprise/phpcs.xml src/",
+        "phpstan":           "phpstan analyse -c phpstan.neon src/"
+    }
+}
