@@ -134,6 +134,11 @@ $params_googletagmanager   = $params->get('googletagmanager', false);
 $params_googletagmanagerid = $params->get('googletagmanagerid', null);
 $params_googleanalytics    = $params->get('googleanalytics', false);
 $params_googleanalyticsid  = $params->get('googleanalyticsid', null);
+$params_googlesitekey      = $params->get('googlesitekey', null);
+
+if (!empty($params_googlesitekey)) {
+	$doc->setMetaData('google-site-verification', htmlspecialchars($params_googlesitekey, ENT_QUOTES, 'UTF-8'));
+}
 
 /* -----------------------
    Login routes & Users

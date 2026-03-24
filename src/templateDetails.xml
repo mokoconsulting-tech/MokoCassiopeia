@@ -25,7 +25,7 @@
 	DEFGROUP: Joomla
 	INGROUP: MokoCassiopeia
 	PATH: templates/mokocassiopeia/templateDetails.xml
-	VERSION: 03.08.04
+	VERSION: 03.09.01
 	BRIEF: Template manifest XML file for MokoCassiopeia
 	=========================================================================
 -->
@@ -36,12 +36,12 @@
 	  </server>
 	</updateservers>
 	<name>MokoCassiopeia</name>
-	<version>03.09.00</version>
+	<version>03.09.01</version>
 	<creationDate>2026-03-08</creationDate>
 	<author>Jonathan Miller || Moko Consulting</author>
 	<authorEmail>hello@mokoconsulting.tech</authorEmail>
 	<copyright>(C)GNU General Public License Version 3 - 2026 Moko Consulting</copyright>
-	<description><![CDATA[<h3>MokoCassiopeia Template Description</h3> <p>  <strong>MokoCassiopeia</strong> continues Joomla's tradition of space-themed default templates—  building on the legacy of <em>Solarflare</em> (Joomla 1.0), <em>Milkyway</em> (Joomla 1.5),  and <em>Protostar</em> (Joomla 3.0). </p> <p>  This template is a customized fork of the <strong>Cassiopeia</strong> template introduced in Joomla 4,  preserving its modern, accessible, and mobile-first foundation while introducing new stylistic  enhancements and structural refinements specifically tailored for use by Moko Consulting. </p>  <h4>Custom Colour Themes</h4> <p>  To create a custom colour scheme, copy the template file  <code>templates/light.custom.css</code> to  <code>media/templates/site/mokocassiopeia/css/theme/light.custom.css</code>  or <code>templates/dark.custom.css</code> to  <code>media/templates/site/mokocassiopeia/css/theme/dark.custom.css</code>.  Customise the CSS variables to match your brand, then activate it in  <em>System → Site Templates → MokoCassiopeia → Theme tab</em>  by selecting "Custom" for the Light or Dark Mode Palette.  For comprehensive documentation on all available CSS variables,  see <code>docs/CSS_VARIABLES.md</code>. </p>  <h4>Code Attribution</h4> <p>  This template is based on the original <strong>Cassiopeia</strong> template developed by the  <a href="https://www.joomla.org" target="_blank" rel="noopener">Joomla! Project</a> and released under the GNU General Public License. </p> <p>  Modifications and enhancements have been made by Moko Consulting in accordance with open-source licensing standards. </p> <p>  It includes integration with  <a href="https://afeld.github.io/bootstrap-toc/" target="_blank" rel="noopener">Bootstrap TOC</a>,  an open-source table of contents generator by A. Feld, licensed under the MIT License. </p> <p>  All third-party libraries and assets remain the property of their respective authors and are credited within their source files where applicable. </p>]]></description>
+	<description><![CDATA[<h3>MokoCassiopeia Template Description</h3> <p>  <strong>MokoCassiopeia</strong> continues Joomla's tradition of space-themed default templates—  building on the legacy of <em>Solarflare</em> (Joomla 1.0), <em>Milkyway</em> (Joomla 1.5),  and <em>Protostar</em> (Joomla 3.0). </p> <p>  This template is a customized fork of the <strong>Cassiopeia</strong> template introduced in Joomla 4,  preserving its modern, accessible, and mobile-first foundation while introducing new stylistic  enhancements and structural refinements specifically tailored for use by Moko Consulting. </p>  <h4>Custom Colour Themes</h4> <p>  Starter palette files are included with the template. To create a custom colour scheme,  copy <code>templates/mokocassiopeia/templates/light.custom.css</code> to  <code>media/templates/site/mokocassiopeia/css/theme/light.custom.css</code>,  or <code>templates/mokocassiopeia/templates/dark.custom.css</code> to  <code>media/templates/site/mokocassiopeia/css/theme/dark.custom.css</code>.  Customise the CSS variables to match your brand, then activate your palette in  <em>System → Site Templates → MokoCassiopeia → Theme tab</em>  by selecting "Custom" for the Light or Dark Mode Palette.  A full variable reference is available in the <em>CSS Variables</em> tab in template options. </p>  <h4>Custom CSS &amp; JavaScript</h4> <p>  For site-specific styles and scripts that should survive template updates, create the following files: </p> <ul>  <li><code>media/templates/site/mokocassiopeia/css/user.css</code> — loaded on every page for custom CSS overrides.</li>  <li><code>media/templates/site/mokocassiopeia/js/user.js</code> — loaded on every page for custom JavaScript.</li> </ul> <p>  These files are gitignored and will not be overwritten by template updates. </p>  <h4>Code Attribution</h4> <p>  This template is based on the original <strong>Cassiopeia</strong> template developed by the  <a href="https://www.joomla.org" target="_blank" rel="noopener">Joomla! Project</a> and released under the GNU General Public License. </p> <p>  Modifications and enhancements have been made by Moko Consulting in accordance with open-source licensing standards. </p> <p>  It includes integration with  <a href="https://afeld.github.io/bootstrap-toc/" target="_blank" rel="noopener">Bootstrap TOC</a>,  an open-source table of contents generator by A. Feld, licensed under the MIT License. </p> <p>  All third-party libraries and assets remain the property of their respective authors and are credited within their source files where applicable. </p>]]></description>
 	<inheritable>1</inheritable>
 	<files>
 		<filename>component.php</filename>
@@ -52,6 +52,7 @@
 		<filename>templateDetails.xml</filename>
 		<folder>html</folder>
 		<folder>language</folder>
+		<folder>templates</folder>
 	</files>
 	<stylesheets>
 		<stylesheet>media/templates/site/mokocassiopeia/css/editor.css</stylesheet>
@@ -66,6 +67,7 @@
 		<position>topbar</position>
 		<position>below-topbar</position>
 		<position>below-logo</position>
+		<position>brand-aside</position>
 		<position>menu</position>
 		<position>search</position>
 		<position>banner</position>
@@ -123,6 +125,7 @@
 					<option value="1">JYES</option>
 				</field>
 				<field name="googleanalyticsid" type="text" default="" label="TPL_MOKOCASSIOPEIA_GOOGLEANALYTICSID_LABEL" description="TPL_MOKOCASSIOPEIA_GOOGLEANALYTICSID_DESC" filter="string" showon="googleanalytics:1" />
+				<field name="googlesitekey" type="text" default="" label="TPL_MOKOCASSIOPEIA_GOOGLESITEKEY_LABEL" description="TPL_MOKOCASSIOPEIA_GOOGLESITEKEY_DESC" filter="string" />
 			</fieldset>
 
 			<!-- Custom Code tab -->
@@ -245,6 +248,50 @@
 					<option value="tr">Top-right</option>
 					<option value="tl">Top-left</option>
 				</field>
+			</fieldset>
+
+			<!-- CSS Variables reference tab -->
+			<fieldset name="css_variables" label="TPL_MOKOCASSIOPEIA_CSS_VARS_FIELDSET_LABEL">
+				<field name="css_vars_intro" type="note" description="TPL_MOKOCASSIOPEIA_CSS_VARS_INTRO" />
+				<field name="css_vars_brand" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_BRAND_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_BRAND_DESC" class="alert alert-light" />
+				<field name="css_vars_links" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_LINKS_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_LINKS_DESC" class="alert alert-light" />
+				<field name="css_vars_typography" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_TYPO_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_TYPO_DESC" class="alert alert-light" />
+				<field name="css_vars_nav" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_NAV_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_NAV_DESC" class="alert alert-light" />
+				<field name="css_vars_layout" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_LAYOUT_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_LAYOUT_DESC" class="alert alert-light" />
+				<field name="css_vars_breakpoints" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_BP_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_BP_DESC" class="alert alert-light" />
+				<field name="css_vars_bootstrap" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_BS_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_BS_DESC" class="alert alert-light" />
+				<field name="css_vars_bootstrap_states" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_BS_STATES_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_BS_STATES_DESC" class="alert alert-light" />
+				<field name="css_vars_alert_list" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_ALERT_LIST_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_ALERT_LIST_DESC" class="alert alert-light" />
+				<field name="css_vars_colors" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_COLORS_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_COLORS_DESC" class="alert alert-light" />
+				<field name="css_vars_hero" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_HERO_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_HERO_DESC" class="alert alert-light" />
+				<field name="css_vars_header" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_HEADER_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_HEADER_DESC" class="alert alert-light" />
+				<field name="css_vars_containers" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_CONTAINERS_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_CONTAINERS_DESC" class="alert alert-light" />
+				<field name="css_vars_borders" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_BORDERS_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_BORDERS_DESC" class="alert alert-light" />
+				<field name="css_vars_shadows" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_SHADOWS_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_SHADOWS_DESC" class="alert alert-light" />
+				<field name="css_vars_forms" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_FORMS_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_FORMS_DESC" class="alert alert-light" />
+				<field name="css_vars_buttons" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_BUTTONS_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_BUTTONS_DESC" class="alert alert-light" />
+				<field name="css_vars_cards" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_CARDS_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_CARDS_DESC" class="alert alert-light" />
+				<field name="css_vars_accordion" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_ACCORDION_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_ACCORDION_DESC" class="alert alert-light" />
+				<field name="css_vars_alert_base" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_ALERT_BASE_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_ALERT_BASE_DESC" class="alert alert-light" />
+				<field name="css_vars_badge" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_BADGE_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_BADGE_DESC" class="alert alert-light" />
+				<field name="css_vars_breadcrumb" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_BREADCRUMB_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_BREADCRUMB_DESC" class="alert alert-light" />
+				<field name="css_vars_dropdown_menu" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_DROPDOWN_MENU_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_DROPDOWN_MENU_DESC" class="alert alert-light" />
+				<field name="css_vars_list_group" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_LIST_GROUP_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_LIST_GROUP_DESC" class="alert alert-light" />
+				<field name="css_vars_modal" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_MODAL_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_MODAL_DESC" class="alert alert-light" />
+				<field name="css_vars_backdrop" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_BACKDROP_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_BACKDROP_DESC" class="alert alert-light" />
+				<field name="css_vars_nav_tabs" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_NAV_TABS_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_NAV_TABS_DESC" class="alert alert-light" />
+				<field name="css_vars_nav_pills" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_NAV_PILLS_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_NAV_PILLS_DESC" class="alert alert-light" />
+				<field name="css_vars_pagination" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_PAGINATION_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_PAGINATION_DESC" class="alert alert-light" />
+				<field name="css_vars_popover" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_POPOVER_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_POPOVER_DESC" class="alert alert-light" />
+				<field name="css_vars_progress" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_PROGRESS_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_PROGRESS_DESC" class="alert alert-light" />
+				<field name="css_vars_spinner" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_SPINNER_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_SPINNER_DESC" class="alert alert-light" />
+				<field name="css_vars_table" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_TABLE_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_TABLE_DESC" class="alert alert-light" />
+				<field name="css_vars_toast" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_TOAST_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_TOAST_DESC" class="alert alert-light" />
+				<field name="css_vars_tooltip" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_TOOLTIP_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_TOOLTIP_DESC" class="alert alert-light" />
+				<field name="css_vars_components" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_COMPONENTS_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_COMPONENTS_DESC" class="alert alert-light" />
+				<field name="css_vars_offcanvas" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_OFFCANVAS_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_OFFCANVAS_DESC" class="alert alert-light" />
+				<field name="css_vars_virtuemart" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_VM_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_VM_DESC" class="alert alert-light" />
+				<field name="css_vars_gable" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_GABLE_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_GABLE_DESC" class="alert alert-light" />
 			</fieldset>
 		</fields>
 	</config>
