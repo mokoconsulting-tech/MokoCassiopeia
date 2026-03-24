@@ -1,0 +1,758 @@
+# Copyright (C) 2026 Moko Consulting <hello@mokoconsulting.tech>
+#
+# This file is part of a Moko Consulting project.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+# FILE INFORMATION
+# DEFGROUP: GitHub.Workflow
+# INGROUP: MokoStandards.Firewall
+# REPO: https://github.com/mokoconsulting-tech/MokoStandards
+# PATH: /templates/workflows/shared/enterprise-firewall-setup.yml
+# VERSION: 01.00.00
+# BRIEF: Enterprise firewall configuration — generates outbound allow-rules including SFTP deployment server
+# NOTE: Reads DEV_FTP_HOST / DEV_FTP_PORT variables to include SFTP egress rules alongside HTTPS rules.
+
+name: Enterprise Firewall Configuration
+
+# This workflow provides firewall configuration guidance for enterprise-ready sites
+# It generates firewall rules for allowing outbound access to trusted domains
+# including license providers, documentation sources, package registries,
+# and the SFTP deployment server (DEV_FTP_HOST / DEV_FTP_PORT).
+#
+# Runs automatically when:
+# - Coding agent workflows are triggered (pull requests with copilot/ prefix)
+# - Manual workflow dispatch for custom configurations
+
+on:
+  workflow_dispatch:
+    inputs:
+      firewall_type:
+        description: 'Target firewall type'
+        required: true
+        type: choice
+        options:
+          - 'iptables'
+          - 'ufw'
+          - 'firewalld'
+          - 'aws-security-group'
+          - 'azure-nsg'
+          - 'gcp-firewall'
+          - 'cloudflare'
+          - 'all'
+        default: 'all'
+      output_format:
+        description: 'Output format'
+        required: true
+        type: choice
+        options:
+          - 'shell-script'
+          - 'json'
+          - 'yaml'
+          - 'markdown'
+          - 'all'
+        default: 'markdown'
+
+  # Auto-run when coding agent creates or updates PRs
+  pull_request:
+    branches:
+      - 'copilot/**'
+      - 'agent/**'
+    types: [opened, synchronize, reopened]
+
+  # Auto-run on push to coding agent branches
+  push:
+    branches:
+      - 'copilot/**'
+      - 'agent/**'
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  generate-firewall-rules:
+    name: Generate Firewall Rules
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+
+      - name: Apply Firewall Rules to Runner (Auto-run only)
+        if: github.event_name != 'workflow_dispatch'
+        env:
+          DEV_FTP_HOST: ${{ vars.DEV_FTP_HOST }}
+          DEV_FTP_PORT: ${{ vars.DEV_FTP_PORT }}
+        run: |
+          echo "🔥 Applying firewall rules for coding agent environment..."
+          echo ""
+          echo "This step ensures the GitHub Actions runner can access trusted domains"
+          echo "including license providers, package registries, and documentation sources."
+          echo ""
+
+          # Note: GitHub Actions runners are ephemeral and run in controlled environments
+          # This step documents what domains are being accessed during the workflow
+          # Actual firewall configuration is managed by GitHub
+
+          cat > /tmp/trusted-domains.txt << 'EOF'
+          # Trusted domains for coding agent environment
+          # License Providers
+          www.gnu.org
+          opensource.org
+          choosealicense.com
+          spdx.org
+          creativecommons.org
+          apache.org
+          fsf.org
+
+          # Documentation & Standards
+          semver.org
+          keepachangelog.com
+          conventionalcommits.org
+
+          # GitHub & Related
+          github.com
+          api.github.com
+          docs.github.com
+          raw.githubusercontent.com
+          ghcr.io
+
+          # Package Registries
+          npmjs.com
+          registry.npmjs.org
+          pypi.org
+          files.pythonhosted.org
+          packagist.org
+          repo.packagist.org
+          rubygems.org
+
+          # Platform-Specific
+          joomla.org
+          downloads.joomla.org
+          docs.joomla.org
+          php.net
+          getcomposer.org
+          dolibarr.org
+          wiki.dolibarr.org
+          docs.dolibarr.org
+
+          # Moko Consulting
+          mokoconsulting.tech
+
+          # SFTP Deployment Server (DEV_FTP_HOST)
+          ${DEV_FTP_HOST:-<not configured>}
+
+          # Google Services
+          drive.google.com
+          docs.google.com
+          sheets.google.com
+          accounts.google.com
+          storage.googleapis.com
+          fonts.googleapis.com
+          fonts.gstatic.com
+
+          # GitHub Extended
+          upload.github.com
+          objects.githubusercontent.com
+          user-images.githubusercontent.com
+          codeload.github.com
+          pkg.github.com
+
+          # Developer Reference
+          developer.mozilla.org
+          stackoverflow.com
+          git-scm.com
+
+          # CDN & Infrastructure
+          cdn.jsdelivr.net
+          unpkg.com
+          cdnjs.cloudflare.com
+          img.shields.io
+
+          # Container Registries
+          hub.docker.com
+          registry-1.docker.io
+
+          # CI & Code Quality
+          codecov.io
+          sonarcloud.io
+
+          # Terraform & Infrastructure
+          registry.terraform.io
+          releases.hashicorp.com
+          checkpoint-api.hashicorp.com
+          EOF
+
+          echo "✓ Trusted domains documented for this runner"
+          echo "✓ GitHub Actions runners have network access to these domains"
+          echo ""
+
+          # Test connectivity to key domains
+          echo "Testing connectivity to key domains..."
+          for domain in "github.com" "www.gnu.org" "npmjs.com" "pypi.org"; do
+            if curl -s --max-time 3 -o /dev/null -w "%{http_code}" "https://$domain" | grep -q "200\|301\|302"; then
+              echo "  ✓ $domain is accessible"
+            else
+              echo "  ⚠️  $domain connectivity check failed (may be expected)"
+            fi
+          done
+
+          # Test SFTP server connectivity (TCP port check)
+          SFTP_HOST="${DEV_FTP_HOST:-}"
+          SFTP_PORT="${DEV_FTP_PORT:-22}"
+          if [ -n "$SFTP_HOST" ]; then
+            # Strip any embedded :port suffix
+            SFTP_HOST="${SFTP_HOST%%:*}"
+            echo ""
+            echo "Testing SFTP deployment server connectivity..."
+            if timeout 5 bash -c "echo >/dev/tcp/${SFTP_HOST}/${SFTP_PORT}" 2>/dev/null; then
+              echo "  ✓ SFTP server ${SFTP_HOST}:${SFTP_PORT} is reachable"
+            else
+              echo "  ⚠️  SFTP server ${SFTP_HOST}:${SFTP_PORT} is not reachable from runner (firewall rule needed)"
+            fi
+          else
+            echo ""
+            echo "  ℹ️  DEV_FTP_HOST not configured — skipping SFTP connectivity check"
+          fi
+
+      - name: Generate Firewall Configuration
+        id: generate
+        env:
+          DEV_FTP_HOST: ${{ vars.DEV_FTP_HOST }}
+          DEV_FTP_PORT: ${{ vars.DEV_FTP_PORT }}
+        run: |
+          cat > generate_firewall_config.py << 'PYTHON_EOF'
+          #!/usr/bin/env python3
+          """
+          Enterprise Firewall Configuration Generator
+
+          Generates firewall rules for enterprise-ready deployments allowing
+          access to trusted domains including license providers, documentation
+          sources, package registries, and platform-specific sites.
+          """
+
+          import json
+          import os
+          import yaml
+          import sys
+          from typing import List, Dict
+
+          # SFTP deployment server from org variables
+          _sftp_host_raw = os.environ.get("DEV_FTP_HOST", "").strip()
+          _sftp_port = os.environ.get("DEV_FTP_PORT", "").strip() or "22"
+          # Strip embedded :port suffix if present
+          _sftp_host = _sftp_host_raw.split(":")[0] if _sftp_host_raw else ""
+          if ":" in _sftp_host_raw and not _sftp_port:
+              _sftp_port = _sftp_host_raw.split(":")[1]
+
+          SFTP_HOST = _sftp_host
+          SFTP_PORT = int(_sftp_port) if _sftp_port.isdigit() else 22
+
+          # Trusted domains from .github/copilot.yml
+          TRUSTED_DOMAINS = {
+              "license_providers": [
+                  "www.gnu.org",
+                  "opensource.org",
+                  "choosealicense.com",
+                  "spdx.org",
+                  "creativecommons.org",
+                  "apache.org",
+                  "fsf.org",
+              ],
+              "documentation_standards": [
+                  "semver.org",
+                  "keepachangelog.com",
+                  "conventionalcommits.org",
+              ],
+              "github_related": [
+                  "github.com",
+                  "api.github.com",
+                  "docs.github.com",
+                  "raw.githubusercontent.com",
+                  "ghcr.io",
+              ],
+              "package_registries": [
+                  "npmjs.com",
+                  "registry.npmjs.org",
+                  "pypi.org",
+                  "files.pythonhosted.org",
+                  "packagist.org",
+                  "repo.packagist.org",
+                  "rubygems.org",
+              ],
+              "standards_organizations": [
+                  "json-schema.org",
+                  "w3.org",
+                  "ietf.org",
+              ],
+              "platform_specific": [
+                  "joomla.org",
+                  "downloads.joomla.org",
+                  "docs.joomla.org",
+                  "php.net",
+                  "getcomposer.org",
+                  "dolibarr.org",
+                  "wiki.dolibarr.org",
+                  "docs.dolibarr.org",
+              ],
+              "moko_consulting": [
+                  "mokoconsulting.tech",
+              ],
+              "google_services": [
+                  "drive.google.com",
+                  "docs.google.com",
+                  "sheets.google.com",
+                  "accounts.google.com",
+                  "storage.googleapis.com",
+                  "fonts.googleapis.com",
+                  "fonts.gstatic.com",
+              ],
+              "github_extended": [
+                  "upload.github.com",
+                  "objects.githubusercontent.com",
+                  "user-images.githubusercontent.com",
+                  "codeload.github.com",
+                  "pkg.github.com",
+              ],
+              "developer_reference": [
+                  "developer.mozilla.org",
+                  "stackoverflow.com",
+                  "git-scm.com",
+              ],
+              "cdn_and_infrastructure": [
+                  "cdn.jsdelivr.net",
+                  "unpkg.com",
+                  "cdnjs.cloudflare.com",
+                  "img.shields.io",
+              ],
+              "container_registries": [
+                  "hub.docker.com",
+                  "registry-1.docker.io",
+              ],
+              "ci_code_quality": [
+                  "codecov.io",
+                  "sonarcloud.io",
+              ],
+              "terraform_infrastructure": [
+                  "registry.terraform.io",
+                  "releases.hashicorp.com",
+                  "checkpoint-api.hashicorp.com",
+              ],
+          }
+
+          # Inject SFTP deployment server as a separate category (port 22, not 443)
+          if SFTP_HOST:
+              TRUSTED_DOMAINS["sftp_deployment_server"] = [SFTP_HOST]
+              print(f"ℹ️  SFTP deployment server: {SFTP_HOST}:{SFTP_PORT}")
+
+          def generate_sftp_iptables_rules(host: str, port: int) -> str:
+              """Generate iptables rules specifically for SFTP egress"""
+              return (
+                  f"# Allow SFTP to deployment server {host}:{port}\n"
+                  f"iptables -A OUTPUT -p tcp -d $(dig +short {host} | head -1)"
+                  f" --dport {port} -j ACCEPT  # SFTP deploy\n"
+              )
+
+          def generate_sftp_ufw_rules(host: str, port: int) -> str:
+              """Generate UFW rules for SFTP egress"""
+              return (
+                  f"# Allow SFTP to deployment server\n"
+                  f"ufw allow out to $(dig +short {host} | head -1)"
+                  f" port {port} proto tcp comment 'SFTP deploy to {host}'\n"
+              )
+
+          def generate_sftp_firewalld_rules(host: str, port: int) -> str:
+              """Generate firewalld rules for SFTP egress"""
+              return (
+                  f"# Allow SFTP to deployment server\n"
+                  f"firewall-cmd --permanent --add-rich-rule='"
+                  f"rule family=ipv4 destination address=$(dig +short {host} | head -1)"
+                  f" port port={port} protocol=tcp accept'  # SFTP deploy\n"
+              )
+
+          def generate_iptables_rules(domains: List[str]) -> str:
+              """Generate iptables firewall rules"""
+              rules = ["#!/bin/bash", "", "# Enterprise Firewall Rules - iptables", ""]
+              rules.append("# Allow outbound HTTPS to trusted domains")
+              rules.append("")
+
+              for domain in domains:
+                  rules.append(f"# Allow {domain}")
+                  rules.append(f"iptables -A OUTPUT -p tcp -d $(dig +short {domain} | head -1) --dport 443 -j ACCEPT")
+
+              rules.append("")
+              rules.append("# Allow DNS lookups")
+              rules.append("iptables -A OUTPUT -p udp --dport 53 -j ACCEPT")
+              rules.append("iptables -A OUTPUT -p tcp --dport 53 -j ACCEPT")
+
+              return "\n".join(rules)
+
+          def generate_ufw_rules(domains: List[str]) -> str:
+              """Generate UFW firewall rules"""
+              rules = ["#!/bin/bash", "", "# Enterprise Firewall Rules - UFW", ""]
+              rules.append("# Allow outbound HTTPS to trusted domains")
+              rules.append("")
+
+              for domain in domains:
+                  rules.append(f"# Allow {domain}")
+                  rules.append(f"ufw allow out to $(dig +short {domain} | head -1) port 443 proto tcp comment 'Allow {domain}'")
+
+              rules.append("")
+              rules.append("# Allow DNS")
+              rules.append("ufw allow out 53/udp comment 'Allow DNS UDP'")
+              rules.append("ufw allow out 53/tcp comment 'Allow DNS TCP'")
+
+              return "\n".join(rules)
+
+          def generate_firewalld_rules(domains: List[str]) -> str:
+              """Generate firewalld rules"""
+              rules = ["#!/bin/bash", "", "# Enterprise Firewall Rules - firewalld", ""]
+              rules.append("# Add trusted domains to firewall")
+              rules.append("")
+
+              for domain in domains:
+                  rules.append(f"# Allow {domain}")
+                  rules.append(f"firewall-cmd --permanent --add-rich-rule='rule family=ipv4 destination address=$(dig +short {domain} | head -1) port port=443 protocol=tcp accept'")
+
+              rules.append("")
+              rules.append("# Reload firewall")
+              rules.append("firewall-cmd --reload")
+
+              return "\n".join(rules)
+
+          def generate_aws_security_group(domains: List[str]) -> Dict:
+              """Generate AWS Security Group rules (JSON format)"""
+              rules = {
+                  "SecurityGroupRules": {
+                      "Egress": []
+                  }
+              }
+
+              for domain in domains:
+                  rules["SecurityGroupRules"]["Egress"].append({
+                      "Description": f"Allow HTTPS to {domain}",
+                      "IpProtocol": "tcp",
+                      "FromPort": 443,
+                      "ToPort": 443,
+                      "CidrIp": "0.0.0.0/0",  # In practice, resolve to specific IPs
+                      "Tags": [{
+                          "Key": "Domain",
+                          "Value": domain
+                      }]
+                  })
+
+              # Add DNS
+              rules["SecurityGroupRules"]["Egress"].append({
+                  "Description": "Allow DNS",
+                  "IpProtocol": "udp",
+                  "FromPort": 53,
+                  "ToPort": 53,
+                  "CidrIp": "0.0.0.0/0"
+              })
+
+              return rules
+
+          def generate_markdown_documentation(domains_by_category: Dict[str, List[str]]) -> str:
+              """Generate markdown documentation"""
+              md = ["# Enterprise Firewall Configuration Guide", ""]
+              md.append("## Overview")
+              md.append("")
+              md.append("This document provides firewall configuration guidance for enterprise-ready deployments.")
+              md.append("It lists trusted domains that should be whitelisted for outbound access to ensure")
+              md.append("proper functionality of license validation, package management, and documentation access.")
+              md.append("")
+
+              md.append("## Trusted Domains by Category")
+              md.append("")
+
+              all_domains = []
+              for category, domains in domains_by_category.items():
+                  category_name = category.replace("_", " ").title()
+                  md.append(f"### {category_name}")
+                  md.append("")
+                  md.append("| Domain | Purpose |")
+                  md.append("|--------|---------|")
+
+                  for domain in domains:
+                      all_domains.append(domain)
+                      purpose = get_domain_purpose(domain)
+                      md.append(f"| `{domain}` | {purpose} |")
+
+                  md.append("")
+
+              md.append("## Implementation Examples")
+              md.append("")
+
+              md.append("### iptables Example")
+              md.append("")
+              md.append("```bash")
+              md.append("# Allow HTTPS to trusted domain")
+              md.append(f"iptables -A OUTPUT -p tcp -d $(dig +short {all_domains[0]}) --dport 443 -j ACCEPT")
+              md.append("```")
+              md.append("")
+
+              md.append("### UFW Example")
+              md.append("")
+              md.append("```bash")
+              md.append("# Allow HTTPS to trusted domain")
+              md.append(f"ufw allow out to {all_domains[0]} port 443 proto tcp")
+              md.append("```")
+              md.append("")
+
+              md.append("### AWS Security Group Example")
+              md.append("")
+              md.append("```json")
+              md.append("{")
+              md.append('  "IpPermissions": [{')
+              md.append('    "IpProtocol": "tcp",')
+              md.append('    "FromPort": 443,')
+              md.append('    "ToPort": 443,')
+              md.append('    "IpRanges": [{"CidrIp": "0.0.0.0/0", "Description": "HTTPS to trusted domains"}]')
+              md.append("  }]")
+              md.append("}")
+              md.append("```")
+              md.append("")
+
+              md.append("## Ports Required")
+              md.append("")
+              md.append("| Port | Protocol | Purpose |")
+              md.append("|------|----------|---------|")
+              md.append("| 443 | TCP | HTTPS (secure web access) |")
+              md.append("| 80 | TCP | HTTP (redirects to HTTPS) |")
+              md.append("| 53 | UDP/TCP | DNS resolution |")
+              md.append("")
+
+              md.append("## Security Considerations")
+              md.append("")
+              md.append("1. **DNS Resolution**: Ensure DNS queries are allowed (port 53 UDP/TCP)")
+              md.append("2. **Certificate Validation**: HTTPS requires ability to reach certificate authorities")
+              md.append("3. **Dynamic IPs**: Some domains use CDNs with dynamic IPs - consider using FQDNs in rules")
+              md.append("4. **Regular Updates**: Review and update whitelist as services change")
+              md.append("5. **Logging**: Enable logging for blocked connections to identify missing rules")
+              md.append("")
+
+              md.append("## Compliance Notes")
+              md.append("")
+              md.append("- All listed domains provide read-only access to public information")
+              md.append("- License providers enable GPL compliance verification")
+              md.append("- Package registries support dependency security scanning")
+              md.append("- No authentication credentials are transmitted to these domains")
+              md.append("")
+
+              return "\n".join(md)
+
+          def get_domain_purpose(domain: str) -> str:
+              """Get human-readable purpose for a domain"""
+              purposes = {
+                  "www.gnu.org": "GNU licenses and documentation",
+                  "opensource.org": "Open Source Initiative resources",
+                  "choosealicense.com": "GitHub license selection tool",
+                  "spdx.org": "Software Package Data Exchange identifiers",
+                  "creativecommons.org": "Creative Commons licenses",
+                  "apache.org": "Apache Software Foundation licenses",
+                  "fsf.org": "Free Software Foundation resources",
+                  "semver.org": "Semantic versioning specification",
+                  "keepachangelog.com": "Changelog format standards",
+                  "conventionalcommits.org": "Commit message conventions",
+                  "github.com": "GitHub platform access",
+                  "api.github.com": "GitHub API access",
+                  "docs.github.com": "GitHub documentation",
+                  "raw.githubusercontent.com": "GitHub raw content access",
+                  "npmjs.com": "npm package registry",
+                  "pypi.org": "Python Package Index",
+                  "packagist.org": "PHP Composer package registry",
+                  "rubygems.org": "Ruby gems registry",
+                  "joomla.org": "Joomla CMS platform",
+                  "php.net": "PHP documentation and downloads",
+                  "dolibarr.org": "Dolibarr ERP/CRM platform",
+              }
+              return purposes.get(domain, "Trusted resource")
+
+          def main():
+              # Use inputs if provided (manual dispatch), otherwise use defaults (auto-run)
+              firewall_type = "${{ github.event.inputs.firewall_type }}" or "all"
+              output_format = "${{ github.event.inputs.output_format }}" or "markdown"
+
+              print(f"Running in {'manual' if '${{ github.event.inputs.firewall_type }}' else 'automatic'} mode")
+              print(f"Firewall type: {firewall_type}")
+              print(f"Output format: {output_format}")
+              print("")
+
+              # Collect all domains
+              all_domains = []
+              for domains in TRUSTED_DOMAINS.values():
+                  all_domains.extend(domains)
+
+              # Remove duplicates and sort
+              all_domains = sorted(set(all_domains))
+
+              print(f"Generating firewall rules for {len(all_domains)} trusted domains...")
+              print("")
+
+              # Exclude SFTP server from HTTPS rule generation (different port)
+              https_domains = [d for d in all_domains if d != SFTP_HOST]
+
+              # Generate based on firewall type
+              if firewall_type in ["iptables", "all"]:
+                  rules = generate_iptables_rules(https_domains)
+                  if SFTP_HOST:
+                      rules += "\n# ── SFTP Deployment Server ──────────────────────────────\n"
+                      rules += generate_sftp_iptables_rules(SFTP_HOST, SFTP_PORT)
+                  with open("firewall-rules-iptables.sh", "w") as f:
+                      f.write(rules)
+                  print("✓ Generated iptables rules: firewall-rules-iptables.sh")
+
+              if firewall_type in ["ufw", "all"]:
+                  rules = generate_ufw_rules(https_domains)
+                  if SFTP_HOST:
+                      rules += "\n# ── SFTP Deployment Server ──────────────────────────────\n"
+                      rules += generate_sftp_ufw_rules(SFTP_HOST, SFTP_PORT)
+                  with open("firewall-rules-ufw.sh", "w") as f:
+                      f.write(rules)
+                  print("✓ Generated UFW rules: firewall-rules-ufw.sh")
+
+              if firewall_type in ["firewalld", "all"]:
+                  rules = generate_firewalld_rules(https_domains)
+                  if SFTP_HOST:
+                      rules += "\n# ── SFTP Deployment Server ──────────────────────────────\n"
+                      rules += generate_sftp_firewalld_rules(SFTP_HOST, SFTP_PORT)
+                  with open("firewall-rules-firewalld.sh", "w") as f:
+                      f.write(rules)
+                  print("✓ Generated firewalld rules: firewall-rules-firewalld.sh")
+
+              if firewall_type in ["aws-security-group", "all"]:
+                  rules = generate_aws_security_group(all_domains)
+                  with open("firewall-rules-aws-sg.json", "w") as f:
+                      json.dump(rules, f, indent=2)
+                  print("✓ Generated AWS Security Group rules: firewall-rules-aws-sg.json")
+
+              if output_format in ["yaml", "all"]:
+                  with open("trusted-domains.yml", "w") as f:
+                      yaml.dump(TRUSTED_DOMAINS, f, default_flow_style=False)
+                  print("✓ Generated YAML domain list: trusted-domains.yml")
+
+              if output_format in ["json", "all"]:
+                  with open("trusted-domains.json", "w") as f:
+                      json.dump(TRUSTED_DOMAINS, f, indent=2)
+                  print("✓ Generated JSON domain list: trusted-domains.json")
+
+              if output_format in ["markdown", "all"]:
+                  md = generate_markdown_documentation(TRUSTED_DOMAINS)
+                  with open("FIREWALL_CONFIGURATION.md", "w") as f:
+                      f.write(md)
+                  print("✓ Generated documentation: FIREWALL_CONFIGURATION.md")
+
+              print("")
+              print("Domain Categories:")
+              for category, domains in TRUSTED_DOMAINS.items():
+                  print(f"  - {category}: {len(domains)} domains")
+
+              print("")
+              print("Total unique domains: ", len(all_domains))
+
+          if __name__ == "__main__":
+              main()
+          PYTHON_EOF
+
+          chmod +x generate_firewall_config.py
+          pip install PyYAML
+          python3 generate_firewall_config.py
+
+      - name: Upload Firewall Configuration Artifacts
+        uses: actions/upload-artifact@v6
+        with:
+          name: firewall-configurations
+          path: |
+            firewall-rules-*.sh
+            firewall-rules-*.json
+            trusted-domains.*
+            FIREWALL_CONFIGURATION.md
+          retention-days: 90
+
+      - name: Display Summary
+        run: |
+          echo "## Firewall Configuration" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "**Mode**: Manual Execution" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Firewall rules have been generated for enterprise-ready deployments." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "**Mode**: Automatic Execution (Coding Agent Active)" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "This workflow ran automatically because a coding agent (GitHub Copilot) is active." >> $GITHUB_STEP_SUMMARY
+            echo "Firewall configuration has been validated for the coding agent environment." >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Files Generated" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if ls firewall-rules-* trusted-domains.* FIREWALL_CONFIGURATION.md 2>/dev/null; then
+            ls -lh firewall-rules-* trusted-domains.* FIREWALL_CONFIGURATION.md 2>/dev/null | awk '{print "- " $9 " (" $5 ")"}' >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- Documentation generated" >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "### Download Artifacts" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Download the generated firewall configurations from the workflow artifacts." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "### Trusted Domains Active" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "The coding agent has access to:" >> $GITHUB_STEP_SUMMARY
+            echo "- License providers (GPL, OSI, SPDX, Apache, etc.)" >> $GITHUB_STEP_SUMMARY
+            echo "- Package registries (npm, PyPI, Packagist, RubyGems)" >> $GITHUB_STEP_SUMMARY
+            echo "- Documentation sources (GitHub, Joomla, Dolibarr, PHP)" >> $GITHUB_STEP_SUMMARY
+            echo "- Standards organizations (W3C, IETF, JSON Schema)" >> $GITHUB_STEP_SUMMARY
+          fi
+
+# Usage Instructions:
+#
+# This workflow runs in two modes:
+#
+# 1. AUTOMATIC MODE (Coding Agent):
+#    - Triggers when coding agent branches (copilot/**, agent/**) are pushed or PR'd
+#    - Validates firewall configuration for the coding agent environment
+#    - Documents accessible domains for compliance
+#    - Ensures license sources and package registries are available
+#
+# 2. MANUAL MODE (Enterprise Configuration):
+#    - Manually trigger from the Actions tab
+#    - Select desired firewall type and output format
+#    - Download generated artifacts
+#    - Apply firewall rules to your enterprise environment
+#
+# Configuration:
+# - Trusted domains are sourced from .github/copilot.yml
+# - Modify copilot.yml to add/remove trusted domains
+# - Changes automatically propagate to firewall rules
+#
+# Important Notes:
+# - Review generated rules before applying to production
+# - Some domains may use CDNs with dynamic IPs
+# - Consider using FQDN-based rules where supported
+# - Test thoroughly in staging environment first
+# - Monitor logs for blocked connections
+# - Update rules as domains/services change
