@@ -1,0 +1,18 @@
+---
+blank_issues_enabled: true
+contact_links:
+  - name: 💼 Enterprise Support
+    url: https://mokoconsulting.tech/enterprise
+    about: Enterprise-level support and consultation services
+  - name: 💬 Ask a Question
+    url: https://mokoconsulting.tech/
+    about: Get help or ask questions through our website
+  - name: 📚 MokoStandards Documentation
+    url: https://github.com/mokoconsulting-tech/MokoStandards
+    about: View our coding standards and best practices
+  - name: 🔒 Report a Security Vulnerability
+    url: https://github.com/mokoconsulting-tech/.github-private/security/advisories/new
+    about: Report security vulnerabilities privately (for critical issues)
+  - name: 💡 Community Discussions
+    url: https://github.com/orgs/mokoconsulting-tech/discussions
+    about: Join community discussions and Q&A

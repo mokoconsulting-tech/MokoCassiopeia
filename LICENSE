@@ -6,17 +6,18 @@
 
 	This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
 
-	This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the IMPLIED WARRANTY of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+	This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
 	You should have received a copy of the GNU General Public License (./LICENSE).
 
-	# FILE INFORMATION
-	DEFGROUP: 
-	INGROUP: Project.Documentation
-	REPO: 
-	VERSION: 03.05.00
-	PATH: ./LICENSE
-	BRIEF: Project license (GPL-3.0-or-later)
+ # FILE INFORMATION
+ DEFGROUP: MokoStandards
+ INGROUP: MokoStandards.Documentation
+ REPO: https://github.com/mokoconsulting-tech/MokoStandards/
+ VERSION: 05.00.00
+ PATH: ./LICENSE
+ BRIEF: Project license (GPL-3.0-or-later)
+ NOTE: Exact text fetched from gnu.org
 -->
 										GNU GENERAL PUBLIC LICENSE
 											 Version 3, 29 June 2007
@@ -660,7 +661,7 @@ the "copyright" line and a pointer to where the full notice is found.
 		(at your option) any later version.
 
 		This program is distributed in the hope that it will be useful,
-		but WITHOUT ANY WARRANTY; without even the IMPLIED WARRANTY of
+		but WITHOUT ANY WARRANTY; without even the implied warranty of
 		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 		GNU General Public License for more details.
 
