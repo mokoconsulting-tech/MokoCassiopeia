@@ -138,7 +138,6 @@ package-lock.json
 # PHP / Composer tooling
 # ============================================================
 vendor/
-!src/media/vendor/
 composer.lock
 *.phar
 codeception.phar
@@ -187,34 +186,15 @@ venv/
 hypothesis/
 
 # ============================================================
-# Dolibarr (base + runtime)
+# Joomla Development
 # ============================================================
-documents/
-dolibarr_documents/
-custom/
-uploads/
-thumbs/
-data/
-cache/
-temp/
-tmp/
-logs/
-htdocs/documents/
-htdocs/custom/
-htdocs/cache/
-htdocs/tmp/
-htdocs/logs/
+# Custom user overrides for Joomla development
+user.css
+user.js
+colors_custom.css
 
-# ============================================================
-# Template Customizations
-# ============================================================
-# Ignore custom theme files to prevent fork-specific customizations
-src/media/css/theme/light.custom.css
-src/media/css/theme/dark.custom.css
-
-# Ignore user customization files to prevent local development overrides
-src/media/css/user.css
-src/media/js/user.js
+# Joomla Module Builder auto-generated files
+modulebuilder.txt
 
 # ============================================================
 # Joomla Core
@@ -326,7 +306,12 @@ src/media/js/user.js
 /administrator/language/en-GB/en-GB.com_wrapper.ini
 /administrator/language/en-GB/en-GB.com_wrapper.sys.ini
 /administrator/language/en-GB/en-GB.ini
+/administrator/language/en-GB/en-GB.lib_fof.ini
+/administrator/language/en-GB/en-GB.lib_fof.sys.ini
 /administrator/language/en-GB/en-GB.lib_joomla.ini
+/administrator/language/en-GB/en-GB.lib_phpass.ini
+/administrator/language/en-GB/en-GB.lib_phpmailer.ini
+/administrator/language/en-GB/en-GB.lib_simplepie.ini
 /administrator/language/en-GB/en-GB.localise.php
 /administrator/language/en-GB/en-GB.mod_custom.ini
 /administrator/language/en-GB/en-GB.mod_custom.sys.ini
@@ -390,6 +375,8 @@ src/media/js/user.js
 /administrator/language/en-GB/en-GB.plg_content_contact.sys.ini
 /administrator/language/en-GB/en-GB.plg_content_emailcloak.ini
 /administrator/language/en-GB/en-GB.plg_content_emailcloak.sys.ini
+/administrator/language/en-GB/en-GB.plg_content_example.ini
+/administrator/language/en-GB/en-GB.plg_content_example.sys.ini
 /administrator/language/en-GB/en-GB.plg_content_fields.ini
 /administrator/language/en-GB/en-GB.plg_content_fields.sys.ini
 /administrator/language/en-GB/en-GB.plg_content_finder.ini
@@ -406,6 +393,12 @@ src/media/js/user.js
 /administrator/language/en-GB/en-GB.plg_content_pagenavigation.sys.ini
 /administrator/language/en-GB/en-GB.plg_content_vote.ini
 /administrator/language/en-GB/en-GB.plg_content_vote.sys.ini
+/administrator/language/en-GB/en-GB.plg_editors_codemirror.ini
+/administrator/language/en-GB/en-GB.plg_editors_codemirror.sys.ini
+/administrator/language/en-GB/en-GB.plg_editors_none.ini
+/administrator/language/en-GB/en-GB.plg_editors_none.sys.ini
+/administrator/language/en-GB/en-GB.plg_editors_tinymce.ini
+/administrator/language/en-GB/en-GB.plg_editors_tinymce.sys.ini
 /administrator/language/en-GB/en-GB.plg_editors-xtd_article.ini
 /administrator/language/en-GB/en-GB.plg_editors-xtd_article.sys.ini
 /administrator/language/en-GB/en-GB.plg_editors-xtd_contact.ini
@@ -422,12 +415,8 @@ src/media/js/user.js
 /administrator/language/en-GB/en-GB.plg_editors-xtd_pagebreak.sys.ini
 /administrator/language/en-GB/en-GB.plg_editors-xtd_readmore.ini
 /administrator/language/en-GB/en-GB.plg_editors-xtd_readmore.sys.ini
-/administrator/language/en-GB/en-GB.plg_editors_codemirror.ini
-/administrator/language/en-GB/en-GB.plg_editors_codemirror.sys.ini
-/administrator/language/en-GB/en-GB.plg_editors_none.ini
-/administrator/language/en-GB/en-GB.plg_editors_none.sys.ini
-/administrator/language/en-GB/en-GB.plg_editors_tinymce.ini
-/administrator/language/en-GB/en-GB.plg_editors_tinymce.sys.ini
+/administrator/language/en-GB/en-GB.plg_extension_example.ini
+/administrator/language/en-GB/en-GB.plg_extension_example.sys.ini
 /administrator/language/en-GB/en-GB.plg_extension_joomla.ini
 /administrator/language/en-GB/en-GB.plg_extension_joomla.sys.ini
 /administrator/language/en-GB/en-GB.plg_fields_calendar.ini
@@ -438,8 +427,6 @@ src/media/js/user.js
 /administrator/language/en-GB/en-GB.plg_fields_color.sys.ini
 /administrator/language/en-GB/en-GB.plg_fields_editor.ini
 /administrator/language/en-GB/en-GB.plg_fields_editor.sys.ini
-/administrator/language/en-GB/en-GB.plg_fields_image.ini
-/administrator/language/en-GB/en-GB.plg_fields_image.sys.ini
 /administrator/language/en-GB/en-GB.plg_fields_imagelist.ini
 /administrator/language/en-GB/en-GB.plg_fields_imagelist.sys.ini
 /administrator/language/en-GB/en-GB.plg_fields_integer.ini
@@ -474,16 +461,12 @@ src/media/js/user.js
 /administrator/language/en-GB/en-GB.plg_finder_newsfeeds.sys.ini
 /administrator/language/en-GB/en-GB.plg_finder_tags.ini
 /administrator/language/en-GB/en-GB.plg_finder_tags.sys.ini
-/administrator/language/en-GB/en-GB.plg_finder_weblinks.ini
-/administrator/language/en-GB/en-GB.plg_finder_weblinks.sys.ini
 /administrator/language/en-GB/en-GB.plg_installer_folderinstaller.ini
 /administrator/language/en-GB/en-GB.plg_installer_folderinstaller.sys.ini
 /administrator/language/en-GB/en-GB.plg_installer_packageinstaller.ini
 /administrator/language/en-GB/en-GB.plg_installer_packageinstaller.sys.ini
 /administrator/language/en-GB/en-GB.plg_installer_urlinstaller.ini
 /administrator/language/en-GB/en-GB.plg_installer_urlinstaller.sys.ini
-/administrator/language/en-GB/en-GB.plg_installer_webinstaller.ini
-/administrator/language/en-GB/en-GB.plg_installer_webinstaller.sys.ini
 /administrator/language/en-GB/en-GB.plg_privacy_actionlogs.ini
 /administrator/language/en-GB/en-GB.plg_privacy_actionlogs.sys.ini
 /administrator/language/en-GB/en-GB.plg_privacy_consents.ini
@@ -560,29 +543,22 @@ src/media/js/user.js
 /administrator/language/en-GB/en-GB.plg_twofactorauth_yubikey.sys.ini
 /administrator/language/en-GB/en-GB.plg_user_contactcreator.ini
 /administrator/language/en-GB/en-GB.plg_user_contactcreator.sys.ini
+/administrator/language/en-GB/en-GB.plg_user_example.ini
+/administrator/language/en-GB/en-GB.plg_user_example.sys.ini
 /administrator/language/en-GB/en-GB.plg_user_joomla.ini
 /administrator/language/en-GB/en-GB.plg_user_joomla.sys.ini
 /administrator/language/en-GB/en-GB.plg_user_profile.ini
 /administrator/language/en-GB/en-GB.plg_user_profile.sys.ini
 /administrator/language/en-GB/en-GB.plg_user_terms.ini
 /administrator/language/en-GB/en-GB.plg_user_terms.sys.ini
-/administrator/language/en-GB/en-GB.tpl_hathor.ini
-/administrator/language/en-GB/en-GB.tpl_hathor.sys.ini
-/administrator/language/en-GB/en-GB.tpl_isis.ini
-/administrator/language/en-GB/en-GB.tpl_isis.sys.ini
 /administrator/language/en-GB/en-GB.xml
-/administrator/language/en-GB/install.xml
-/administrator/language/overrides/*
+/administrator/language/en-GB/index.html
 /administrator/language/index.html
+/administrator/language/overrides/*
 /administrator/logs/*
-/administrator/manifests/files/joomla.xml
-/administrator/manifests/libraries/fof.xml
-/administrator/manifests/libraries/idna_convert.xml
-/administrator/manifests/libraries/joomla.xml
-/administrator/manifests/libraries/phpass.xml
-/administrator/manifests/libraries/phputf8.xml
-/administrator/manifests/packages/pkg_en-GB.xml
-/administrator/manifests/packages/index.html
+/administrator/manifests/files/*
+/administrator/manifests/libraries/*
+/administrator/manifests/packages/*
 /administrator/modules/mod_custom/*
 /administrator/modules/mod_feed/*
 /administrator/modules/mod_latest/*
@@ -619,21 +595,18 @@ src/media/js/user.js
 /components/com_finder/*
 /components/com_mailto/*
 /components/com_media/*
-/components/com_menus/*
-/components/com_modules/*
 /components/com_newsfeeds/*
 /components/com_privacy/*
 /components/com_search/*
 /components/com_tags/*
 /components/com_users/*
+/components/com_weblinks/*
 /components/com_wrapper/*
-/components/index.html
 /images/banners/*
 /images/headers/*
+/images/joomla*
 /images/sampledata/*
 /images/index.html
-/images/joomla*
-/images/powered_by.png
 /includes/*
 /installation/*
 /language/en-GB/en-GB.com_ajax.ini
@@ -652,14 +625,12 @@ src/media/js/user.js
 /language/en-GB/en-GB.com_weblinks.ini
 /language/en-GB/en-GB.com_wrapper.ini
 /language/en-GB/en-GB.files_joomla.sys.ini
-/language/en-GB/en-GB.finder_cli.ini
 /language/en-GB/en-GB.ini
 /language/en-GB/en-GB.lib_fof.ini
 /language/en-GB/en-GB.lib_fof.sys.ini
 /language/en-GB/en-GB.lib_idna_convert.sys.ini
 /language/en-GB/en-GB.lib_joomla.ini
 /language/en-GB/en-GB.lib_joomla.sys.ini
-/language/en-GB/en-GB.lib_phpass.sys.ini
 /language/en-GB/en-GB.lib_phpmailer.sys.ini
 /language/en-GB/en-GB.lib_phputf8.sys.ini
 /language/en-GB/en-GB.lib_simplepie.sys.ini
@@ -727,13 +698,10 @@ src/media/js/user.js
 /language/en-GB/en-GB.tpl_protostar.ini
 /language/en-GB/en-GB.tpl_protostar.sys.ini
 /language/en-GB/en-GB.xml
-/language/en-GB/install.xml
-/language/overrides/*
+/language/en-GB/index.html
 /language/index.html
+/language/overrides/*
 /layouts/joomla/*
-/layouts/libraries/*
-/layouts/plugins/*
-/layouts/index.html
 /libraries/cms/*
 /libraries/fof/*
 /libraries/idna_convert/*
@@ -744,7 +712,6 @@ src/media/js/user.js
 /libraries/phpmailer/*
 /libraries/phputf8/*
 /libraries/simplepie/*
-/libraries/src/*
 /libraries/vendor/*
 /libraries/classmap.php
 /libraries/cms.php
@@ -760,8 +727,14 @@ src/media/js/user.js
 /media/com_fields/*
 /media/com_finder/*
 /media/com_joomlaupdate/*
+/media/com_mailto/*
+/media/com_media/*
 /media/com_menus/*
 /media/com_modules/*
+/media/com_newsfeeds/*
+/media/com_privacy/*
+/media/com_tags/*
+/media/com_weblinks/*
 /media/com_wrapper/*
 /media/contacts/*
 /media/editors/*
@@ -769,18 +742,18 @@ src/media/js/user.js
 /media/mailto/*
 /media/media/*
 /media/mod_languages/*
-/media/mod_sampledata/*
 /media/overrider/*
 /media/plg_captcha_recaptcha/*
 /media/plg_captcha_recaptcha_invisible/*
+/media/plg_editors-xtd_article/*
 /media/plg_quickicon_extensionupdate/*
 /media/plg_quickicon_joomlaupdate/*
 /media/plg_quickicon_privacycheck/*
+/media/plg_system_debug/*
 /media/plg_system_highlight/*
 /media/plg_system_stats/*
 /media/plg_twofactorauth_totp/*
 /media/system/*
-/media/index.html
 /modules/mod_articles_archive/*
 /modules/mod_articles_categories/*
 /modules/mod_articles_category/*
@@ -804,9 +777,9 @@ src/media/js/user.js
 /modules/mod_tags_popular/*
 /modules/mod_tags_similar/*
 /modules/mod_users_latest/*
+/modules/mod_weblinks/*
 /modules/mod_whosonline/*
 /modules/mod_wrapper/*
-/modules/index.html
 /plugins/actionlog/joomla/*
 /plugins/authentication/cookie/*
 /plugins/authentication/example/*
