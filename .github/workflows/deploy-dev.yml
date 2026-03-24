@@ -1,0 +1,587 @@
+# Copyright (C) 2026 Moko Consulting <hello@mokoconsulting.tech>
+#
+# This file is part of a Moko Consulting project.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <https://www.gnu.org/licenses/>.
+#
+# FILE INFORMATION
+# DEFGROUP: GitHub.Workflow
+# INGROUP: MokoStandards.Deploy
+# REPO: https://github.com/mokoconsulting-tech/MokoStandards
+# PATH: /templates/workflows/shared/deploy-dev.yml
+# VERSION: 04.00.25
+# BRIEF: SFTP deployment workflow for development server — synced to all governed repos
+# NOTE: Synced via bulk-repo-sync to .github/workflows/deploy-dev.yml in all governed repos.
+#       Port is resolved in order: DEV_FTP_PORT variable → :port suffix in DEV_FTP_HOST → 22.
+
+name: Deploy to Dev Server (SFTP)
+
+# Deploys the contents of the src/ directory to the development server via SFTP.
+# Triggers on every pull_request to development branches (so the dev server always
+# reflects the latest PR state) and on push/merge to main branches.
+#
+# Required org-level variables:  DEV_FTP_HOST, DEV_FTP_PATH, DEV_FTP_USERNAME
+# Optional org-level variable:   DEV_FTP_PORT (auto-detected from host or defaults to 22)
+# Optional org/repo variable:    DEV_FTP_PATH_SUFFIX
+# Optional org/repo variable:    CUSTOM_FOLDER — when set, appended to the remote path after
+#                                 DEV_FTP_PATH_SUFFIX; used automatically for Dolibarr modules
+# Optional org/repo variable:    FTP_IGNORE — comma-delimited list of regex patterns, each enclosed in
+#                                 double quotes, for files/paths to exclude from upload, e.g.:
+#                                   "\.git*", "\.DS_Store", "configuration\.php", "\.ps1"
+#                                 Patterns are tested against the forward-slash relative path of each
+#                                 file (e.g. "subdir/file.txt"). The repository .gitignore is also
+#                                 respected automatically.
+# Required org-level secret:     DEV_FTP_KEY (preferred) or DEV_FTP_PASSWORD
+#
+# Access control: only users with admin or maintain role on the repository may deploy.
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - develop
+      - dev
+      - development
+    paths:
+      - 'src/**'
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+    branches:
+      - main
+      - master
+      - develop
+      - dev
+      - development
+  workflow_dispatch:
+    inputs:
+      clear_remote:
+        description: 'Delete all files inside the remote destination folder before uploading'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  check-permission:
+    name: Verify Deployment Permission
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check actor permission
+        env:
+          # Prefer the org-scoped GH_TOKEN secret (needed for the org membership
+          # fallback). Falls back to the built-in github.token so the collaborator
+          # endpoint still works even if GH_TOKEN is not configured.
+          GH_TOKEN: ${{ secrets.GH_TOKEN || github.token }}
+        run: |
+          ACTOR="${{ github.actor }}"
+          REPO="${{ github.repository }}"
+          ORG="${{ github.repository_owner }}"
+
+          # Try the per-repo collaborator endpoint first.
+          # This returns 404 for org owners who are not listed as explicit
+          # collaborators, so we fall back to the org membership role check.
+          PERMISSION=$(gh api "repos/${REPO}/collaborators/${ACTOR}/permission" \
+            --jq '.permission' 2>/dev/null)
+
+          if [ -z "$PERMISSION" ]; then
+            # Collaborator endpoint returned nothing — try org membership.
+            # Requires a token with read:org scope (secrets.GH_TOKEN).
+            # github.token alone is insufficient for this endpoint.
+            ORG_ROLE=$(gh api "orgs/${ORG}/memberships/${ACTOR}" \
+              --jq '.role' 2>/dev/null)
+            if [ "$ORG_ROLE" = "owner" ]; then
+              PERMISSION="admin"
+              echo "ℹ️  ${ACTOR} is an org owner — granting admin access"
+            else
+              # Both checks failed — token may lack read:org scope.
+              echo "⚠️  Could not determine permission for ${ACTOR}."
+              echo "   Add GH_TOKEN (PAT with read:org scope) as an org secret to fix this."
+              PERMISSION="none"
+            fi
+          fi
+
+          case "$PERMISSION" in
+            admin|maintain)
+              echo "✅ ${ACTOR} has '${PERMISSION}' permission — authorized to deploy"
+              ;;
+            *)
+              echo "❌ Deployment requires admin or maintain role."
+              echo "   ${ACTOR} has '${PERMISSION}' — contact your org administrator."
+              exit 1
+              ;;
+          esac
+
+  deploy:
+    name: SFTP Deploy → Dev
+    runs-on: ubuntu-latest
+    needs: [check-permission]
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      github.event_name == 'push' ||
+      (github.event_name == 'pull_request' &&
+        (github.event.action == 'opened' ||
+         github.event.action == 'synchronize' ||
+         github.event.action == 'reopened' ||
+         github.event.pull_request.merged == true))
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Resolve source directory
+        id: source
+        run: |
+          SRC="src"
+          if [ ! -d "$SRC" ]; then
+            echo "⚠️ No src/ directory found — skipping deployment"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            COUNT=$(find "$SRC" -maxdepth 0 -type d > /dev/null && find "$SRC" -type f | wc -l)
+            echo "✅ Source: src/ (${COUNT} file(s))"
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+            echo "dir=${SRC}"  >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Preview files to deploy
+        if: steps.source.outputs.skip == 'false'
+        env:
+          SOURCE_DIR: ${{ steps.source.outputs.dir }}
+          FTP_IGNORE: ${{ vars.FTP_IGNORE }}
+        run: |
+          # ── Parse FTP_IGNORE ─────────────────────────────────────────────────
+          IGNORE_PATTERNS=()
+          if [ -n "$FTP_IGNORE" ]; then
+            while IFS= read -r -d ',' token; do
+              pattern=$(printf '%s' "$token" | sed 's/^[[:space:]]*"//;s/"[[:space:]]*$//')
+              [ -n "$pattern" ] && IGNORE_PATTERNS+=("$pattern")
+            done <<< "${FTP_IGNORE},"
+          fi
+
+          # ── Walk src/ and classify every file ────────────────────────────────
+          WILL_UPLOAD=()
+          IGNORED_FILES=()
+          while IFS= read -r -d '' file; do
+            rel="${file#${SOURCE_DIR}/}"
+            SKIP=false
+            for pat in "${IGNORE_PATTERNS[@]}"; do
+              if echo "$rel" | grep -qE "$pat" 2>/dev/null; then
+                IGNORED_FILES+=("$rel | FTP_IGNORE \`$pat\`")
+                SKIP=true; break
+              fi
+            done
+            $SKIP && continue
+            if [ -f ".gitignore" ] && git check-ignore -q "$rel" 2>/dev/null; then
+              IGNORED_FILES+=("$rel | .gitignore")
+              continue
+            fi
+            WILL_UPLOAD+=("$rel")
+          done < <(find "$SOURCE_DIR" -type f -print0 | sort -z)
+
+          UPLOAD_COUNT="${#WILL_UPLOAD[@]}"
+          IGNORE_COUNT="${#IGNORED_FILES[@]}"
+
+          echo "ℹ️  ${UPLOAD_COUNT} file(s) will be uploaded, ${IGNORE_COUNT} ignored"
+
+          # ── Write deployment preview to step summary ──────────────────────────
+          {
+            echo "## 📋 Deployment Preview"
+            echo ""
+            echo "| Field | Value |"
+            echo "|---|---|"
+            echo "| Source | \`${SOURCE_DIR}/\` |"
+            echo "| Files to upload | **${UPLOAD_COUNT}** |"
+            echo "| Files ignored | **${IGNORE_COUNT}** |"
+            echo ""
+            if [ "${UPLOAD_COUNT}" -gt 0 ]; then
+              echo "### 📂 Files that will be uploaded"
+              echo '```'
+              printf '%s\n' "${WILL_UPLOAD[@]}"
+              echo '```'
+              echo ""
+            fi
+            if [ "${IGNORE_COUNT}" -gt 0 ]; then
+              echo "### ⏭️ Files excluded"
+              echo "| File | Reason |"
+              echo "|---|---|"
+              for entry in "${IGNORED_FILES[@]}"; do
+                f="${entry% | *}"; r="${entry##* | }"
+                echo "| \`${f}\` | ${r} |"
+              done
+              echo ""
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Resolve SFTP host and port
+        if: steps.source.outputs.skip == 'false'
+        id: conn
+        env:
+          HOST_RAW: ${{ vars.DEV_FTP_HOST }}
+          PORT_VAR: ${{ vars.DEV_FTP_PORT }}
+        run: |
+          HOST="$HOST_RAW"
+          PORT="$PORT_VAR"
+
+          # Priority 1 — explicit DEV_FTP_PORT variable
+          if [ -n "$PORT" ]; then
+            echo "ℹ️  Using explicit DEV_FTP_PORT=${PORT}"
+
+          # Priority 2 — port embedded in DEV_FTP_HOST  (host:port)
+          elif [[ "$HOST" == *:* ]]; then
+            PORT="${HOST##*:}"
+            HOST="${HOST%:*}"
+            echo "ℹ️  Extracted port ${PORT} from DEV_FTP_HOST"
+
+          # Priority 3 — SFTP default
+          else
+            PORT="22"
+            echo "ℹ️  No port specified — defaulting to SFTP port 22"
+          fi
+
+          echo "host=${HOST}" >> "$GITHUB_OUTPUT"
+          echo "port=${PORT}" >> "$GITHUB_OUTPUT"
+          echo "SFTP target: ${HOST}:${PORT}"
+
+      - name: Build remote path
+        if: steps.source.outputs.skip == 'false'
+        id: remote
+        env:
+          DEV_FTP_PATH:        ${{ vars.DEV_FTP_PATH }}
+          DEV_FTP_PATH_SUFFIX: ${{ vars.DEV_FTP_PATH_SUFFIX }}
+          CUSTOM_FOLDER:       ${{ vars.CUSTOM_FOLDER }}
+        run: |
+          BASE="$DEV_FTP_PATH"
+          SUFFIX="$DEV_FTP_PATH_SUFFIX"
+          CUSTOM="$CUSTOM_FOLDER"
+
+          if [ -z "$BASE" ]; then
+            echo "❌ DEV_FTP_PATH is not set."
+            echo "   Configure it as an org-level variable (Settings → Variables) and"
+            echo "   ensure this repository has been granted access to it."
+            exit 1
+          fi
+
+          # Always append suffix when set — path is BASE/SUFFIX
+          if [ -n "$SUFFIX" ]; then
+            REMOTE="${BASE%/}/${SUFFIX#/}"
+          else
+            REMOTE="$BASE"
+          fi
+
+          # Append CUSTOM_FOLDER when set — makes Dolibarr module paths automatic
+          if [ -n "$CUSTOM" ]; then
+            REMOTE="${REMOTE%/}/${CUSTOM#/}"
+            echo "ℹ️  CUSTOM_FOLDER appended: ${CUSTOM}"
+          fi
+
+          echo "path=${REMOTE}" >> "$GITHUB_OUTPUT"
+          echo "Remote path: ${REMOTE}"
+
+      - name: Detect SFTP authentication method
+        if: steps.source.outputs.skip == 'false'
+        id: auth
+        env:
+          HAS_KEY:      ${{ secrets.DEV_FTP_KEY }}
+          HAS_PASSWORD: ${{ secrets.DEV_FTP_PASSWORD }}
+        run: |
+          if [ -n "$HAS_KEY" ] && [ -n "$HAS_PASSWORD" ]; then
+            # Both set: key auth with password as passphrase; falls back to password-only if key fails
+            echo "method=key" >> "$GITHUB_OUTPUT"
+            echo "use_passphrase=true" >> "$GITHUB_OUTPUT"
+            echo "has_password=true" >> "$GITHUB_OUTPUT"
+            echo "ℹ️  Primary: SSH key + passphrase (DEV_FTP_KEY / DEV_FTP_PASSWORD)"
+            echo "ℹ️  Fallback: password-only auth if key authentication fails"
+          elif [ -n "$HAS_KEY" ]; then
+            # Key only: no passphrase, no password fallback
+            echo "method=key" >> "$GITHUB_OUTPUT"
+            echo "use_passphrase=false" >> "$GITHUB_OUTPUT"
+            echo "has_password=false" >> "$GITHUB_OUTPUT"
+            echo "ℹ️  Using SSH key authentication (DEV_FTP_KEY, no passphrase, no fallback)"
+          elif [ -n "$HAS_PASSWORD" ]; then
+            # Password only: direct SFTP password auth
+            echo "method=password" >> "$GITHUB_OUTPUT"
+            echo "use_passphrase=false" >> "$GITHUB_OUTPUT"
+            echo "has_password=true" >> "$GITHUB_OUTPUT"
+            echo "ℹ️  Using password authentication (DEV_FTP_PASSWORD)"
+          else
+            echo "❌ No SFTP credentials configured."
+            echo "   Set DEV_FTP_KEY (preferred) or DEV_FTP_PASSWORD as an org-level secret."
+            exit 1
+          fi
+
+      - name: Setup PHP
+        if: steps.source.outputs.skip == 'false'
+        uses: shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1 # v2.31.0
+        with:
+          php-version: '8.1'
+          tools: composer
+
+      - name: Setup MokoStandards deploy tools
+        if: steps.source.outputs.skip == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN || github.token }}
+          COMPOSER_AUTH: '{"github-oauth":{"github.com":"${{ secrets.GH_TOKEN || github.token }}"}}'
+        run: |
+          git clone --depth 1 --quiet \
+            "https://x-access-token:${GH_TOKEN}@github.com/mokoconsulting-tech/MokoStandards.git" \
+            /tmp/mokostandards
+          cd /tmp/mokostandards
+          composer install --no-dev --no-interaction --quiet
+
+      - name: Clear remote destination folder
+        if: >-
+          steps.source.outputs.skip == 'false' &&
+          inputs.clear_remote == true
+        env:
+          SFTP_HOST:      ${{ steps.conn.outputs.host }}
+          SFTP_PORT:      ${{ steps.conn.outputs.port }}
+          SFTP_USER:      ${{ vars.DEV_FTP_USERNAME }}
+          SFTP_KEY:       ${{ secrets.DEV_FTP_KEY }}
+          SFTP_PASSWORD:  ${{ secrets.DEV_FTP_PASSWORD }}
+          AUTH_METHOD:    ${{ steps.auth.outputs.method }}
+          USE_PASSPHRASE: ${{ steps.auth.outputs.use_passphrase }}
+          HAS_PASSWORD:   ${{ steps.auth.outputs.has_password }}
+          REMOTE_PATH:    ${{ steps.remote.outputs.path }}
+        run: |
+          cat > /tmp/moko_clear.php << 'PHPEOF'
+          <?php
+          declare(strict_types=1);
+          require '/tmp/mokostandards/vendor/autoload.php';
+
+          use phpseclib3\Net\SFTP;
+          use phpseclib3\Crypt\PublicKeyLoader;
+
+          $host          = (string) getenv('SFTP_HOST');
+          $port          = (int)    getenv('SFTP_PORT');
+          $username      = (string) getenv('SFTP_USER');
+          $authMethod    = (string) getenv('AUTH_METHOD');
+          $usePassphrase = getenv('USE_PASSPHRASE') === 'true';
+          $hasPassword   = getenv('HAS_PASSWORD')   === 'true';
+          $remotePath    = rtrim((string) getenv('REMOTE_PATH'), '/');
+
+          echo "⚠️  Clearing remote folder: {$remotePath}\n";
+
+          $sftp = new SFTP($host, $port);
+
+          // ── Authentication ──────────────────────────────────────────────
+          if ($authMethod === 'key') {
+              $keyData    = (string) getenv('SFTP_KEY');
+              $passphrase = $usePassphrase ? (string) getenv('SFTP_PASSWORD') : false;
+              $password   = $hasPassword   ? (string) getenv('SFTP_PASSWORD') : '';
+              $key = PublicKeyLoader::load($keyData, $passphrase);
+              if (!$sftp->login($username, $key)) {
+                  if ($password !== '') {
+                      echo "⚠️  Key auth failed — falling back to password\n";
+                      if (!$sftp->login($username, $password)) {
+                          fwrite(STDERR, "❌ Both key and password authentication failed\n");
+                          exit(1);
+                      }
+                      echo "✅ Connected via password authentication (key fallback)\n";
+                  } else {
+                      fwrite(STDERR, "❌ Key authentication failed and no password fallback is available\n");
+                      exit(1);
+                  }
+              } else {
+                  echo "✅ Connected via SSH key authentication\n";
+              }
+          } else {
+              if (!$sftp->login($username, (string) getenv('SFTP_PASSWORD'))) {
+                  fwrite(STDERR, "❌ Password authentication failed\n");
+                  exit(1);
+              }
+              echo "✅ Connected via password authentication\n";
+          }
+
+          // ── Recursive delete ────────────────────────────────────────────
+          function rmrf(SFTP $sftp, string $path): void
+          {
+              $entries = $sftp->nlist($path);
+              if ($entries === false) {
+                  return; // path does not exist — nothing to clear
+              }
+              foreach ($entries as $name) {
+                  if ($name === '.' || $name === '..') {
+                      continue;
+                  }
+                  $entry = "{$path}/{$name}";
+                  if ($sftp->is_dir($entry)) {
+                      rmrf($sftp, $entry);
+                      $sftp->rmdir($entry);
+                      echo "  🗑️  Removed dir:  {$entry}\n";
+                  } else {
+                      $sftp->delete($entry);
+                      echo "  🗑️  Removed file: {$entry}\n";
+                  }
+              }
+          }
+
+          // ── Create remote directory tree ────────────────────────────────
+          function sftpMakedirs(SFTP $sftp, string $path): void
+          {
+              $parts = array_values(array_filter(explode('/', $path), fn(string $p) => $p !== ''));
+              $current = str_starts_with($path, '/') ? '' : '';
+              foreach ($parts as $part) {
+                  $current .= '/' . $part;
+                  $sftp->mkdir($current); // silently returns false if already exists
+              }
+          }
+
+          rmrf($sftp, $remotePath);
+          sftpMakedirs($sftp, $remotePath);
+          echo "✅ Remote folder ready: {$remotePath}\n";
+          PHPEOF
+          php /tmp/moko_clear.php
+
+      - name: Deploy via SFTP
+        if: steps.source.outputs.skip == 'false'
+        env:
+          SFTP_HOST:       ${{ steps.conn.outputs.host }}
+          SFTP_PORT:       ${{ steps.conn.outputs.port }}
+          SFTP_USER:       ${{ vars.DEV_FTP_USERNAME }}
+          SFTP_KEY:        ${{ secrets.DEV_FTP_KEY }}
+          SFTP_PASSWORD:   ${{ secrets.DEV_FTP_PASSWORD }}
+          AUTH_METHOD:     ${{ steps.auth.outputs.method }}
+          USE_PASSPHRASE:  ${{ steps.auth.outputs.use_passphrase }}
+          REMOTE_PATH:     ${{ steps.remote.outputs.path }}
+          SOURCE_DIR:      ${{ steps.source.outputs.dir }}
+        run: |
+          # ── Write SSH key to temp file (key auth only) ────────────────────────
+          if [ "$AUTH_METHOD" = "key" ]; then
+            printf '%s' "$SFTP_KEY" > /tmp/deploy_key
+            chmod 600 /tmp/deploy_key
+          fi
+
+          # ── Generate sftp-config.json safely via jq ───────────────────────────
+          if [ "$AUTH_METHOD" = "key" ]; then
+            jq -n \
+              --arg  host "$SFTP_HOST" \
+              --argjson port "${SFTP_PORT:-22}" \
+              --arg  user "$SFTP_USER" \
+              --arg  path "$REMOTE_PATH" \
+              --arg  key  "/tmp/deploy_key" \
+              '{host:$host, port:$port, user:$user, remote_path:$path, ssh_key_file:$key}' \
+              > /tmp/sftp-config.json
+          else
+            jq -n \
+              --arg  host "$SFTP_HOST" \
+              --argjson port "${SFTP_PORT:-22}" \
+              --arg  user "$SFTP_USER" \
+              --arg  path "$REMOTE_PATH" \
+              --arg  pass "$SFTP_PASSWORD" \
+              '{host:$host, port:$port, user:$user, remote_path:$path, password:$pass}' \
+              > /tmp/sftp-config.json
+          fi
+
+          # ── Run deploy-sftp.php from MokoStandards ────────────────────────────
+          DEPLOY_ARGS=(--path . --src-dir "$SOURCE_DIR" --config /tmp/sftp-config.json)
+          if [ "$USE_PASSPHRASE" = "true" ]; then
+            DEPLOY_ARGS+=(--key-passphrase "$SFTP_PASSWORD")
+          fi
+
+          php /tmp/mokostandards/api/deploy/deploy-sftp.php "${DEPLOY_ARGS[@]}"
+          # (deploy-sftp.php handles dotfile skipping and .ftp_ignore natively)
+          # Remove temp files that should never be left behind
+          rm -f /tmp/deploy_key /tmp/sftp-config.json
+
+      - name: Create or update failure issue
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN || github.token }}
+        run: |
+          REPO="${{ github.repository }}"
+          RUN_URL="${{ github.server_url }}/${REPO}/actions/runs/${{ github.run_id }}"
+          ACTOR="${{ github.actor }}"
+          BRANCH="${{ github.ref_name }}"
+          EVENT="${{ github.event_name }}"
+          NOW=$(date -u '+%Y-%m-%d %H:%M:%S UTC')
+          LABEL="deploy-failure"
+
+          TITLE="fix: Dev deployment failed — ${REPO}"
+          BODY="## Dev Deployment Failed
+
+          A deployment to the dev server failed and requires attention.
+
+          | Field | Value |
+          |-------|-------|
+          | **Repository** | \`${REPO}\` |
+          | **Branch** | \`${BRANCH}\` |
+          | **Trigger** | ${EVENT} |
+          | **Actor** | @${ACTOR} |
+          | **Failed at** | ${NOW} |
+          | **Run** | [View workflow run](${RUN_URL}) |
+
+          ### Next steps
+          1. Review the [workflow run log](${RUN_URL}) for the specific error.
+          2. Fix the underlying issue (credentials, SFTP connectivity, permissions).
+          3. Re-trigger the deployment via **Actions → Deploy to Dev Server → Run workflow**.
+
+          ---
+          *Auto-created by deploy-dev.yml — close this issue once the deployment is resolved.*"
+
+          # Ensure the label exists (idempotent — no-op if already present)
+          gh label create "$LABEL" \
+            --repo "$REPO" \
+            --color "CC0000" \
+            --description "Automated deploy failure tracking" \
+            --force 2>/dev/null || true
+
+          # Look for an existing open deploy-failure issue
+          EXISTING=$(gh api "repos/${REPO}/issues?labels=${LABEL}&state=open&per_page=1" \
+            --jq '.[0].number' 2>/dev/null)
+
+          if [ -n "$EXISTING" ] && [ "$EXISTING" != "null" ]; then
+            gh api "repos/${REPO}/issues/${EXISTING}" \
+              -X PATCH \
+              -f title="$TITLE" \
+              -f body="$BODY" \
+              --silent
+            echo "📋 Failure issue #${EXISTING} updated: ${REPO}" >> "$GITHUB_STEP_SUMMARY"
+          else
+            gh issue create \
+              --repo "$REPO" \
+              --title "$TITLE" \
+              --body "$BODY" \
+              --label "$LABEL" \
+              | tee -a "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Deployment summary
+        if: always()
+        run: |
+          if [ "${{ steps.source.outputs.skip }}" == "true" ]; then
+            echo "### ⏭️ Deployment Skipped" >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "No \`src/\` directory found in this repository." >> "$GITHUB_STEP_SUMMARY"
+          elif [ "${{ job.status }}" == "success" ]; then
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "### ✅ Dev Deployment Successful" >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "| Field | Value |" >> "$GITHUB_STEP_SUMMARY"
+            echo "|-------|-------|" >> "$GITHUB_STEP_SUMMARY"
+            echo "| Host | \`${{ steps.conn.outputs.host }}:${{ steps.conn.outputs.port }}\` |" >> "$GITHUB_STEP_SUMMARY"
+            echo "| Remote path | \`${{ steps.remote.outputs.path }}\` |" >> "$GITHUB_STEP_SUMMARY"
+            echo "| Source | \`src/\` |" >> "$GITHUB_STEP_SUMMARY"
+            echo "| Trigger | ${{ github.event_name }} |" >> "$GITHUB_STEP_SUMMARY"
+            echo "| Auth | ${{ steps.auth.outputs.method }} |" >> "$GITHUB_STEP_SUMMARY"
+            echo "| Clear remote | ${{ inputs.clear_remote || 'false' }} |" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "### ❌ Dev Deployment Failed" >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "Check the job log above for error details." >> "$GITHUB_STEP_SUMMARY"
+          fi
