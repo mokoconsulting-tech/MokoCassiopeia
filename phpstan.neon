@@ -1,37 +1,32 @@
+# Copyright (C) 2026 Moko Consulting <hello@mokoconsulting.tech>
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# PHPStan configuration for Joomla extension repositories.
+# Extends the base MokoStandards config and adds Joomla framework class stubs
+# so PHPStan can resolve Factory, CMSApplication, User, Table, etc.
+# without requiring a full Joomla installation.
+
 parameters:
     level: 5
+
     paths:
         - src
-    
-    # Exclude paths
+
     excludePaths:
-        - src/vendor/*
-        - src/node_modules/*
-        - src/cache/*
-        - src/tmp/*
-    
-    # Scan files
-    scanFiles:
-        - src/templates/index.php
-        - src/templates/component.php
-        - src/templates/error.php
-        - src/templates/offline.php
-    
-    # Report unmatched ignored errors
-    reportUnmatchedIgnoredErrors: false
-    
-    # Check function name case
-    checkFunctionNameCase: true
-    
-    # Check internal classes
-    checkInternalClassCaseSensitivity: true
-    
-    # Treat PHP version
-    phpVersion: 80000
-    
-    # Ignore errors - adjust as needed
+        - vendor
+        - node_modules
+
+    # Joomla framework stubs — resolved via the enterprise package from vendor/
+    stubFiles:
+        - vendor/mokoconsulting-tech/enterprise/templates/stubs/joomla.php
+
+    # Suppress errors that are structural in Joomla's service-container architecture
     ignoreErrors:
-        # Allow dynamic properties which are common in Joomla
-        - '#Access to an undefined property#'
-        # Allow some reflection usage
-        - '#Call to an undefined static method#'
+        # Joomla's service-based dependency injection returns mixed from getApplication()
+        - '#Cannot call method .+ on Joomla\\CMS\\Application\\CMSApplication\|null#'
+        # Factory::getX() patterns are safe at runtime even when nullable in stubs
+        - '#Call to static method [a-zA-Z]+\(\) on an interface#'
+
+    reportUnmatchedIgnoredErrors: false
+    checkMissingIterableValueType: false
+    checkGenericClassInNonGenericObjectType: false
