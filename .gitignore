@@ -905,4 +905,4 @@ modulebuilder.txt
 !.gitkeep
 
 # ── MokoStandards sync (auto-appended) ────────────────────────────────
-!src/media/vendor/
+/.claude
