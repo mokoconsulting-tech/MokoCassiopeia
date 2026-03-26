@@ -903,3 +903,6 @@ modulebuilder.txt
 # Keep-empty folders helper
 # ============================================================
 !.gitkeep
+
+# ── MokoStandards sync (auto-appended) ────────────────────────────────
+!src/media/vendor/
