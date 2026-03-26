@@ -511,6 +511,40 @@ color-scheme: light;
 --vm-vendor-menu-link-active: var(--primary);
 --vm-vendor-menu-hover-bg: var(--secondary-bg);
 
+/* ===== HERO VARIANTS ===== */
+/* Primary — sky blue, light overlay */
+--hero-primary-bg-color: var(--color-primary);
+--hero-primary-overlay: linear-gradient(rgba(163, 205, 226, .45), rgba(163, 205, 226, .45));
+--hero-primary-color: var(--color-primary);
+
+/* Secondary — navy, stronger overlay */
+--hero-secondary-bg-color: var(--color-primary);
+--hero-secondary-overlay: linear-gradient(rgba(17, 40, 85, .75), rgba(17, 40, 85, .75));
+--hero-secondary-color: #f1f5f9;
+
+/* ===== BLOCK COLORS (top-a / top-b / bottom-a / bottom-b) ===== */
+--block-color-1: var(--color-primary);
+--block-text-1:  var(--body-color);
+
+--block-color-2: var(--accent-color-primary);
+--block-text-2:  #fff;
+
+--block-color-3: var(--warning, #eec234);
+--block-text-3:  var(--body-color);
+
+--block-color-4: var(--success-bg-subtle, #eef7f0);
+--block-text-4:  var(--body-color);
+
+/* ===== BLOCK COLOR OVERRIDES ===== */
+--block-highlight-bg:   var(--accent-color-primary);
+--block-highlight-text: #fff;
+
+--block-cta-bg:         var(--color-primary);
+--block-cta-text:       #fff;
+
+--block-alert-bg:       var(--danger, #a51f18);
+--block-alert-text:     #fff;
+
 /* ===== GABLE ===== */
 --gab-blue: #0066cc;
 --gab-green: #28a745;

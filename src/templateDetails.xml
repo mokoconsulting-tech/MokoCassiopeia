@@ -36,7 +36,8 @@
 	  </server>
 	</updateservers>
 	<name>MokoCassiopeia</name>
-	<version>03.09.01</version>
+	<version>03.09.02</version>
+	<scriptfile>script.php</scriptfile>
 	<creationDate>2026-03-08</creationDate>
 	<author>Jonathan Miller || Moko Consulting</author>
 	<authorEmail>hello@mokoconsulting.tech</authorEmail>
@@ -49,6 +50,8 @@
 		<filename>index.php</filename>
 		<filename>joomla.asset.json</filename>
 		<filename>offline.php</filename>
+		<filename>script.php</filename>
+		<filename>sync_custom_vars.php</filename>
 		<filename>templateDetails.xml</filename>
 		<folder>html</folder>
 		<folder>language</folder>
@@ -264,6 +267,8 @@
 				<field name="css_vars_alert_list" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_ALERT_LIST_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_ALERT_LIST_DESC" class="alert alert-light" />
 				<field name="css_vars_colors" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_COLORS_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_COLORS_DESC" class="alert alert-light" />
 				<field name="css_vars_hero" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_HERO_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_HERO_DESC" class="alert alert-light" />
+				<field name="css_vars_hero_variants" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_HERO_VARIANTS_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_HERO_VARIANTS_DESC" class="alert alert-info" />
+				<field name="css_vars_block_colors" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_BLOCK_COLORS_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_BLOCK_COLORS_DESC" class="alert alert-info" />
 				<field name="css_vars_header" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_HEADER_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_HEADER_DESC" class="alert alert-light" />
 				<field name="css_vars_containers" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_CONTAINERS_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_CONTAINERS_DESC" class="alert alert-light" />
 				<field name="css_vars_borders" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_BORDERS_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_BORDERS_DESC" class="alert alert-light" />
@@ -292,6 +297,12 @@
 				<field name="css_vars_offcanvas" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_OFFCANVAS_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_OFFCANVAS_DESC" class="alert alert-light" />
 				<field name="css_vars_virtuemart" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_VM_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_VM_DESC" class="alert alert-light" />
 				<field name="css_vars_gable" type="note" label="TPL_MOKOCASSIOPEIA_CSS_VARS_GABLE_LABEL" description="TPL_MOKOCASSIOPEIA_CSS_VARS_GABLE_DESC" class="alert alert-light" />
+			</fieldset>
+
+			<!-- Theme Preview tab — embedded test sheet -->
+			<fieldset name="theme_preview" label="TPL_MOKOCASSIOPEIA_THEME_PREVIEW_FIELDSET_LABEL">
+				<field name="theme_preview_intro" type="note" description="TPL_MOKOCASSIOPEIA_THEME_PREVIEW_INTRO" />
+				<field name="theme_preview_frame" type="note" description="TPL_MOKOCASSIOPEIA_THEME_PREVIEW_FRAME" />
 			</fieldset>
 		</fields>
 	</config>
