@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<!--
+    Copyright (C) 2026 Moko Consulting <hello@mokoconsulting.tech>
+
+    This file is part of a Moko Consulting project.
+
+    SPDX-License-Identifier: GPL-3.0-or-later
+
+    # FILE INFORMATION
+    DEFGROUP: Joomla.Template.Site
+    INGROUP: MokaCassiopeia.Testing
+    REPO: mokoconsulting-tech/MokoCassiopeia
+    VERSION: 03.09.02
+    PATH: ./src/templates/brand-showcase.html
+    BRIEF: Brand + Bootstrap 5 showcase with color system gradients and interactive color sampler
+-->
+<html lang="en" data-bs-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MokoCassiopeia — Brand + Bootstrap Showcase</title>
+<link rel="stylesheet" href="../media/css/template.css">
+<link rel="stylesheet" href="light.custom.css">
+<style>
+body {
+  font-family: var(--body-font-family, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  color: var(--body-color, #22262a);
+  background: var(--body-bg, #fff);
+  margin: 0;
+  padding: 0;
+}
+.showcase { max-width: 1200px; margin: 0 auto; padding: 1rem 1.5rem; }
+h1, h2, h3, h4, h5, h6 { color: var(--heading-color, inherit); }
+a { color: var(--link-color, #224faa); text-decoration: var(--link-decoration, underline); }
+a:hover { color: var(--link-hover-color, #424077); }
+code { color: var(--code-color, #e93f8e); background: var(--secondary-bg, #eaedf0); padding: .15em .4em; border-radius: .2rem; font-size: .875em; }
+.gradient-target { cursor: crosshair; border-radius: .25rem; }
+.theme-toggle { position: fixed; top: 1rem; right: 1.5rem; z-index: 1000; }
+.theme-toggle button { padding: .5rem 1rem; border: 1px solid var(--border-color); border-radius: var(--border-radius); background: var(--body-bg); color: var(--body-color); cursor: pointer; font-size: .875rem; }
+</style>
+</head>
+<body>
+
+<div class="theme-toggle">
+  <button onclick="toggleTheme()">Toggle Light / Dark</button>
+</div>
+
+<div class="showcase">
+
+<!-- ══════════════════════════════════════════════
+     BRAND HEADER
+     ══════════════════════════════════════════════ -->
+<div class="text-center p-4 mb-4" style="border-bottom: var(--border,5px) solid var(--accent-color-primary); color: var(--color-primary);">
+<h1 class="display-5 mb-2">Brand + Bootstrap Showcase</h1>
+<p class="mb-3">Bootstrap 5 powers the responsive, mobile-first foundation of MOKO-CASSIOPEIA, delivering a scalable grid system, standardized components, and utility classes. This implementation integrates Moko Consulting brand variables to ensure consistency, accessibility, and performance across all interfaces.</p>
+<hr>
+<p class="lead mb-0">Full variable system, gradients, and Bootstrap components</p>
+</div>
+<p class="text-center mb-4">Hover gradients to sample exact pixel color</p>
+
+<!-- ══════════════════════════════════════════════
+     COLOR SYSTEM
+     ══════════════════════════════════════════════ -->
+<h2>Color System</h2>
+<div class="mb-4">
+
+<div class="mb-3">
+<div style="width: 100%; height: 60px; background: var(--color-primary);">&nbsp;</div>
+<div class="gradient-target" style="width: 100%; height: 40px; background: linear-gradient(to right,var(--color-primary),#ffffff);"></div>
+<div><code>--color-primary</code></div>
+</div>
+
+<div class="mb-3">
+<div style="width: 100%; height: 60px; background: var(--accent-color-primary);">&nbsp;</div>
+<div class="gradient-target" style="width: 100%; height: 40px; background: linear-gradient(to right,var(--accent-color-primary),#ffffff);"></div>
+<div><code>--accent-color-primary</code></div>
+</div>
+
+<div class="mb-3">
+<div style="width: 100%; height: 60px; background: var(--accent-color-secondary);">&nbsp;</div>
+<div class="gradient-target" style="width: 100%; height: 40px; background: linear-gradient(to right,var(--accent-color-secondary),#ffffff);"></div>
+<div><code>--accent-color-secondary</code></div>
+</div>
+
+<div class="mb-3">
+<div style="width: 100%; height: 60px; background: var(--secondary-bg);">&nbsp;</div>
+<div class="gradient-target" style="width: 100%; height: 40px; background: linear-gradient(to right,var(--secondary-bg),#ffffff);"></div>
+<div><code>--secondary-bg</code></div>
+</div>
+
+<div class="mb-3">
+<div style="width: 100%; height: 60px; background: var(--tertiary-bg);">&nbsp;</div>
+<div class="gradient-target" style="width: 100%; height: 40px; background: linear-gradient(to right,var(--tertiary-bg),#ffffff);"></div>
+<div><code>--tertiary-bg</code></div>
+</div>
+
+<div class="mb-3">
+<div style="width: 100%; height: 60px; background: var(--border-color);">&nbsp;</div>
+<div class="gradient-target" style="width: 100%; height: 40px; background: linear-gradient(to right,var(--border-color),#ffffff);"></div>
+<div><code>--border-color</code></div>
+</div>
+
+</div>
+
+<!-- RGB + BW -->
+<h3>RGB Gradient</h3>
+<div class="gradient-target mb-3" style="height: 60px; background: linear-gradient(to right, red, yellow, lime, cyan, blue, magenta, red);"></div>
+
+<h3>Black to White Gradient</h3>
+<div class="gradient-target mb-4" style="height: 60px; background: linear-gradient(to right, black, white);"></div>
+
+<!-- ══════════════════════════════════════════════
+     NAVBAR
+     ══════════════════════════════════════════════ -->
+<nav class="d-flex align-items-center gap-3 px-3 py-2 mb-4" style="background: var(--nav-bg-color); border-radius: var(--border-radius, .25rem);">
+<span class="fw-bold" style="color: var(--nav-text-color);">Brand Nav</span>
+<a href="#" class="text-decoration-none" style="color: var(--mainmenu-nav-link-color);">Home</a>
+<a href="#" class="text-decoration-none" style="color: var(--mainmenu-nav-link-color);">About</a>
+<a href="#" class="text-decoration-none ms-auto" style="color: var(--accent-color-secondary);">Contact</a>
+</nav>
+
+<div class="container">
+
+<!-- TYPOGRAPHY -->
+<h2>Typography</h2>
+<h1>Heading 1</h1>
+<h2>Heading 2</h2>
+<h3>Heading 3</h3>
+<p class="lead">Lead paragraph</p>
+<p>Body text with <a href="#">link</a> and <code>inline code</code></p>
+
+<!-- BUTTONS -->
+<h2>Buttons</h2>
+<div class="d-flex flex-wrap gap-2 mb-4">
+<button class="btn btn-primary">Primary</button>
+<button class="btn btn-secondary">Secondary</button>
+<button class="btn btn-success">Success</button>
+<button class="btn btn-danger">Danger</button>
+<button class="btn btn-warning">Warning</button>
+<button class="btn btn-info">Info</button>
+<button class="btn btn-outline-primary">Outline</button>
+</div>
+
+<!-- BADGES -->
+<h2>Badges</h2>
+<div class="mb-4">
+<span class="badge bg-primary">Primary</span>
+<span class="badge bg-success">Success</span>
+<span class="badge bg-danger">Danger</span>
+</div>
+
+<!-- ALERTS -->
+<h2>Alerts</h2>
+<div class="alert alert-primary" role="alert">Primary alert</div>
+<div class="alert alert-success" role="alert">Success alert</div>
+<div class="alert alert-warning" role="alert">Warning alert</div>
+<div class="alert alert-danger" role="alert">Danger alert</div>
+
+<!-- TABLE -->
+<h2>Table</h2>
+<table class="table">
+<thead>
+<tr><th>#</th><th>Name</th><th>Status</th></tr>
+</thead>
+<tbody>
+<tr><td>1</td><td>Item</td><td>Active</td></tr>
+<tr><td>2</td><td>Item</td><td>Inactive</td></tr>
+</tbody>
+</table>
+
+<!-- FORM -->
+<h2>Forms</h2>
+<form class="mb-4">
+<input type="text" class="form-control mb-2" placeholder="Input">
+<select class="form-select mb-2"><option>Option</option></select>
+<button type="button" class="btn btn-primary">Submit</button>
+</form>
+
+<!-- CARD -->
+<h2>Cards</h2>
+<div class="card p-3 mb-4">
+<h5>Card Title</h5>
+<p>Example content</p>
+<button class="btn btn-primary btn-sm">Action</button>
+</div>
+
+<!-- ACCORDION -->
+<h2>Accordion</h2>
+<div id="acc" class="accordion mb-4">
+<div class="accordion-item">
+<h2 class="accordion-header"><button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#a1">Item</button></h2>
+<div id="a1" class="accordion-collapse collapse show">
+<div class="accordion-body">Content</div>
+</div>
+</div>
+</div>
+
+<!-- TABS -->
+<h2>Tabs</h2>
+<ul class="nav nav-tabs mb-3">
+<li class="nav-item"><a class="nav-link active" href="#">Tab 1</a></li>
+<li class="nav-item"><a class="nav-link" href="#">Tab 2</a></li>
+</ul>
+
+</div><!-- /.container -->
+
+</div><!-- /.showcase -->
+
+<!-- ══════════════════════════════════════════════
+     COLOR SAMPLER
+     ══════════════════════════════════════════════ -->
+<div id="colorPreview" style="position: fixed; width: 140px; height: 140px; border: 2px solid #000; border-radius: .5rem; display: none; z-index: 9999; pointer-events: none; box-shadow: 0 4px 12px rgba(0,0,0,.3);"></div>
+
+<script>
+function getColorAtPoint(el, x, y) {
+  var rect = el.getBoundingClientRect();
+  var canvas = document.createElement('canvas');
+  var ctx = canvas.getContext('2d');
+
+  canvas.width = rect.width;
+  canvas.height = rect.height;
+
+  var style = getComputedStyle(el).backgroundImage;
+
+  if (style.includes('gradient')) {
+    var grad = ctx.createLinearGradient(0, 0, canvas.width, 0);
+    var colors = style.match(/rgb[a]?\([^\)]+\)|#[0-9a-fA-F]+|\b[a-zA-Z]+\b/g);
+
+    if (colors) {
+      var step = 1 / (colors.length - 1);
+      colors.forEach(function(c, i) { grad.addColorStop(i * step, c); });
+    }
+
+    ctx.fillStyle = grad;
+  } else {
+    ctx.fillStyle = getComputedStyle(el).backgroundColor;
+  }
+
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  var pixel = ctx.getImageData(x, y, 1, 1).data;
+  return 'rgb(' + pixel[0] + ',' + pixel[1] + ',' + pixel[2] + ')';
+}
+
+document.querySelectorAll('.gradient-target').forEach(function(el) {
+  el.addEventListener('mousemove', function(e) {
+    var rect = el.getBoundingClientRect();
+    var x = e.clientX - rect.left;
+    var y = e.clientY - rect.top;
+
+    var color = getColorAtPoint(el, x, y);
+    var box = document.getElementById('colorPreview');
+
+    box.style.display = 'block';
+    box.style.background = color;
+    box.style.left = (e.pageX + 20) + 'px';
+    box.style.top = (e.pageY + 20) + 'px';
+  });
+
+  el.addEventListener('mouseleave', function() {
+    document.getElementById('colorPreview').style.display = 'none';
+  });
+});
+
+function toggleTheme() {
+  var html = document.documentElement;
+  var current = html.getAttribute('data-bs-theme');
+  var next = current === 'light' ? 'dark' : 'light';
+  html.setAttribute('data-bs-theme', next);
+
+  var links = document.querySelectorAll('link[rel="stylesheet"]');
+  links.forEach(function(link) {
+    if (link.href.includes('light.custom.css')) {
+      link.href = link.href.replace('light.custom.css', 'dark.custom.css');
+    } else if (link.href.includes('dark.custom.css')) {
+      link.href = link.href.replace('dark.custom.css', 'light.custom.css');
+    }
+  });
+}
+</script>
+</body>
+</html>

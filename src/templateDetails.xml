@@ -304,6 +304,12 @@
 				<field name="theme_preview_intro" type="note" description="TPL_MOKOCASSIOPEIA_THEME_PREVIEW_INTRO" />
 				<field name="theme_preview_frame" type="note" description="TPL_MOKOCASSIOPEIA_THEME_PREVIEW_FRAME" />
 			</fieldset>
+
+			<!-- Brand Showcase tab — color system, gradients, interactive sampler -->
+			<fieldset name="brand_showcase" label="TPL_MOKOCASSIOPEIA_BRAND_SHOWCASE_FIELDSET_LABEL">
+				<field name="brand_showcase_intro" type="note" description="TPL_MOKOCASSIOPEIA_BRAND_SHOWCASE_INTRO" />
+				<field name="brand_showcase_frame" type="note" description="TPL_MOKOCASSIOPEIA_BRAND_SHOWCASE_FRAME" />
+			</fieldset>
 		</fields>
 	</config>
 </extension>
