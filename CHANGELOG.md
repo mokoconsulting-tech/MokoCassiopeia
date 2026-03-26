@@ -19,6 +19,34 @@ All notable changes to the MokoCassiopeia Joomla template are documented in this
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [03.09.02] - 2026-03-26
+
+### Added - Hero Variant System & Block Color System
+
+#### Hero Variants
+- **`.hero#primary`** and **`.hero#secondary`** CSS variant system for visually distinct hero treatments
+- Shared `.hero` base class with `background-size: cover`, `border-radius: .5rem`, and `overflow: hidden`
+- Six new CSS variables (`--hero-primary-bg-color`, `--hero-primary-overlay`, `--hero-primary-color`, and secondary equivalents)
+- Light and dark mode defaults in custom palette templates
+
+#### Block Color System
+- Automatic `:nth-child()` slot palette for `top-a`, `top-b`, `bottom-a`, `bottom-b` module positions
+- Four color slots (`--block-color-1` through `--block-color-4`) with matching text variables
+- Named per-module overrides: `#block-highlight`, `#block-cta`, `#block-alert`
+- ID specificity wins over `:nth-child()` — no `!important` needed
+
+#### Files Modified
+- `src/media/css/template.css` — hero variant rules, block color `:nth-child()` rules, named override rules
+- `src/templates/light.custom.css` — hero and block color variables (light mode)
+- `src/templates/dark.custom.css` — hero and block color variables (dark mode)
+- `docs/CSS_VARIABLES.md` — full variable reference for both systems
+- `CHANGELOG.md` — this entry
+
+#### Files Added
+- `src/templates/theme-test.html` — Bootstrap-style test page showing all CSS variables and new features
+
+---
+
 ## [03.08.03] - 2026-02-27
 
 ### Added - Main Menu Collapsible Dropdown Override

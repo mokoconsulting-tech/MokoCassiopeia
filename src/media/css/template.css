@@ -13942,6 +13942,28 @@ meter {
 	}
 }
 
+/* ── HERO VARIANT BASE ── */
+.hero {
+	background-size: cover;
+	background-position: center;
+	overflow: hidden;
+	border-radius: .5rem;
+}
+
+/* ── PRIMARY VARIANT ── */
+.hero#primary {
+	background-color: var(--hero-primary-bg-color);
+	background-image: var(--hero-primary-overlay);
+	color: var(--hero-primary-color);
+}
+
+/* ── SECONDARY VARIANT ── */
+.hero#secondary {
+	background-color: var(--hero-secondary-bg-color);
+	background-image: var(--hero-secondary-overlay);
+	color: var(--hero-secondary-color);
+}
+
 .footer {
 	margin-top: 1em;
 	color: var(--body-color);
@@ -14638,6 +14660,64 @@ iframe {
 		-ms-flex: 0 1 auto;
 		flex: 0 1 auto;
 	}
+}
+
+/* ── BLOCK COLOR SYSTEM (nth-child slot palette) ── */
+.container-top-a > .card:nth-child(1),
+.container-top-b > .card:nth-child(1),
+.container-bottom-a > .card:nth-child(1),
+.container-bottom-b > .card:nth-child(1) {
+	background-color: var(--block-color-1);
+	color: var(--block-text-1);
+}
+
+.container-top-a > .card:nth-child(2),
+.container-top-b > .card:nth-child(2),
+.container-bottom-a > .card:nth-child(2),
+.container-bottom-b > .card:nth-child(2) {
+	background-color: var(--block-color-2);
+	color: var(--block-text-2);
+}
+
+.container-top-a > .card:nth-child(3),
+.container-top-b > .card:nth-child(3),
+.container-bottom-a > .card:nth-child(3),
+.container-bottom-b > .card:nth-child(3) {
+	background-color: var(--block-color-3);
+	color: var(--block-text-3);
+}
+
+.container-top-a > .card:nth-child(4),
+.container-top-b > .card:nth-child(4),
+.container-bottom-a > .card:nth-child(4),
+.container-bottom-b > .card:nth-child(4) {
+	background-color: var(--block-color-4);
+	color: var(--block-text-4);
+}
+
+/* ── BLOCK COLOR — Named per-module overrides ── */
+.container-top-a #block-highlight,
+.container-top-b #block-highlight,
+.container-bottom-a #block-highlight,
+.container-bottom-b #block-highlight {
+	background-color: var(--block-highlight-bg);
+	color: var(--block-highlight-text);
+}
+
+.container-top-a #block-cta,
+.container-top-b #block-cta,
+.container-bottom-a #block-cta,
+.container-bottom-b #block-cta {
+	background-color: var(--block-cta-bg);
+	color: var(--block-cta-text);
+}
+
+.container-top-a #block-alert,
+.container-top-b #block-alert,
+.container-bottom-a #block-alert,
+.container-bottom-b #block-alert {
+	background-color: var(--block-alert-bg);
+	color: var(--block-alert-text);
 }
 
 .container-component nav {
