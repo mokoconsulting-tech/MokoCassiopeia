@@ -51,6 +51,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `src/templates/theme-test.html` — Bootstrap-style test page with branded showcase, CSS variable swatches, hero demos, block color demos, and color test image
 - `src/script.php` — Joomla install/update lifecycle script (runs CSS variable sync on upgrade, checks PHP/Joomla minimum versions)
 - `src/sync_custom_vars.php` — CLI/library utility that detects missing CSS variables in user custom palettes and injects them
+- `src/templates/brand-showcase.html` — Interactive color system gradients with hover pixel sampler, Bootstrap component showcase
+
+#### Variable Audit
+- All 20 hero/block variables confirmed present in all 4 theme files (light/dark standard + custom)
+- No duplicate variable declarations found across any theme file
+- `--gutter-x` references in template.css are self-scoped to grid containers (standard Bootstrap 5 behavior, not a `:root` variable)
 
 ---
 
