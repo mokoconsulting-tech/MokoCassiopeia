@@ -10,7 +10,7 @@
  INGROUP: MokoCassiopeia.Documentation
  REPO: https://github.com/mokoconsulting-tech/MokoCassiopeia
  FILE: docs/CSS_VARIABLES.md
- VERSION: 03.06.03
+ VERSION: 03.09.02
  BRIEF: Complete CSS variable reference for MokoCassiopeia template
 -->
 
@@ -59,6 +59,12 @@ To create custom color schemes:
    - Save changes
 
 4. **Note**: Custom files are gitignored and won't be committed to the repository
+
+5. **On upgrade**: When the template is updated, `script.php` automatically runs `sync_custom_vars.php` to detect any new variables added to the starter templates and inject them into your existing custom palette files. Your existing values are never overwritten — only genuinely new variables are added. You can also run this manually:
+   ```bash
+   php templates/mokocassiopeia/sync_custom_vars.php --dry-run   # preview what would be added
+   php templates/mokocassiopeia/sync_custom_vars.php              # apply missing variables
+   ```
 
 ---
 
@@ -1440,9 +1446,9 @@ These ensure optimal readability for links within alert boxes.
 * Repository: [https://github.com/mokoconsulting-tech/MokoCassiopeia](https://github.com/mokoconsulting-tech/MokoCassiopeia)
 * Path: /docs/CSS_VARIABLES.md
 * Owner: Moko Consulting
-* Version: 03.06.03
+* Version: 03.09.02
 * Status: Active
-* Effective Date: 2026-01-30
+* Effective Date: 2026-03-26
 * Classification: Public Open Source Documentation
 
 ## Revision History
