@@ -9,7 +9,7 @@
  INGROUP: MokoCassiopeia.Documentation
  REPO: https://github.com/mokoconsulting-tech/MokoCassiopeia
  FILE: ./README.md
- VERSION: 03.06.07
+ VERSION: 03.06.08
  BRIEF: Documentation for MokoCassiopeia template
  -->
 
