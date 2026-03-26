@@ -74,15 +74,6 @@ $sitename  = htmlspecialchars($sitenameR, ENT_QUOTES, 'UTF-8');
 $menu      = $app->getMenu()->getActive();
 $pageclass = $menu !== null ? $menu->getParams()->get('pageclass_sfx', '') : '';
 
-// Respect “Site Name in Page Titles” (0:none, 1:before, 2:after)
-$mode      = (int) $app->get('sitename_pagetitles', 0);
-$pageTitle = trim($this->getTitle());
-$final     = $pageTitle !== ''
-	? ($mode === 1 ? $sitenameR . ' - ' . $pageTitle
-	   : ($mode === 2 ? $pageTitle . ' - ' . $sitenameR : $pageTitle))
-	: $sitenameR;
-$this->setTitle($final);
-
 // Template/Media path
 $templatePath = 'media/templates/site/mokocassiopeia';
 
