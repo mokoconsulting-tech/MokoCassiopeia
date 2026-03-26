@@ -149,7 +149,6 @@ package-lock.json
 # PHP / Composer tooling
 # ============================================================
 vendor/
-!src/media/vendor/
 composer.lock
 *.phar
 codeception.phar
