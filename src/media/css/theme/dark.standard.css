@@ -534,6 +534,40 @@ color-scheme: dark;
 --hero-overlay-text-align: center;
 --hero-overlay-text-color: var(--body-color);
 
+/* ===== HERO VARIANTS ===== */
+/* Primary — deep navy, dark overlay */
+--hero-primary-bg-color: #0d1e3a;
+--hero-primary-overlay: linear-gradient(rgba(13, 30, 58, .65), rgba(13, 30, 58, .65));
+--hero-primary-color: #f1f5f9;
+
+/* Secondary — darker navy, heavier overlay */
+--hero-secondary-bg-color: #080f1e;
+--hero-secondary-overlay: linear-gradient(rgba(8, 15, 30, .80), rgba(8, 15, 30, .80));
+--hero-secondary-color: #f1f5f9;
+
+/* ===== BLOCK COLORS (top-a / top-b / bottom-a / bottom-b) ===== */
+--block-color-1: var(--secondary-bg);
+--block-text-1:  var(--body-color);
+
+--block-color-2: var(--accent-color-primary);
+--block-text-2:  #fff;
+
+--block-color-3: rgba(238, 194, 52, .15);
+--block-text-3:  var(--body-color);
+
+--block-color-4: rgba(74, 166, 100, .15);
+--block-text-4:  var(--body-color);
+
+/* ===== BLOCK COLOR OVERRIDES ===== */
+--block-highlight-bg:   var(--accent-color-primary);
+--block-highlight-text: #fff;
+
+--block-cta-bg:         var(--color-primary);
+--block-cta-text:       #f1f5f9;
+
+--block-alert-bg:       var(--danger, #c23a31);
+--block-alert-text:     #fff;
+
 /* ===== OFFCANVAS ===== */
 --offcanvas-zindex: 1045;
 --offcanvas-width: 400px;
