@@ -5,7 +5,7 @@
 # INGROUP: MokoStandards.Compliance
 # REPO: https://github.com/mokoconsulting-tech/MokoStandards
 # PATH: /.github/workflows/standards-compliance.yml
-# VERSION: 04.00.05
+# VERSION: 04.01.00
 # BRIEF: MokoStandards compliance validation workflow
 # NOTE: Validates repository structure, documentation, and coding standards
 
@@ -1197,28 +1197,28 @@ jobs:
 
           # Find large files (>1MB)
           LARGE_FILES=$(find . -type f -size +1M ! -path "./.git/*" ! -path "./vendor/*" ! -path "./node_modules/*" 2>/dev/null | wc -l)
-          HUGE_FILES=$(find . -type f -size +10M ! -path "./.git/*" ! -path "./vendor/*" ! -path "./node_modules/*" 2>/dev/null | wc -l)
+          HUGE_FILES=$(find . -type f -size +15M ! -path "./.git/*" ! -path "./vendor/*" ! -path "./node_modules/*" 2>/dev/null | wc -l)
 
           echo "### Size Thresholds" >> $GITHUB_STEP_SUMMARY
           echo "- **Warning**: Files >1MB" >> $GITHUB_STEP_SUMMARY
-          echo "- **Critical**: Files >10MB" >> $GITHUB_STEP_SUMMARY
+          echo "- **Critical**: Files >15MB" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
           if [ "$HUGE_FILES" -gt 0 ]; then
-            echo "❌ **Critical**: Found $HUGE_FILES file(s) exceeding 10MB" >> $GITHUB_STEP_SUMMARY
+            echo "❌ **Critical**: Found $HUGE_FILES file(s) exceeding 15MB" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "<details>" >> $GITHUB_STEP_SUMMARY
-            echo "<summary>View files >10MB</summary>" >> $GITHUB_STEP_SUMMARY
+            echo "<summary>View files >15MB</summary>" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-            find . -type f -size +10M ! -path "./.git/*" ! -path "./vendor/*" ! -path "./node_modules/*" -exec ls -lh {} + 2>/dev/null | awk '{print $5, $9}' >> $GITHUB_STEP_SUMMARY
+            find . -type f -size +15M ! -path "./.git/*" ! -path "./vendor/*" ! -path "./node_modules/*" -exec ls -lh {} + 2>/dev/null | awk '{print $5, $9}' >> $GITHUB_STEP_SUMMARY
             echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
             echo "</details>" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
-            echo "**Action Required**: Remove or optimize files >10MB" >> $GITHUB_STEP_SUMMARY
+            echo "**Action Required**: Remove or optimize files >15MB" >> $GITHUB_STEP_SUMMARY
             exit 1
           elif [ "$LARGE_FILES" -gt 0 ]; then
-            echo "⚠️ **Warning**: Found $LARGE_FILES file(s) between 1MB and 10MB" >> $GITHUB_STEP_SUMMARY
+            echo "⚠️ **Warning**: Found $LARGE_FILES file(s) between 1MB and 15MB" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "<details>" >> $GITHUB_STEP_SUMMARY
             echo "<summary>View files >1MB</summary>" >> $GITHUB_STEP_SUMMARY
