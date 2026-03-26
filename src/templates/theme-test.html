@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<!--
+    Copyright (C) 2026 Moko Consulting <hello@mokoconsulting.tech>
+
+    This file is part of a Moko Consulting project.
+
+    SPDX-License-Identifier: GPL-3.0-or-later
+
+    # FILE INFORMATION
+    DEFGROUP: Joomla.Template.Site
+    INGROUP: MokaCassiopeia.Testing
+    REPO: mokoconsulting-tech/MokoCassiopeia
+    VERSION: 03.09.02
+    PATH: ./src/templates/theme-test.html
+    BRIEF: Bootstrap-style test page for MokoCassiopeia CSS variables, hero variants, and block color system
+-->
+<html lang="en" data-bs-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MokoCassiopeia — Theme Test Sheet</title>
+<!-- Load the template CSS -->
+<link rel="stylesheet" href="../media/css/template.css">
+<!-- Load the light custom palette (swap to dark.custom.css for dark mode testing) -->
+<link rel="stylesheet" href="light.custom.css">
+<style>
+/* ── Test Page Layout ── */
+body { font-family: var(--body-font-family, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif); color: var(--body-color, #22262a); background: var(--body-bg, #fff); margin: 0; padding: 0; }
+.test-container { max-width: 1200px; margin: 0 auto; padding: 1rem 1.5rem; }
+h1, h2, h3, h4, h5, h6 { color: var(--heading-color, inherit); }
+h1 { font-size: 2.25rem; margin-bottom: .25rem; }
+h2 { font-size: 1.75rem; margin-top: 2.5rem; border-bottom: 2px solid var(--border-color, #dfe3e7); padding-bottom: .5rem; }
+h3 { font-size: 1.25rem; margin-top: 1.5rem; }
+p.lead { font-size: 1.15rem; color: var(--muted-color, #6d757e); }
+hr { border: 0; border-top: 1px solid var(--border-color, #dfe3e7); margin: 2rem 0; }
+a { color: var(--link-color, #224faa); text-decoration: var(--link-decoration, underline); }
+a:hover { color: var(--link-hover-color, #424077); }
+code { color: var(--code-color, #e93f8e); background: var(--secondary-bg, #eaedf0); padding: .15em .4em; border-radius: .2rem; font-size: .875em; }
+pre { background: var(--secondary-bg, #eaedf0); color: var(--body-color); padding: 1rem; border-radius: var(--border-radius, .25rem); overflow-x: auto; font-size: .875rem; }
+
+/* ── Swatch Grid ── */
+.swatch-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: .75rem; margin: 1rem 0; }
+.swatch { border-radius: var(--border-radius, .25rem); border: 1px solid var(--border-color, #dfe3e7); overflow: hidden; }
+.swatch-color { height: 60px; }
+.swatch-label { padding: .4rem .6rem; font-size: .75rem; background: var(--body-bg, #fff); }
+.swatch-label code { font-size: .7rem; }
+
+/* ── Variable Table ── */
+.var-table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: .875rem; }
+.var-table th, .var-table td { padding: .5rem .75rem; border: 1px solid var(--border-color, #dfe3e7); text-align: left; }
+.var-table th { background: var(--secondary-bg, #eaedf0); font-weight: 600; }
+.var-table tr:nth-child(even) td { background: var(--tertiary-bg, #f9fafb); }
+
+/* ── Flex row helper ── */
+.row { display: flex; flex-wrap: wrap; gap: 1rem; }
+.col { flex: 1; min-width: 200px; }
+
+/* ── Theme Toggle ── */
+.theme-toggle { position: fixed; top: 1rem; right: 1.5rem; z-index: 1000; }
+.theme-toggle button { padding: .5rem 1rem; border: 1px solid var(--border-color); border-radius: var(--border-radius); background: var(--body-bg); color: var(--body-color); cursor: pointer; font-size: .875rem; }
+
+/* ── Block Color Demo ── */
+.block-demo { display: flex; gap: .75rem; flex-wrap: wrap; margin: 1rem 0; }
+.block-demo .card { flex: 1; min-width: 180px; padding: 1.25rem; border-radius: var(--border-radius, .25rem); border: 1px solid var(--border-color, #dfe3e7); }
+</style>
+</head>
+<body>
+
+<div class="theme-toggle">
+  <button onclick="toggleTheme()">Toggle Light / Dark</button>
+</div>
+
+<div class="test-container">
+
+<!-- ══════════════════════════════════════════════
+     HEADER
+     ══════════════════════════════════════════════ -->
+<h1>MokoCassiopeia Theme Test Sheet</h1>
+<p class="lead">Visual reference for CSS variables, Bootstrap components, hero variants, and block color system. Toggle light/dark mode with the button in the top-right corner.</p>
+
+<hr>
+
+<!-- ══════════════════════════════════════════════
+     1. BRAND COLORS
+     ══════════════════════════════════════════════ -->
+<h2>1. Brand &amp; Theme Colors</h2>
+<div class="swatch-grid">
+  <div class="swatch">
+    <div class="swatch-color" style="background: var(--color-primary)"></div>
+    <div class="swatch-label"><code>--color-primary</code></div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background: var(--accent-color-primary)"></div>
+    <div class="swatch-label"><code>--accent-color-primary</code></div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background: var(--accent-color-secondary)"></div>
+    <div class="swatch-label"><code>--accent-color-secondary</code></div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background: var(--body-bg)"></div>
+    <div class="swatch-label"><code>--body-bg</code></div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background: var(--body-color)"></div>
+    <div class="swatch-label"><code>--body-color</code></div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background: var(--secondary-bg)"></div>
+    <div class="swatch-label"><code>--secondary-bg</code></div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background: var(--tertiary-bg)"></div>
+    <div class="swatch-label"><code>--tertiary-bg</code></div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background: var(--border-color)"></div>
+    <div class="swatch-label"><code>--border-color</code></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     2. BOOTSTRAP PALETTE
+     ══════════════════════════════════════════════ -->
+<h2>2. Bootstrap Color Palette</h2>
+<div class="swatch-grid">
+  <div class="swatch">
+    <div class="swatch-color" style="background: var(--primary)"></div>
+    <div class="swatch-label"><code>--primary</code></div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background: var(--secondary)"></div>
+    <div class="swatch-label"><code>--secondary</code></div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background: var(--success)"></div>
+    <div class="swatch-label"><code>--success</code></div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background: var(--info)"></div>
+    <div class="swatch-label"><code>--info</code></div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background: var(--warning)"></div>
+    <div class="swatch-label"><code>--warning</code></div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background: var(--danger)"></div>
+    <div class="swatch-label"><code>--danger</code></div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background: var(--light)"></div>
+    <div class="swatch-label"><code>--light</code></div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background: var(--dark)"></div>
+    <div class="swatch-label"><code>--dark</code></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     3. GRAY SCALE
+     ══════════════════════════════════════════════ -->
+<h2>3. Gray Scale</h2>
+<div class="swatch-grid">
+  <div class="swatch">
+    <div class="swatch-color" style="background: var(--gray-100)"></div>
+    <div class="swatch-label"><code>--gray-100</code></div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background: var(--gray-200)"></div>
+    <div class="swatch-label"><code>--gray-200</code></div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background: var(--gray-300)"></div>
+    <div class="swatch-label"><code>--gray-300</code></div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background: var(--gray-400)"></div>
+    <div class="swatch-label"><code>--gray-400</code></div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background: var(--gray-500)"></div>
+    <div class="swatch-label"><code>--gray-500</code></div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background: var(--gray-600)"></div>
+    <div class="swatch-label"><code>--gray-600</code></div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background: var(--gray-700)"></div>
+    <div class="swatch-label"><code>--gray-700</code></div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background: var(--gray-800)"></div>
+    <div class="swatch-label"><code>--gray-800</code></div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background: var(--gray-900)"></div>
+    <div class="swatch-label"><code>--gray-900</code></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     4. STANDARD COLORS
+     ══════════════════════════════════════════════ -->
+<h2>4. Standard Colors</h2>
+<div class="swatch-grid">
+  <div class="swatch">
+    <div class="swatch-color" style="background: var(--blue)"></div>
+    <div class="swatch-label"><code>--blue</code></div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background: var(--indigo)"></div>
+    <div class="swatch-label"><code>--indigo</code></div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background: var(--purple)"></div>
+    <div class="swatch-label"><code>--purple</code></div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background: var(--pink)"></div>
+    <div class="swatch-label"><code>--pink</code></div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background: var(--red)"></div>
+    <div class="swatch-label"><code>--red</code></div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background: var(--orange)"></div>
+    <div class="swatch-label"><code>--orange</code></div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background: var(--yellow)"></div>
+    <div class="swatch-label"><code>--yellow</code></div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background: var(--green)"></div>
+    <div class="swatch-label"><code>--green</code></div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background: var(--teal)"></div>
+    <div class="swatch-label"><code>--teal</code></div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background: var(--cyan)"></div>
+    <div class="swatch-label"><code>--cyan</code></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     5. TYPOGRAPHY
+     ══════════════════════════════════════════════ -->
+<h2>5. Typography</h2>
+<div>
+  <h1>Heading 1 <small style="color: var(--muted-color); font-size: .5em;">h1</small></h1>
+  <h2 style="border: none; padding: 0; margin-top: .5rem;">Heading 2 <small style="color: var(--muted-color); font-size: .5em;">h2</small></h2>
+  <h3>Heading 3 <small style="color: var(--muted-color); font-size: .6em;">h3</small></h3>
+  <h4>Heading 4 <small style="color: var(--muted-color); font-size: .6em;">h4</small></h4>
+  <h5>Heading 5 <small style="color: var(--muted-color); font-size: .6em;">h5</small></h5>
+  <h6>Heading 6 <small style="color: var(--muted-color); font-size: .6em;">h6</small></h6>
+</div>
+<p>This is regular body text using <code>--body-color</code> on <code>--body-bg</code>. Font family: <code>--body-font-family</code>. Size: <code>--body-font-size</code> (1rem).</p>
+<p><strong>Bold text.</strong> <em>Italic text.</em> <a href="#">This is a link</a>. <code>Inline code</code>. <mark style="background: var(--highlight-bg); color: var(--highlight-color);">Highlighted text</mark>.</p>
+<p class="lead">This is lead text styled with <code>--muted-color</code>.</p>
+
+<!-- ══════════════════════════════════════════════
+     6. LINKS
+     ══════════════════════════════════════════════ -->
+<h2>6. Link Colors</h2>
+<table class="var-table">
+  <tr><th>Variable</th><th>Preview</th></tr>
+  <tr><td><code>--link-color</code></td><td><a href="#" style="color: var(--link-color)">Sample link</a></td></tr>
+  <tr><td><code>--link-hover-color</code></td><td><span style="color: var(--link-hover-color); text-decoration: underline; cursor: pointer;">Hover state</span></td></tr>
+  <tr><td><code>--color-link</code></td><td><span style="color: var(--color-link)">color-link value</span></td></tr>
+  <tr><td><code>--color-hover</code></td><td><span style="color: var(--color-hover)">color-hover value</span></td></tr>
+</table>
+
+<!-- ══════════════════════════════════════════════
+     7. BUTTONS (Bootstrap-style)
+     ══════════════════════════════════════════════ -->
+<h2>7. Buttons</h2>
+<div style="display: flex; flex-wrap: wrap; gap: .5rem; margin: 1rem 0;">
+  <button class="btn btn-primary">Primary</button>
+  <button class="btn btn-secondary">Secondary</button>
+  <button class="btn btn-success">Success</button>
+  <button class="btn btn-danger">Danger</button>
+  <button class="btn btn-warning">Warning</button>
+  <button class="btn btn-info">Info</button>
+  <button class="btn btn-light">Light</button>
+  <button class="btn btn-dark">Dark</button>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: .5rem; margin: 1rem 0;">
+  <button class="btn btn-outline-primary">Outline Primary</button>
+  <button class="btn btn-outline-secondary">Outline Secondary</button>
+  <button class="btn btn-outline-success">Outline Success</button>
+  <button class="btn btn-outline-danger">Outline Danger</button>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     8. CARDS
+     ══════════════════════════════════════════════ -->
+<h2>8. Cards</h2>
+<div class="row">
+  <div class="col">
+    <div class="card" style="background: var(--card-bg); border: var(--card-border-width) solid var(--card-border-color); border-radius: var(--card-border-radius); padding: 0;">
+      <div style="padding: var(--card-cap-padding-y) var(--card-cap-padding-x); background: var(--card-cap-bg); color: var(--card-cap-color); border-bottom: 1px solid var(--card-border-color); font-weight: 600;">Card Header</div>
+      <div style="padding: var(--card-spacer-y) var(--card-spacer-x); color: var(--card-color);">
+        <h5 style="margin-top: 0;">Card Title</h5>
+        <p style="margin-bottom: .5rem;">Card body using <code>--card-bg</code>, <code>--card-color</code>, and <code>--card-border-color</code>.</p>
+        <button class="btn btn-primary" style="font-size: .875rem;">Action</button>
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="card" style="background: var(--card-bg); border: var(--card-border-width) solid var(--card-border-color); border-radius: var(--card-border-radius); padding: var(--card-spacer-y) var(--card-spacer-x); color: var(--card-color);">
+      <h5 style="margin-top: 0;">Simple Card</h5>
+      <p>No header, just body content. Uses the same card variables.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     9. FORMS
+     ══════════════════════════════════════════════ -->
+<h2>9. Form Elements</h2>
+<div style="max-width: 480px;">
+  <div style="margin-bottom: 1rem;">
+    <label style="display: block; margin-bottom: .25rem; font-weight: 500;">Text Input</label>
+    <input type="text" placeholder="Placeholder text" style="width: 100%; padding: .375rem .75rem; border: 1px solid var(--input-border-color, #ced4da); border-radius: var(--border-radius); background: var(--input-bg, #fff); color: var(--input-color, #22262a); font-size: 1rem;">
+  </div>
+  <div style="margin-bottom: 1rem;">
+    <label style="display: block; margin-bottom: .25rem; font-weight: 500;">Select</label>
+    <select style="width: 100%; padding: .375rem .75rem; border: 1px solid var(--input-border-color, #ced4da); border-radius: var(--border-radius); background: var(--input-bg, #fff); color: var(--input-color, #22262a); font-size: 1rem;">
+      <option>Option 1</option>
+      <option>Option 2</option>
+      <option>Option 3</option>
+    </select>
+  </div>
+  <div style="margin-bottom: 1rem;">
+    <label style="display: block; margin-bottom: .25rem; font-weight: 500;">Textarea</label>
+    <textarea rows="3" style="width: 100%; padding: .375rem .75rem; border: 1px solid var(--input-border-color, #ced4da); border-radius: var(--border-radius); background: var(--input-bg, #fff); color: var(--input-color, #22262a); font-size: 1rem;">Sample text content</textarea>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     10. ALERTS (Bootstrap-style)
+     ══════════════════════════════════════════════ -->
+<h2>10. Alerts</h2>
+<div style="padding: .75rem 1rem; margin-bottom: .75rem; border-radius: var(--border-radius); background: var(--primary-bg-subtle); color: var(--primary-text-emphasis); border: 1px solid var(--primary-border-subtle);">
+  <strong>Primary alert.</strong> Uses <code>--primary-bg-subtle</code> and <code>--primary-text-emphasis</code>.
+</div>
+<div style="padding: .75rem 1rem; margin-bottom: .75rem; border-radius: var(--border-radius); background: var(--success-bg-subtle); color: var(--success-text-emphasis); border: 1px solid var(--success-border-subtle);">
+  <strong>Success alert.</strong> Uses <code>--success-bg-subtle</code> and <code>--success-text-emphasis</code>.
+</div>
+<div style="padding: .75rem 1rem; margin-bottom: .75rem; border-radius: var(--border-radius); background: var(--warning-bg-subtle); color: var(--warning-text-emphasis); border: 1px solid var(--warning-border-subtle);">
+  <strong>Warning alert.</strong> Uses <code>--warning-bg-subtle</code> and <code>--warning-text-emphasis</code>.
+</div>
+<div style="padding: .75rem 1rem; margin-bottom: .75rem; border-radius: var(--border-radius); background: var(--danger-bg-subtle); color: var(--danger-text-emphasis); border: 1px solid var(--danger-border-subtle);">
+  <strong>Danger alert.</strong> Uses <code>--danger-bg-subtle</code> and <code>--danger-text-emphasis</code>.
+</div>
+<div style="padding: .75rem 1rem; margin-bottom: .75rem; border-radius: var(--border-radius); background: var(--info-bg-subtle); color: var(--info-text-emphasis); border: 1px solid var(--info-border-subtle);">
+  <strong>Info alert.</strong> Uses <code>--info-bg-subtle</code> and <code>--info-text-emphasis</code>.
+</div>
+
+<!-- ══════════════════════════════════════════════
+     11. BORDERS & SHADOWS
+     ══════════════════════════════════════════════ -->
+<h2>11. Borders &amp; Shadows</h2>
+<div class="row">
+  <div class="col" style="padding: 1.5rem; border: var(--border-width) var(--border-style) var(--border-color); border-radius: var(--border-radius); margin-bottom: 1rem;">
+    Default border: <code>--border-width</code> / <code>--border-color</code> / <code>--border-radius</code>
+  </div>
+  <div class="col" style="padding: 1.5rem; border-radius: var(--border-radius); box-shadow: var(--box-shadow-sm); margin-bottom: 1rem;">
+    <code>--box-shadow-sm</code>
+  </div>
+  <div class="col" style="padding: 1.5rem; border-radius: var(--border-radius); box-shadow: var(--box-shadow); margin-bottom: 1rem;">
+    <code>--box-shadow</code>
+  </div>
+  <div class="col" style="padding: 1.5rem; border-radius: var(--border-radius); box-shadow: var(--box-shadow-lg); margin-bottom: 1rem;">
+    <code>--box-shadow-lg</code>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     12. NAVIGATION COLORS
+     ══════════════════════════════════════════════ -->
+<h2>12. Navigation Colors</h2>
+<div class="swatch-grid">
+  <div class="swatch">
+    <div class="swatch-color" style="background: var(--nav-bg-color)"></div>
+    <div class="swatch-label"><code>--nav-bg-color</code></div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background: var(--nav-text-color); border: 1px solid var(--border-color)"></div>
+    <div class="swatch-label"><code>--nav-text-color</code></div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background: var(--mainmenu-nav-link-color); border: 1px solid var(--border-color)"></div>
+    <div class="swatch-label"><code>--mainmenu-nav-link-color</code></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     13. CONTAINER BACKGROUNDS
+     ══════════════════════════════════════════════ -->
+<h2>13. Container Background Variables</h2>
+<table class="var-table">
+  <tr><th>Container</th><th>BG Color</th><th>BG Image</th><th>Border</th></tr>
+  <tr><td>below-topbar</td><td><code>--container-below-topbar-bg-color</code></td><td><code>--container-below-topbar-bg-image</code></td><td><code>--container-below-topbar-border</code></td></tr>
+  <tr><td>top-a</td><td><code>--container-top-a-bg-color</code></td><td><code>--container-top-a-bg-image</code></td><td><code>--container-top-a-border</code></td></tr>
+  <tr><td>top-b</td><td><code>--container-top-b-bg-color</code></td><td><code>--container-top-b-bg-image</code></td><td><code>--container-top-b-border</code></td></tr>
+  <tr><td>bottom-a</td><td><code>--container-bottom-a-bg-color</code></td><td><code>--container-bottom-a-bg-image</code></td><td><code>--container-bottom-a-border</code></td></tr>
+  <tr><td>bottom-b</td><td><code>--container-bottom-b-bg-color</code></td><td><code>--container-bottom-b-bg-image</code></td><td><code>--container-bottom-b-border</code></td></tr>
+  <tr><td>sidebar</td><td><code>--container-sidebar-bg-color</code></td><td><code>--container-sidebar-bg-image</code></td><td><code>--container-sidebar-border</code></td></tr>
+</table>
+
+<!-- ══════════════════════════════════════════════
+     14. HERO VARIANTS (NEW)
+     ══════════════════════════════════════════════ -->
+<h2>14. Hero Variants <span style="font-size: .65em; color: var(--success); font-weight: normal;">NEW</span></h2>
+<p>The <code>.hero#primary</code> and <code>.hero#secondary</code> variants use CSS variables for background color, overlay gradient, and text color. Each adapts automatically with the active theme.</p>
+
+<h3>Primary Variant — <code>.hero#primary</code></h3>
+<div class="hero" id="primary" style="background-image: url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22200%22><rect fill=%22%23a3cde2%22 width=%22400%22 height=%22200%22/><text x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 font-family=%22sans-serif%22 font-size=%2216%22 fill=%22%23112855%22>Hero Background Image Area</text></svg>'); padding: 0;">
+  <div style="padding: 3rem 2rem; text-align: center;">
+    <h2 style="border: none; padding: 0; margin: 0 0 .5rem 0; font-size: 2rem;">Primary Hero</h2>
+    <p style="margin: 0; font-size: 1.1rem;">Homepage &amp; main landing pages — sky blue tint, softer overlay</p>
+  </div>
+</div>
+
+<h3>Secondary Variant — <code>.hero#secondary</code></h3>
+<div class="hero" id="secondary" style="background-image: url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22200%22><rect fill=%22%23112855%22 width=%22400%22 height=%22200%22/><text x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 font-family=%22sans-serif%22 font-size=%2216%22 fill=%22%23f1f5f9%22>Hero Background Image Area</text></svg>'); padding: 0;">
+  <div style="padding: 3rem 2rem; text-align: center;">
+    <h2 style="border: none; padding: 0; margin: 0 0 .5rem 0; font-size: 2rem;">Secondary Hero</h2>
+    <p style="margin: 0; font-size: 1.1rem;">Inner pages, events, about — navy overlay, lighter text</p>
+  </div>
+</div>
+
+<h3>Hero Variable Reference</h3>
+<table class="var-table">
+  <tr><th>Variable</th><th>Variant</th><th>Purpose</th></tr>
+  <tr><td><code>--hero-primary-bg-color</code></td><td>Primary</td><td>Fallback background color</td></tr>
+  <tr><td><code>--hero-primary-overlay</code></td><td>Primary</td><td>Gradient overlay tint</td></tr>
+  <tr><td><code>--hero-primary-color</code></td><td>Primary</td><td>Text color</td></tr>
+  <tr><td><code>--hero-secondary-bg-color</code></td><td>Secondary</td><td>Fallback background color</td></tr>
+  <tr><td><code>--hero-secondary-overlay</code></td><td>Secondary</td><td>Gradient overlay tint</td></tr>
+  <tr><td><code>--hero-secondary-color</code></td><td>Secondary</td><td>Text color</td></tr>
+</table>
+
+<!-- ══════════════════════════════════════════════
+     15. BLOCK COLOR SYSTEM (NEW)
+     ══════════════════════════════════════════════ -->
+<h2>15. Block Color System <span style="font-size: .65em; color: var(--success); font-weight: normal;">NEW</span></h2>
+<p>Modules in <code>top-a</code>, <code>top-b</code>, <code>bottom-a</code>, and <code>bottom-b</code> positions automatically receive brand colors based on their order. No classes needed — <code>:nth-child()</code> handles assignment.</p>
+
+<h3>Slot Palette Preview</h3>
+<div class="block-demo">
+  <div class="card" style="background-color: var(--block-color-1); color: var(--block-text-1);">
+    <strong>Slot 1</strong><br>
+    <code style="color: inherit; background: rgba(255,255,255,.15);">--block-color-1</code>
+  </div>
+  <div class="card" style="background-color: var(--block-color-2); color: var(--block-text-2);">
+    <strong>Slot 2</strong><br>
+    <code style="color: inherit; background: rgba(255,255,255,.15);">--block-color-2</code>
+  </div>
+  <div class="card" style="background-color: var(--block-color-3); color: var(--block-text-3);">
+    <strong>Slot 3</strong><br>
+    <code style="color: inherit; background: rgba(255,255,255,.15);">--block-color-3</code>
+  </div>
+  <div class="card" style="background-color: var(--block-color-4); color: var(--block-text-4);">
+    <strong>Slot 4</strong><br>
+    <code style="color: inherit; background: rgba(255,255,255,.15);">--block-color-4</code>
+  </div>
+</div>
+
+<h3>Named Override Preview</h3>
+<div class="block-demo">
+  <div class="card" style="background-color: var(--block-highlight-bg); color: var(--block-highlight-text);">
+    <strong>#block-highlight</strong><br>
+    <code style="color: inherit; background: rgba(255,255,255,.15);">--block-highlight-bg</code>
+  </div>
+  <div class="card" style="background-color: var(--block-cta-bg); color: var(--block-cta-text);">
+    <strong>#block-cta</strong><br>
+    <code style="color: inherit; background: rgba(255,255,255,.15);">--block-cta-bg</code>
+  </div>
+  <div class="card" style="background-color: var(--block-alert-bg); color: var(--block-alert-text);">
+    <strong>#block-alert</strong><br>
+    <code style="color: inherit; background: rgba(255,255,255,.15);">--block-alert-bg</code>
+  </div>
+</div>
+
+<h3>Block Variable Reference</h3>
+<table class="var-table">
+  <tr><th>Variable</th><th>Purpose</th></tr>
+  <tr><td><code>--block-color-1</code> / <code>--block-text-1</code></td><td>1st module in position (automatic)</td></tr>
+  <tr><td><code>--block-color-2</code> / <code>--block-text-2</code></td><td>2nd module in position (automatic)</td></tr>
+  <tr><td><code>--block-color-3</code> / <code>--block-text-3</code></td><td>3rd module in position (automatic)</td></tr>
+  <tr><td><code>--block-color-4</code> / <code>--block-text-4</code></td><td>4th module in position (automatic)</td></tr>
+  <tr><td><code>--block-highlight-bg</code> / <code>--block-highlight-text</code></td><td>Named override for <code>#block-highlight</code></td></tr>
+  <tr><td><code>--block-cta-bg</code> / <code>--block-cta-text</code></td><td>Named override for <code>#block-cta</code></td></tr>
+  <tr><td><code>--block-alert-bg</code> / <code>--block-alert-text</code></td><td>Named override for <code>#block-alert</code></td></tr>
+</table>
+
+<h3>Override Priority</h3>
+<table class="var-table">
+  <tr><th>Priority</th><th>Method</th><th>How Applied</th></tr>
+  <tr><td>1 (highest)</td><td>Named module ID (<code>#block-highlight</code>)</td><td>ID in module HTML + named variable</td></tr>
+  <tr><td>2 (default)</td><td>Slot color (<code>--block-color-N</code>)</td><td>Automatic by <code>:nth-child()</code> order</td></tr>
+</table>
+
+<!-- ══════════════════════════════════════════════
+     16. VIRTUEMART COLORS
+     ══════════════════════════════════════════════ -->
+<h2>16. VirtueMart Surface Colors</h2>
+<div class="swatch-grid">
+  <div class="swatch">
+    <div class="swatch-color" style="background: var(--vm-surface, #fff)"></div>
+    <div class="swatch-label"><code>--vm-surface</code></div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background: var(--vm-surface-2, #f8f9fa)"></div>
+    <div class="swatch-label"><code>--vm-surface-2</code></div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background: var(--vm-price-color, #448344)"></div>
+    <div class="swatch-label"><code>--vm-price-color</code></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     17. GABLE COLORS
+     ══════════════════════════════════════════════ -->
+<h2>17. Gable Colors</h2>
+<div class="swatch-grid">
+  <div class="swatch">
+    <div class="swatch-color" style="background: var(--gab-blue)"></div>
+    <div class="swatch-label"><code>--gab-blue</code></div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background: var(--gab-green)"></div>
+    <div class="swatch-label"><code>--gab-green</code></div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background: var(--gab-red)"></div>
+    <div class="swatch-label"><code>--gab-red</code></div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background: var(--gab-orange)"></div>
+    <div class="swatch-label"><code>--gab-orange</code></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     18. CODE SAMPLES
+     ══════════════════════════════════════════════ -->
+<h2>18. Code &amp; Preformatted Text</h2>
+<p>Inline code: <code>var(--color-primary)</code></p>
+<pre>/* Example: overriding block slot 1 in colors_custom.css */
+--block-color-1: var(--accent-color-primary);
+--block-text-1:  #fff;
+
+/* Hero variant usage in module HTML */
+&lt;div class="hero" id="primary"
+  style="background-image:url('/images/hero/main.jpg')"&gt;
+  &lt;div class="col-12 py-5 px-4 text-center"&gt;
+    ...content...
+  &lt;/div&gt;
+&lt;/div&gt;</pre>
+
+<!-- ══════════════════════════════════════════════
+     19. OPACITY UTILITIES
+     ══════════════════════════════════════════════ -->
+<h2>19. Opacity Scale</h2>
+<div style="display: flex; gap: .5rem; flex-wrap: wrap;">
+  <div style="width: 60px; height: 60px; background: var(--color-primary); opacity: var(--opacity-5); border-radius: var(--border-radius); display: flex; align-items: center; justify-content: center; font-size: .7rem;">5%</div>
+  <div style="width: 60px; height: 60px; background: var(--color-primary); opacity: var(--opacity-10); border-radius: var(--border-radius); display: flex; align-items: center; justify-content: center; font-size: .7rem;">10%</div>
+  <div style="width: 60px; height: 60px; background: var(--color-primary); opacity: var(--opacity-15); border-radius: var(--border-radius); display: flex; align-items: center; justify-content: center; font-size: .7rem;">15%</div>
+  <div style="width: 60px; height: 60px; background: var(--color-primary); opacity: var(--opacity-25); border-radius: var(--border-radius); display: flex; align-items: center; justify-content: center; font-size: .7rem; color: #fff;">25%</div>
+  <div style="width: 60px; height: 60px; background: var(--color-primary); opacity: var(--opacity-50); border-radius: var(--border-radius); display: flex; align-items: center; justify-content: center; font-size: .7rem; color: #fff;">50%</div>
+  <div style="width: 60px; height: 60px; background: var(--color-primary); opacity: var(--opacity-75); border-radius: var(--border-radius); display: flex; align-items: center; justify-content: center; font-size: .7rem; color: #fff;">75%</div>
+  <div style="width: 60px; height: 60px; background: var(--color-primary); opacity: var(--opacity-100); border-radius: var(--border-radius); display: flex; align-items: center; justify-content: center; font-size: .7rem; color: #fff;">100%</div>
+</div>
+
+<hr>
+<p style="color: var(--muted-color); font-size: .8rem; text-align: center; margin: 2rem 0;">
+  MokoCassiopeia Theme Test Sheet &mdash; v03.09.02 &mdash; &copy; 2026 Moko Consulting
+</p>
+
+</div><!-- /.test-container -->
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-bs-theme');
+  const next = current === 'light' ? 'dark' : 'light';
+  html.setAttribute('data-bs-theme', next);
+
+  // Swap stylesheet
+  const links = document.querySelectorAll('link[rel="stylesheet"]');
+  links.forEach(link => {
+    if (link.href.includes('light.custom.css')) {
+      link.href = link.href.replace('light.custom.css', 'dark.custom.css');
+    } else if (link.href.includes('dark.custom.css')) {
+      link.href = link.href.replace('dark.custom.css', 'light.custom.css');
+    }
+  });
+}
+</script>
+</body>
+</html>

@@ -38,6 +38,8 @@ This document provides a complete reference of all CSS variables available in th
 - [Responsive Tokens & Breakpoints](#responsive-tokens--breakpoints)
 - [VirtueMart Variables](#virtuemart-variables)
 - [Gable Variables](#gable-variables)
+- [Hero Variant Variables](#hero-variant-variables)
+- [Block Color Variables](#block-color-variables)
 
 ---
 
@@ -1357,6 +1359,81 @@ These ensure optimal readability for links within alert boxes.
 
 ---
 
+## Hero Variant Variables
+
+### `--hero-primary-bg-color`
+- **Description**: Fallback background color for the primary hero variant
+- **Light Mode Default**: `var(--color-primary)`
+- **Dark Mode Default**: `#0d1e3a`
+- **Usage**: `.hero#primary` background when no image loads
+
+### `--hero-primary-overlay`
+- **Description**: Gradient overlay tint for primary hero
+- **Light Mode Default**: `linear-gradient(rgba(163, 205, 226, .45), rgba(163, 205, 226, .45))`
+- **Dark Mode Default**: `linear-gradient(rgba(13, 30, 58, .65), rgba(13, 30, 58, .65))`
+- **Usage**: Semi-transparent color wash over hero background image
+
+### `--hero-primary-color`
+- **Description**: Text color for primary hero content
+- **Light Mode Default**: `var(--color-primary)`
+- **Dark Mode Default**: `#f1f5f9`
+- **Usage**: Headings and body text inside `.hero#primary`
+
+### `--hero-secondary-bg-color`
+- **Description**: Fallback background color for the secondary hero variant
+- **Light Mode Default**: `var(--color-primary)`
+- **Dark Mode Default**: `#080f1e`
+- **Usage**: `.hero#secondary` background when no image loads
+
+### `--hero-secondary-overlay`
+- **Description**: Gradient overlay tint for secondary hero
+- **Light Mode Default**: `linear-gradient(rgba(17, 40, 85, .75), rgba(17, 40, 85, .75))`
+- **Dark Mode Default**: `linear-gradient(rgba(8, 15, 30, .80), rgba(8, 15, 30, .80))`
+- **Usage**: Stronger overlay for inner-page heroes
+
+### `--hero-secondary-color`
+- **Description**: Text color for secondary hero content
+- **Light Mode Default**: `#f1f5f9`
+- **Dark Mode Default**: `#f1f5f9`
+- **Usage**: Headings and body text inside `.hero#secondary`
+
+---
+
+## Block Color Variables
+
+### Slot Palette (automatic by position order)
+
+| Variable | Purpose | Light Default | Dark Default |
+|---|---|---|---|
+| `--block-color-1` | Background for 1st module | `var(--color-primary)` | `var(--secondary-bg)` |
+| `--block-text-1` | Text for 1st module | `var(--body-color)` | `var(--body-color)` |
+| `--block-color-2` | Background for 2nd module | `var(--accent-color-primary)` | `var(--accent-color-primary)` |
+| `--block-text-2` | Text for 2nd module | `#fff` | `#fff` |
+| `--block-color-3` | Background for 3rd module | `var(--warning, #eec234)` | `rgba(238, 194, 52, .15)` |
+| `--block-text-3` | Text for 3rd module | `var(--body-color)` | `var(--body-color)` |
+| `--block-color-4` | Background for 4th module | `var(--success-bg-subtle, #eef7f0)` | `rgba(74, 166, 100, .15)` |
+| `--block-text-4` | Text for 4th module | `var(--body-color)` | `var(--body-color)` |
+
+### Named Per-Module Overrides
+
+| Variable | Purpose |
+|---|---|
+| `--block-highlight-bg` | Background for `#block-highlight` module |
+| `--block-highlight-text` | Text color for `#block-highlight` module |
+| `--block-cta-bg` | Background for `#block-cta` module |
+| `--block-cta-text` | Text color for `#block-cta` module |
+| `--block-alert-bg` | Background for `#block-alert` module |
+| `--block-alert-text` | Text color for `#block-alert` module |
+
+### Override Priority
+
+| Priority | Method | How applied |
+|---|---|---|
+| 1 (highest) | Named module ID (`#block-highlight`) | ID in module HTML, named variable in palette |
+| 2 | Slot color (`--block-color-1` etc.) | Automatic by `:nth-child()` order |
+
+---
+
 ## Metadata
 
 * Document: docs/CSS_VARIABLES.md
@@ -1372,5 +1449,6 @@ These ensure optimal readability for links within alert boxes.
 
 | Date       | Change Summary                                        | Author          |
 | ---------- | ----------------------------------------------------- | --------------- |
+| 2026-03-26 | Added hero variant and block color variable docs       | Claude          |
 | 2026-02-07 | Added missing CSS variable documentation              | GitHub Copilot  |
 | 2026-01-30 | Initial CSS variables reference documentation created | GitHub Copilot  |
