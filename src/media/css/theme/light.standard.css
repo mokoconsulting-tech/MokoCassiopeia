@@ -42,11 +42,6 @@ color-scheme: light;
 --link-hover-color-rgb: 66, 64, 119;
 --link-active-color: var(--link-color);
 
-/* ===== OFFCANVAS ===== */
---offcanvas-color: var(--body-color);
---offcanvas-padding-x: 1rem;
---offcanvas-padding-y: 1rem;
-
 /* ===== NAVBAR ===== */
 --navbar-padding-x: 1rem;
 --navbar-padding-y: 0.5rem;
@@ -92,8 +87,9 @@ color-scheme: light;
 --tertiary-color: #22262a80;
 --tertiary-color-rgb: 34, 38, 42;
 --muted-color: #6d757e;
---code-color: #e93f8e;
+--code-color: black;
 --code-color-ink: var(--code-color, #e93f8e);
+--code-bg-color: lightgreen;
 --highlight-color: #22262a;
 --highlight-bg: #fbeea8;
 

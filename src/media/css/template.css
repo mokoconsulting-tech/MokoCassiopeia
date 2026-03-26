@@ -342,8 +342,10 @@ pre code {
 
 code {
 	font-size: 0.875em;
-	color: var(--code-color);
+	color: var(--code-color, black);
 	word-wrap: break-word;
+	padding: calc(var(--padding-x, 0.15rem) * 3);
+	background-color: var(--code-bg-color, lightgreen);
 }
 
 a>code {
@@ -5394,8 +5396,7 @@ fieldset:disabled .btn {
 	float: left;
 	padding-right: var(--breadcrumb-item-padding-x);
 	color: var(--breadcrumb-divider-color);
-	content: var(--breadcrumb-divider, "/")
-		/* rtl: var(--breadcrumb-divider, "/") */
+	content: var(--breadcrumb-divider, "\00a0/\00a0");
 	;
 }
 
@@ -17010,10 +17011,6 @@ html.component body{
 	padding-top: 3.125rem;
 }
 
-code {
-	background-color: var(--gab-gray1);
-}
-
 #view_gabble {
 	background-color: var(--gab-blue);
 	padding: 0.375rem;
@@ -19453,12 +19450,6 @@ nav[data-toggle=toc] .nav-link.active+ul{
 .mod-breadcrumbs__item {
 	display: flex;
 	align-items: center;
-}
-
-.mod-breadcrumbs__item:not(:last-child)::after {
-	content: "/";
-	margin-left: 0.5rem;
-	color: var(--gray-500);
 }
 
 .mod-breadcrumbs__link {

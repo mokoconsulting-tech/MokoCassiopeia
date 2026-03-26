@@ -43,11 +43,6 @@ color-scheme: dark;
 --link-hover-color-rgb: 195, 214, 255;
 --link-active-color: var(--link-color);
 
-/* ===== OFFCANVAS ===== */
---offcanvas-color: var(--body-color);
---offcanvas-padding-x: 1rem;
---offcanvas-padding-y: 1rem;
-
 /* ===== NAVBAR ===== */
 --navbar-padding-x: 1rem;
 --navbar-padding-y: 0.5rem;
