@@ -582,6 +582,224 @@ pre { background: var(--secondary-bg, #eaedf0); color: var(--body-color); paddin
   <div style="width: 60px; height: 60px; background: var(--color-primary); opacity: var(--opacity-100); border-radius: var(--border-radius); display: flex; align-items: center; justify-content: center; font-size: .7rem; color: #fff;">100%</div>
 </div>
 
+<!-- ══════════════════════════════════════════════
+     21. BRANDED BOOTSTRAP 5 SHOWCASE
+     ══════════════════════════════════════════════ -->
+<h2>21. Branded Bootstrap 5 Showcase</h2>
+<p>Comprehensive component demos using MokoCassiopeia's brand variables. Mirrors the live Joomla article at <code>/style/branded-bootstrap5</code>.</p>
+
+<!-- BRAND HEADER (gradient + border via variables) -->
+<div class="text-center p-4 mb-4" style="background: var(--header-background-image); background-position: center; background-attachment: fixed; background-repeat: repeat; background-size: auto; border-bottom: var(--border, 5px) solid var(--accent-color-primary); color: var(--color-primary);">
+<h3 class="mb-1" style="border: none; padding: 0; margin: 0;">Brand + Bootstrap Showcase</h3>
+<p class="lead mb-0" style="color: inherit;">Comprehensive components with toggleable code samples</p>
+</div>
+
+<!-- NAV SAMPLE (brand colors) -->
+<nav class="d-flex align-items-center gap-3 px-3 py-2 mb-4" style="background: var(--nav-bg-color); border-radius: var(--border-radius, .25rem);">
+<span class="fw-bold" style="color: var(--nav-text-color);">Brand Nav</span>
+<a href="#" class="text-decoration-none" style="color: var(--mainmenu-nav-link-color);">Home</a>
+<a href="#" class="text-decoration-none" style="color: var(--mainmenu-nav-link-color);">About</a>
+<a href="#" class="text-decoration-none ms-auto fw-semibold" style="color: var(--accent-color-secondary);">Contact</a>
+</nav>
+
+<!-- BREADCRUMB -->
+<nav aria-label="Breadcrumbs" style="margin-bottom: 1.5rem;">
+<ol class="breadcrumb px-3 py-2" style="background: var(--secondary-bg, #eaedf0); border-radius: var(--border-radius, .25rem); margin: 0; list-style: none; display: flex; flex-wrap: wrap; padding: .5rem 1rem; font-size: .875rem;">
+<li class="breadcrumb-item"><a href="#">Home</a></li>
+<li class="breadcrumb-item"><a href="#">Style</a></li>
+<li class="breadcrumb-item active" style="color: var(--muted-color);">Branded Bootstrap5</li>
+</ol>
+</nav>
+
+<!-- TYPOGRAPHY SECTION -->
+<h3>Typography</h3>
+<div class="row" style="margin-bottom: 2rem;">
+<div class="col">
+<h1 style="border: none; padding: 0; margin: .5rem 0;">H1 Heading</h1>
+<h2 style="border: none; padding: 0; margin: .5rem 0;">H2 Heading</h2>
+<h3 style="margin: .5rem 0;">H3 Heading</h3>
+<h4>H4 Heading</h4>
+<h5>H5 Heading</h5>
+<h6>H6 Heading</h6>
+<p class="lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</p>
+<p>Curabitur <strong>ullamcorper</strong> nec <em>nisi</em> a <a href="#">themed link</a>. Nulla vitae <code>&lt;section&gt;</code> purus.</p>
+<blockquote style="border-left: var(--border, 5px) solid var(--accent-color-primary); padding-left: 1rem; margin: 1rem 0;">
+<p style="margin-bottom: .25rem;">"Design is intelligence made visible."</p>
+<footer style="color: var(--muted-color); font-size: .875rem;">— Alina Wheeler</footer>
+</blockquote>
+</div>
+</div>
+
+<!-- BUTTONS & GROUPS -->
+<h3>Buttons &amp; Button Groups</h3>
+<div style="display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1rem;">
+<button class="btn btn-primary">Primary</button>
+<button class="btn btn-secondary">Secondary</button>
+<button class="btn btn-success">Success</button>
+<button class="btn btn-info">Info</button>
+<button class="btn btn-warning">Warning</button>
+<button class="btn btn-danger">Danger</button>
+<button class="btn btn-light">Light</button>
+<button class="btn btn-dark">Dark</button>
+<button class="btn" style="background: var(--accent-color-primary); color: var(--color-primary); border: none;">Accent</button>
+</div>
+<div style="display: inline-flex; margin-bottom: 1.5rem;">
+<button class="btn btn-outline-primary" style="border-radius: var(--border-radius, .25rem) 0 0 var(--border-radius, .25rem);">Left</button>
+<button class="btn btn-outline-primary" style="border-radius: 0;">Middle</button>
+<button class="btn btn-outline-primary" style="border-radius: 0 var(--border-radius, .25rem) var(--border-radius, .25rem) 0;">Right</button>
+</div>
+
+<!-- BADGES & ALERTS -->
+<h3>Badges &amp; Alerts</h3>
+<div style="display: flex; flex-wrap: wrap; gap: .35rem; margin-bottom: 1rem;">
+<span style="display: inline-block; padding: .25em .5em; font-size: .75em; font-weight: 700; border-radius: var(--border-radius, .25rem); background: var(--primary); color: #fff;">Primary</span>
+<span style="display: inline-block; padding: .25em .5em; font-size: .75em; font-weight: 700; border-radius: var(--border-radius, .25rem); background: var(--secondary); color: #fff;">Secondary</span>
+<span style="display: inline-block; padding: .25em .5em; font-size: .75em; font-weight: 700; border-radius: var(--border-radius, .25rem); background: var(--success); color: #fff;">Success</span>
+<span style="display: inline-block; padding: .25em .5em; font-size: .75em; font-weight: 700; border-radius: var(--border-radius, .25rem); background: var(--warning); color: var(--body-color);">Warning</span>
+<span style="display: inline-block; padding: .25em .5em; font-size: .75em; font-weight: 700; border-radius: var(--border-radius, .25rem); background: var(--danger); color: #fff;">Danger</span>
+<span style="display: inline-block; padding: .25em .5em; font-size: .75em; font-weight: 700; border-radius: var(--border-radius, .25rem); background: var(--accent-color-primary); color: var(--color-primary);">Accent</span>
+</div>
+<div style="padding: .75rem 1rem; margin-bottom: .75rem; border-radius: var(--border-radius); background: var(--primary-bg-subtle); color: var(--primary-text-emphasis); border: 1px solid var(--primary-border-subtle);">
+<strong>Primary:</strong> Vivamus sagittis lacus vel augue.
+</div>
+<div style="padding: .75rem 1rem; margin-bottom: .75rem; border-radius: var(--border-radius); background: var(--warning-bg-subtle); color: var(--warning-text-emphasis); border: 1px solid var(--warning-border-subtle);">
+Cras mattis consectetur purus sit amet fermentum.
+</div>
+<div style="padding: .75rem 1rem; margin-bottom: 1.5rem; border-radius: var(--border-radius); background: var(--accent-color-primary); color: var(--color-primary); border: var(--border, 5px) solid var(--accent-color-secondary);">
+Brand alert — Aenean lacinia bibendum nulla sed consectetur.
+</div>
+
+<!-- TABLES -->
+<h3>Tables</h3>
+<div style="overflow-x: auto; margin-bottom: 1.5rem;">
+<table class="var-table">
+<thead><tr style="background: var(--dark, #212529); color: #fff;"><th>#</th><th>Name</th><th>Status</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>Alpha</td><td><span style="display: inline-block; padding: .15em .4em; font-size: .75em; font-weight: 700; border-radius: var(--border-radius); background: var(--success); color: #fff;">Active</span></td><td>Lorem ipsum dolor sit amet.</td></tr>
+<tr><td>2</td><td>Beta</td><td><span style="display: inline-block; padding: .15em .4em; font-size: .75em; font-weight: 700; border-radius: var(--border-radius); background: var(--warning); color: var(--body-color);">Pending</span></td><td>Integer posuere erat a ante.</td></tr>
+<tr><td>3</td><td>Gamma</td><td><span style="display: inline-block; padding: .15em .4em; font-size: .75em; font-weight: 700; border-radius: var(--border-radius); background: var(--danger); color: #fff;">Blocked</span></td><td>Donec id elit non mi porta.</td></tr>
+</tbody>
+</table>
+</div>
+
+<!-- FORMS (BRANDED) -->
+<h3>Branded Forms</h3>
+<div style="max-width: 600px; margin-bottom: 1.5rem;">
+<div style="display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
+<div style="flex: 1; min-width: 200px;">
+<label style="display: block; margin-bottom: .25rem; font-weight: 500;">Email</label>
+<input type="email" placeholder="name@example.com" style="width: 100%; padding: .375rem .75rem; border: 1px solid var(--input-border-color, #ced4da); border-radius: var(--border-radius); background: var(--input-bg, #fff); color: var(--input-color, #22262a);">
+</div>
+<div style="flex: 1; min-width: 200px;">
+<label style="display: block; margin-bottom: .25rem; font-weight: 500;">Password</label>
+<input type="password" placeholder="••••••••" style="width: 100%; padding: .375rem .75rem; border: 1px solid var(--input-border-color, #ced4da); border-radius: var(--border-radius); background: var(--input-bg, #fff); color: var(--input-color, #22262a);">
+</div>
+</div>
+<div style="margin-bottom: 1rem;">
+<label style="display: block; margin-bottom: .25rem; font-weight: 500;">Input Group</label>
+<div style="display: flex;">
+<span style="display: flex; align-items: center; padding: .375rem .75rem; background: var(--secondary-bg, #eaedf0); border: 1px solid var(--input-border-color, #ced4da); border-right: none; border-radius: var(--border-radius) 0 0 var(--border-radius);">@</span>
+<input type="text" placeholder="username" style="flex: 1; padding: .375rem .75rem; border: 1px solid var(--input-border-color, #ced4da); background: var(--input-bg, #fff); color: var(--input-color, #22262a);">
+<button class="btn btn-outline-secondary" style="border-radius: 0 var(--border-radius) var(--border-radius) 0;">Search</button>
+</div>
+</div>
+<button class="btn btn-primary">Submit</button>
+</div>
+
+<!-- CARDS & LIST GROUPS -->
+<h3>Branded Cards &amp; List Groups</h3>
+<div class="row" style="margin-bottom: 1.5rem;">
+<div class="col">
+<div style="border: 1px solid var(--card-border-color, var(--border-color)); border-radius: var(--card-border-radius, var(--border-radius)); overflow: hidden; background: var(--card-bg, var(--body-bg));">
+<div style="padding: .5rem 1rem; background: var(--accent-color-primary); color: var(--color-primary); font-weight: 600;">Featured</div>
+<div style="padding: var(--card-spacer-y, 1rem) var(--card-spacer-x, 1rem); color: var(--card-color, var(--body-color));">
+<h5 style="margin-top: 0;">Card title</h5>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
+<button class="btn btn-primary" style="font-size: .875rem;">Go somewhere</button>
+</div>
+</div>
+</div>
+<div class="col">
+<div style="border: 1px solid var(--border-color); border-radius: var(--border-radius); overflow: hidden;">
+<div style="padding: .5rem 1rem; background: var(--primary); color: #fff; font-weight: 500;">Active item</div>
+<div style="padding: .5rem 1rem; border-bottom: 1px solid var(--border-color);">Second item</div>
+<div style="padding: .5rem 1rem; display: flex; justify-content: space-between; align-items: center;">With badge <span style="display: inline-block; padding: .15em .5em; font-size: .75em; font-weight: 700; border-radius: 50rem; background: var(--primary); color: #fff;">4</span></div>
+</div>
+</div>
+</div>
+
+<!-- BREADCRUMB & PAGINATION -->
+<h3>Breadcrumb &amp; Pagination</h3>
+<nav aria-label="breadcrumb" style="margin-bottom: 1rem;">
+<ol style="list-style: none; display: flex; flex-wrap: wrap; padding: .5rem 1rem; margin: 0; background: var(--secondary-bg, #eaedf0); border-radius: var(--border-radius); font-size: .875rem; gap: .5rem;">
+<li><a href="#">Home</a> /</li>
+<li><a href="#">Library</a> /</li>
+<li style="color: var(--muted-color);">Data</li>
+</ol>
+</nav>
+<nav aria-label="Pagination" style="margin-bottom: 1.5rem;">
+<ul style="list-style: none; display: flex; padding: 0; margin: 0; gap: 0;">
+<li><span style="display: block; padding: .375rem .75rem; border: 1px solid var(--border-color); color: var(--muted-color); border-radius: var(--border-radius) 0 0 var(--border-radius);">Previous</span></li>
+<li><a href="#" style="display: block; padding: .375rem .75rem; border: 1px solid var(--border-color); border-left: none; text-decoration: none;">1</a></li>
+<li><a href="#" style="display: block; padding: .375rem .75rem; border: 1px solid var(--border-color); border-left: none; text-decoration: none;">2</a></li>
+<li><a href="#" style="display: block; padding: .375rem .75rem; border: 1px solid var(--border-color); border-left: none; text-decoration: none;">3</a></li>
+<li><a href="#" style="display: block; padding: .375rem .75rem; border: 1px solid var(--border-color); border-left: none; text-decoration: none; border-radius: 0 var(--border-radius) var(--border-radius) 0;">Next</a></li>
+</ul>
+</nav>
+
+<!-- PROGRESS BARS -->
+<h3>Progress Bars</h3>
+<div style="margin-bottom: 1.5rem;">
+<div style="height: 20px; background: var(--secondary-bg, #eaedf0); border-radius: var(--border-radius); margin-bottom: .5rem; overflow: hidden;">
+<div style="width: 25%; height: 100%; background: var(--accent-color-primary); color: var(--color-primary); display: flex; align-items: center; justify-content: center; font-size: .75rem; font-weight: 600;">25%</div>
+</div>
+<div style="height: 20px; background: var(--secondary-bg, #eaedf0); border-radius: var(--border-radius); overflow: hidden;">
+<div style="width: 65%; height: 100%; background: var(--success); color: #fff; display: flex; align-items: center; justify-content: center; font-size: .75rem; font-weight: 600;">65%</div>
+</div>
+</div>
+
+<!-- CSS VARIABLE SWATCHES (COMPUTED VALUES) -->
+<h3>CSS Variable Swatches (Computed)</h3>
+<p style="color: var(--muted-color);">Visual preview of key variables with their resolved values displayed via JavaScript.</p>
+<div class="swatch-grid" id="computed-swatches">
+<div class="swatch">
+<div class="swatch-color" style="background: var(--color-primary)"></div>
+<div class="swatch-label"><code>--color-primary</code><br><small class="computed-val" data-var="--color-primary"></small></div>
+</div>
+<div class="swatch">
+<div class="swatch-color" style="background: var(--color-link)"></div>
+<div class="swatch-label"><code>--color-link</code><br><small class="computed-val" data-var="--color-link"></small></div>
+</div>
+<div class="swatch">
+<div class="swatch-color" style="background: var(--color-hover)"></div>
+<div class="swatch-label"><code>--color-hover</code><br><small class="computed-val" data-var="--color-hover"></small></div>
+</div>
+<div class="swatch">
+<div class="swatch-color" style="background: var(--accent-color-primary)"></div>
+<div class="swatch-label"><code>--accent-color-primary</code><br><small class="computed-val" data-var="--accent-color-primary"></small></div>
+</div>
+<div class="swatch">
+<div class="swatch-color" style="background: var(--accent-color-secondary)"></div>
+<div class="swatch-label"><code>--accent-color-secondary</code><br><small class="computed-val" data-var="--accent-color-secondary"></small></div>
+</div>
+<div class="swatch">
+<div class="swatch-color" style="background: var(--nav-bg-color)"></div>
+<div class="swatch-label"><code>--nav-bg-color</code><br><small class="computed-val" data-var="--nav-bg-color"></small></div>
+</div>
+<div class="swatch">
+<div class="swatch-color" style="background: var(--body-bg); border: 1px solid var(--border-color);"></div>
+<div class="swatch-label"><code>--body-bg</code><br><small class="computed-val" data-var="--body-bg"></small></div>
+</div>
+<div class="swatch">
+<div class="swatch-color" style="background: var(--body-color)"></div>
+<div class="swatch-label"><code>--body-color</code><br><small class="computed-val" data-var="--body-color"></small></div>
+</div>
+<div class="swatch">
+<div class="swatch-color" style="background: var(--border-color)"></div>
+<div class="swatch-label"><code>--border-color</code><br><small class="computed-val" data-var="--border-color"></small></div>
+</div>
+</div>
+
 <hr>
 <p style="color: var(--muted-color); font-size: .8rem; text-align: center; margin: 2rem 0;">
   MokoCassiopeia Theme Test Sheet &mdash; v03.09.02 &mdash; &copy; 2026 Moko Consulting
@@ -590,6 +808,19 @@ pre { background: var(--secondary-bg, #eaedf0); color: var(--body-color); paddin
 </div><!-- /.test-container -->
 
 <script>
+// Populate computed CSS variable values
+function updateComputedValues() {
+  const root = document.documentElement;
+  const style = getComputedStyle(root);
+  document.querySelectorAll('.computed-val').forEach(el => {
+    const varName = el.dataset.var;
+    if (varName) {
+      el.textContent = style.getPropertyValue(varName).trim() || '(not set)';
+    }
+  });
+}
+updateComputedValues();
+
 function toggleTheme() {
   const html = document.documentElement;
   const current = html.getAttribute('data-bs-theme');
@@ -605,6 +836,9 @@ function toggleTheme() {
       link.href = link.href.replace('dark.custom.css', 'light.custom.css');
     }
   });
+
+  // Refresh computed values after stylesheet loads
+  setTimeout(updateComputedValues, 200);
 }
 </script>
 </body>
