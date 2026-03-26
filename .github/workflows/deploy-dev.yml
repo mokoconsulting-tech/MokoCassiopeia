@@ -22,7 +22,7 @@
 # INGROUP: MokoStandards.Deploy
 # REPO: https://github.com/mokoconsulting-tech/MokoStandards
 # PATH: /templates/workflows/shared/deploy-dev.yml
-# VERSION: 04.00.27
+# VERSION: 04.01.00
 # BRIEF: SFTP deployment workflow for development server — synced to all governed repos
 # NOTE: Synced via bulk-repo-sync to .github/workflows/deploy-dev.yml in all governed repos.
 #       Port is resolved in order: DEV_FTP_PORT variable → :port suffix in DEV_FTP_HOST → 22.
@@ -48,19 +48,19 @@ name: Deploy to Dev Server (SFTP)
 on:
   push:
     branches:
-      - main
-      - master
       - 'dev/**'
       - develop
       - development
+    paths:
+      - 'src/**'
   pull_request:
     types: [opened, synchronize, reopened, closed]
     branches:
-      - main
-      - master
       - 'dev/**'
       - develop
       - development
+    paths:
+      - 'src/**'
   workflow_dispatch:
     inputs:
       clear_remote:
@@ -89,52 +89,82 @@ jobs:
           REPO="${{ github.repository }}"
           ORG="${{ github.repository_owner }}"
 
-          # Try the per-repo collaborator endpoint first.
-          # This returns 404 for org owners who are not listed as explicit
-          # collaborators, so we fall back to the org membership role check.
-          PERMISSION=$(gh api "repos/${REPO}/collaborators/${ACTOR}/permission" \
-            --jq '.permission' 2>/dev/null)
+          METHOD=""
+          AUTHORIZED="false"
 
-          if [ -z "$PERMISSION" ]; then
-            # Collaborator endpoint returned nothing — try org membership.
-            # Requires a token with read:org scope (secrets.GH_TOKEN).
-            # github.token alone is insufficient for this endpoint.
-            ORG_ROLE=$(gh api "orgs/${ORG}/memberships/${ACTOR}" \
-              --jq '.role' 2>/dev/null)
-            if [ "$ORG_ROLE" = "owner" ]; then
+          # Hardcoded authorized users — always allowed to deploy
+          AUTHORIZED_USERS="jmiller-moko github-actions[bot]"
+          for user in $AUTHORIZED_USERS; do
+            if [ "$ACTOR" = "$user" ]; then
+              AUTHORIZED="true"
+              METHOD="hardcoded allowlist"
               PERMISSION="admin"
-              echo "ℹ️  ${ACTOR} is an org owner — granting admin access"
-            else
-              # Both checks failed — token may lack read:org scope.
-              echo "⚠️  Could not determine permission for ${ACTOR}."
-              echo "   Add GH_TOKEN (PAT with read:org scope) as an org secret to fix this."
-              PERMISSION="none"
+              break
             fi
+          done
+
+          # For other actors, check repo/org permissions via API
+          if [ "$AUTHORIZED" != "true" ]; then
+            PERMISSION=$(gh api "repos/${REPO}/collaborators/${ACTOR}/permission" \
+              --jq '.permission' 2>/dev/null)
+            METHOD="repo collaborator API"
+
+            if [ -z "$PERMISSION" ]; then
+              ORG_ROLE=$(gh api "orgs/${ORG}/memberships/${ACTOR}" \
+                --jq '.role' 2>/dev/null)
+              METHOD="org membership API"
+              if [ "$ORG_ROLE" = "owner" ]; then
+                PERMISSION="admin"
+              else
+                PERMISSION="none"
+              fi
+            fi
+
+            case "$PERMISSION" in
+              admin|maintain) AUTHORIZED="true" ;;
+            esac
           fi
 
-          case "$PERMISSION" in
-            admin|maintain)
-              echo "✅ ${ACTOR} has '${PERMISSION}' permission — authorized to deploy"
-              ;;
-            *)
-              echo "❌ Deployment requires admin or maintain role."
-              echo "   ${ACTOR} has '${PERMISSION}' — contact your org administrator."
-              exit 1
-              ;;
-          esac
+          # Write detailed summary
+          {
+            echo "## 🔐 Deploy Authorization"
+            echo ""
+            echo "| Field | Value |"
+            echo "|-------|-------|"
+            echo "| **Actor** | \`${ACTOR}\` |"
+            echo "| **Repository** | \`${REPO}\` |"
+            echo "| **Permission** | \`${PERMISSION}\` |"
+            echo "| **Method** | ${METHOD} |"
+            echo "| **Authorized** | ${AUTHORIZED} |"
+            echo "| **Trigger** | \`${{ github.event_name }}\` |"
+            echo "| **Branch** | \`${{ github.ref_name }}\` |"
+            echo ""
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          if [ "$AUTHORIZED" = "true" ]; then
+            echo "✅ ${ACTOR} authorized to deploy (${METHOD})" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "❌ ${ACTOR} is NOT authorized to deploy." >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "Deployment requires one of:" >> "$GITHUB_STEP_SUMMARY"
+            echo "- Being in the hardcoded allowlist" >> "$GITHUB_STEP_SUMMARY"
+            echo "- Having \`admin\` or \`maintain\` role on the repository" >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
 
   deploy:
     name: SFTP Deploy → Dev
     runs-on: ubuntu-latest
     needs: [check-permission]
     if: >-
-      github.event_name == 'workflow_dispatch' ||
+      !startsWith(github.head_ref || github.ref_name, 'chore/') &&
+      (github.event_name == 'workflow_dispatch' ||
       github.event_name == 'push' ||
       (github.event_name == 'pull_request' &&
         (github.event.action == 'opened' ||
          github.event.action == 'synchronize' ||
          github.event.action == 'reopened' ||
-         github.event.pull_request.merged == true))
+         github.event.pull_request.merged == true)))
 
     steps:
       - name: Checkout repository
@@ -214,9 +244,11 @@ jobs:
               fi
             done
             $SKIP && continue
-            if [ -f ".gitignore" ] && git check-ignore -q "$rel" 2>/dev/null; then
-              IGNORED_FILES+=("$rel | .gitignore")
-              continue
+            if [ -f ".gitignore" ]; then
+              git check-ignore -q "$rel" 2>/dev/null && {
+                IGNORED_FILES+=("$rel | .gitignore")
+                continue
+              } || true
             fi
             WILL_UPLOAD+=("$rel")
           done < <(find "$SOURCE_DIR" -type f -print0 | sort -z)
@@ -540,6 +572,25 @@ jobs:
           DEPLOY_ARGS=(--path . --src-dir "$SOURCE_DIR" --config /tmp/sftp-config.json)
           if [ "$USE_PASSPHRASE" = "true" ]; then
             DEPLOY_ARGS+=(--key-passphrase "$SFTP_PASSWORD")
+          fi
+
+          # ── For Dolibarr (crm-module): set version to "development" before deploy ─
+          PLATFORM=""
+          if [ -f ".moko-standards" ]; then
+            PLATFORM=$(grep -E '^platform:' .moko-standards | sed 's/.*:[[:space:]]*//' | tr -d '"')
+          fi
+
+          if [ "$PLATFORM" = "crm-module" ]; then
+            echo "📦 Dolibarr dev deploy — setting module version to 'development'"
+            find "$SOURCE_DIR" -path "*/core/modules/mod*.class.php" -exec \
+              sed -i "s/\(\$this->version\s*=\s*\)['\"][^'\"]*['\"]/\1'development'/" {} + 2>/dev/null || true
+          fi
+
+          if [ "$PLATFORM" = "waas-component" ]; then
+            echo "📦 Joomla dev deploy — setting manifest version to 'development'"
+            find "$SOURCE_DIR" -maxdepth 2 -name "*.xml" -exec grep -l '<extension' {} \; 2>/dev/null | while read -r manifest; do
+              sed -i "s|<version>[^<]*</version>|<version>development</version>|" "$manifest" 2>/dev/null || true
+            done
           fi
 
           php /tmp/mokostandards/api/deploy/deploy-sftp.php "${DEPLOY_ARGS[@]}"
