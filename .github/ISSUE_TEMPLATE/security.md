@@ -7,21 +7,6 @@ assignees: ''
 
 ---
 
-<!--
-SPDX-License-Identifier: GPL-3.0-or-later
-Copyright (C) 2024-2026 Moko Consulting Tech
-
-File: .github/ISSUE_TEMPLATE/security.md
-Description: Issue template for security vulnerability reports
-Project: .github-private
-Author: Moko Consulting Tech
-Version: 03.02.00
-
-Revision History:
-- 2026-01-04: Added MokoStandards compliant header with copyright, file info, and metadata
-- 2026-03-11: Version bump to 03.02.00 to match MokoStandards
-- 2024: Initial creation
--->
 
 ## ⚠️ IMPORTANT: Private Disclosure Required
 
