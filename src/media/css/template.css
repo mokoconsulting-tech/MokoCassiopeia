@@ -791,9 +791,9 @@ progress {
 	display: flex;
 	-ms-flex-wrap: wrap;
 	flex-wrap: wrap;
-	margin-top: calc(-1 * var(--gutter-y));
-	margin-right: calc(-0.5 * var(--gutter-x));
-	margin-left: calc(-0.5 * var(--gutter-x));
+	margin-top: 0;
+	margin-right: 0;
+	margin-left: 0;
 }
 
 .row > * {
@@ -13883,7 +13883,7 @@ meter {
 }
 
 .container-banner .banner-overlay {
-	height: var(--hero-height, 70vh);
+	height: var(--hero-height, 60vh);
 	color: var(--hero-color, var(--body-color));
 	background-repeat: var(--hero-bg-repeat, no-repeat);
 	background-attachment: var(--hero-bg-attachment, fixed);
@@ -15504,8 +15504,8 @@ body.wrapper-fluid .grid-child {
 
 body.wrapper-fluid header>.grid-child,
 body.wrapper-fluid footer>.grid-child {
-	padding-right: 2em;
-	padding-left: 2em;
+	padding-right: var(--navbar-padding-x, 1rem);
+	padding-left: var(--navbar-padding-x, 1rem);
 	padding-top: 0;
 	padding-bottom: 0;
 }
