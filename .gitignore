@@ -941,3 +941,5 @@ src/media/js/user.js
 # Keep-empty folders helper
 # ============================================================
 !.gitkeep
+.claude/settings.local.json
+.claude/worktrees/
