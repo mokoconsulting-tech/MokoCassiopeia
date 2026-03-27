@@ -21,44 +21,41 @@
 # DEFGROUP: GitHub.Workflow
 # INGROUP: MokoStandards.Deploy
 # REPO: https://github.com/mokoconsulting-tech/MokoStandards
-# PATH: /templates/workflows/shared/deploy-dev.yml
+# PATH: /templates/workflows/shared/deploy-rs.yml
 # VERSION: 04.01.00
-# BRIEF: SFTP deployment workflow for development server — synced to all governed repos
-# NOTE: Synced via bulk-repo-sync to .github/workflows/deploy-dev.yml in all governed repos.
-#       Port is resolved in order: DEV_FTP_PORT variable → :port suffix in DEV_FTP_HOST → 22.
+# BRIEF: SFTP deployment workflow for release staging server — synced to all governed repos
+# NOTE: Synced via bulk-repo-sync to .github/workflows/deploy-rs.yml in all governed repos.
+#       Port is resolved in order: RS_FTP_PORT variable → :port suffix in RS_FTP_HOST → 22.
 
-name: Deploy to Dev Server (SFTP)
+name: Deploy to RS Server (SFTP)
 
-# Deploys the contents of the src/ directory to the development server via SFTP.
-# Triggers on every pull_request to development branches (so the dev server always
-# reflects the latest PR state) and on push/merge to main branches.
+# Deploys the contents of the src/ directory to the release staging server via SFTP.
+# Triggers on push/merge to main — deploys the production-ready build to the release staging server.
 #
-# Required org-level variables:  DEV_FTP_HOST, DEV_FTP_PATH, DEV_FTP_USERNAME
-# Optional org-level variable:   DEV_FTP_PORT (auto-detected from host or defaults to 22)
-# Optional org/repo variable:    DEV_FTP_SUFFIX — when set, appended to DEV_FTP_PATH to form the
-#                                 full remote destination: DEV_FTP_PATH/DEV_FTP_SUFFIX
+# Required org-level variables:  RS_FTP_HOST, RS_FTP_PATH, RS_FTP_USERNAME
+# Optional org-level variable:   RS_FTP_PORT (auto-detected from host or defaults to 22)
+# Optional org/repo variable:    RS_FTP_SUFFIX — when set, appended to RS_FTP_PATH to form the
+#                                 full remote destination: RS_FTP_PATH/RS_FTP_SUFFIX
 # Ignore rules:                  Place a .ftp_ignore file in the repository root. Each non-empty,
 #                                 non-comment line is a regex pattern tested against the relative path
 #                                 of each file (e.g. "subdir/file.txt"). The .gitignore is also
 #                                 respected automatically.
-# Required org-level secret:     DEV_FTP_KEY (preferred) or DEV_FTP_PASSWORD
+# Required org-level secret:     RS_FTP_KEY (preferred) or RS_FTP_PASSWORD
 #
 # Access control: only users with admin or maintain role on the repository may deploy.
 
 on:
   push:
     branches:
-      - 'dev/**'
-      - develop
-      - development
+      - main
+      - master
     paths:
       - 'src/**'
   pull_request:
     types: [opened, synchronize, reopened, closed]
     branches:
-      - 'dev/**'
-      - develop
-      - development
+      - main
+      - master
     paths:
       - 'src/**'
   workflow_dispatch:
@@ -153,7 +150,7 @@ jobs:
           fi
 
   deploy:
-    name: SFTP Deploy → Dev
+    name: SFTP Deploy → RS
     runs-on: ubuntu-latest
     needs: [check-permission]
     if: >-
@@ -291,21 +288,21 @@ jobs:
         if: steps.source.outputs.skip == 'false'
         id: conn
         env:
-          HOST_RAW: ${{ vars.DEV_FTP_HOST }}
-          PORT_VAR: ${{ vars.DEV_FTP_PORT }}
+          HOST_RAW: ${{ vars.RS_FTP_HOST }}
+          PORT_VAR: ${{ vars.RS_FTP_PORT }}
         run: |
           HOST="$HOST_RAW"
           PORT="$PORT_VAR"
 
-          # Priority 1 — explicit DEV_FTP_PORT variable
+          # Priority 1 — explicit RS_FTP_PORT variable
           if [ -n "$PORT" ]; then
-            echo "ℹ️  Using explicit DEV_FTP_PORT=${PORT}"
+            echo "ℹ️  Using explicit RS_FTP_PORT=${PORT}"
 
-          # Priority 2 — port embedded in DEV_FTP_HOST  (host:port)
+          # Priority 2 — port embedded in RS_FTP_HOST  (host:port)
           elif [[ "$HOST" == *:* ]]; then
             PORT="${HOST##*:}"
             HOST="${HOST%:*}"
-            echo "ℹ️  Extracted port ${PORT} from DEV_FTP_HOST"
+            echo "ℹ️  Extracted port ${PORT} from RS_FTP_HOST"
 
           # Priority 3 — SFTP default
           else
@@ -321,29 +318,29 @@ jobs:
         if: steps.source.outputs.skip == 'false'
         id: remote
         env:
-          DEV_FTP_PATH: ${{ vars.DEV_FTP_PATH }}
-          DEV_FTP_SUFFIX:  ${{ vars.DEV_FTP_SUFFIX }}
+          RS_FTP_PATH: ${{ vars.RS_FTP_PATH }}
+          RS_FTP_SUFFIX:  ${{ vars.RS_FTP_SUFFIX }}
         run: |
-          BASE="$DEV_FTP_PATH"
+          BASE="$RS_FTP_PATH"
 
           if [ -z "$BASE" ]; then
-            echo "❌ DEV_FTP_PATH is not set."
+            echo "❌ RS_FTP_PATH is not set."
             echo "   Configure it as an org-level variable (Settings → Variables) and"
             echo "   ensure this repository has been granted access to it."
             exit 1
           fi
 
-          # DEV_FTP_SUFFIX is required — it identifies the remote subdirectory for this repo.
+          # RS_FTP_SUFFIX is required — it identifies the remote subdirectory for this repo.
           # Without it we cannot safely determine the deployment target.
-          if [ -z "$DEV_FTP_SUFFIX" ]; then
-            echo "⏭️  DEV_FTP_SUFFIX variable is not set — skipping deployment."
-            echo "   Set DEV_FTP_SUFFIX as a repo or org variable to enable deploy-dev."
+          if [ -z "$RS_FTP_SUFFIX" ]; then
+            echo "⏭️  RS_FTP_SUFFIX variable is not set — skipping deployment."
+            echo "   Set RS_FTP_SUFFIX as a repo or org variable to enable deploy-rs."
             echo "skip=true" >> "$GITHUB_OUTPUT"
             echo "path=" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
-          REMOTE="${BASE%/}/${DEV_FTP_SUFFIX#/}"
+          REMOTE="${BASE%/}/${RS_FTP_SUFFIX#/}"
 
           # ── Platform-specific path safety guards ──────────────────────────────
           PLATFORM=""
@@ -351,26 +348,7 @@ jobs:
             PLATFORM=$(grep -E '^platform:' .moko-standards | sed 's/.*:[[:space:]]*//' | tr -d '"')
           fi
 
-          if [ "$PLATFORM" = "crm-module" ]; then
-            # Dolibarr modules must deploy under htdocs/custom/ — guard against
-            # accidentally overwriting server root or unrelated directories.
-            if [[ "$REMOTE" != *custom* ]]; then
-              echo "❌ Safety check failed: Dolibarr (crm-module) remote path must contain 'custom'."
-              echo "   Current path: ${REMOTE}"
-              echo "   Set DEV_FTP_SUFFIX to the module's htdocs/custom/ subdirectory."
-              exit 1
-            fi
-          fi
-
-          if [ "$PLATFORM" = "waas-component" ]; then
-            # Joomla extensions may only deploy to the server's tmp/ directory.
-            if [[ "$REMOTE" != *tmp* ]]; then
-              echo "❌ Safety check failed: Joomla (waas-component) remote path must contain 'tmp'."
-              echo "   Current path: ${REMOTE}"
-              echo "   Set DEV_FTP_SUFFIX to a path under the server tmp/ directory."
-              exit 1
-            fi
-          fi
+          # RS deployment: no path restrictions for any platform
 
           echo "ℹ️  Remote path: ${REMOTE}"
           echo "path=${REMOTE}" >> "$GITHUB_OUTPUT"
@@ -379,31 +357,31 @@ jobs:
         if: steps.source.outputs.skip == 'false' && steps.remote.outputs.skip != 'true'
         id: auth
         env:
-          HAS_KEY:      ${{ secrets.DEV_FTP_KEY }}
-          HAS_PASSWORD: ${{ secrets.DEV_FTP_PASSWORD }}
+          HAS_KEY:      ${{ secrets.RS_FTP_KEY }}
+          HAS_PASSWORD: ${{ secrets.RS_FTP_PASSWORD }}
         run: |
           if [ -n "$HAS_KEY" ] && [ -n "$HAS_PASSWORD" ]; then
             # Both set: key auth with password as passphrase; falls back to password-only if key fails
             echo "method=key" >> "$GITHUB_OUTPUT"
             echo "use_passphrase=true" >> "$GITHUB_OUTPUT"
             echo "has_password=true" >> "$GITHUB_OUTPUT"
-            echo "ℹ️  Primary: SSH key + passphrase (DEV_FTP_KEY / DEV_FTP_PASSWORD)"
+            echo "ℹ️  Primary: SSH key + passphrase (RS_FTP_KEY / RS_FTP_PASSWORD)"
             echo "ℹ️  Fallback: password-only auth if key authentication fails"
           elif [ -n "$HAS_KEY" ]; then
             # Key only: no passphrase, no password fallback
             echo "method=key" >> "$GITHUB_OUTPUT"
             echo "use_passphrase=false" >> "$GITHUB_OUTPUT"
             echo "has_password=false" >> "$GITHUB_OUTPUT"
-            echo "ℹ️  Using SSH key authentication (DEV_FTP_KEY, no passphrase, no fallback)"
+            echo "ℹ️  Using SSH key authentication (RS_FTP_KEY, no passphrase, no fallback)"
           elif [ -n "$HAS_PASSWORD" ]; then
             # Password only: direct SFTP password auth
             echo "method=password" >> "$GITHUB_OUTPUT"
             echo "use_passphrase=false" >> "$GITHUB_OUTPUT"
             echo "has_password=true" >> "$GITHUB_OUTPUT"
-            echo "ℹ️  Using password authentication (DEV_FTP_PASSWORD)"
+            echo "ℹ️  Using password authentication (RS_FTP_PASSWORD)"
           else
             echo "❌ No SFTP credentials configured."
-            echo "   Set DEV_FTP_KEY (preferred) or DEV_FTP_PASSWORD as an org-level secret."
+            echo "   Set RS_FTP_KEY (preferred) or RS_FTP_PASSWORD as an org-level secret."
             exit 1
           fi
 
@@ -431,9 +409,9 @@ jobs:
         env:
           SFTP_HOST:      ${{ steps.conn.outputs.host }}
           SFTP_PORT:      ${{ steps.conn.outputs.port }}
-          SFTP_USER:      ${{ vars.DEV_FTP_USERNAME }}
-          SFTP_KEY:       ${{ secrets.DEV_FTP_KEY }}
-          SFTP_PASSWORD:  ${{ secrets.DEV_FTP_PASSWORD }}
+          SFTP_USER:      ${{ vars.RS_FTP_USERNAME }}
+          SFTP_KEY:       ${{ secrets.RS_FTP_KEY }}
+          SFTP_PASSWORD:  ${{ secrets.RS_FTP_PASSWORD }}
           AUTH_METHOD:    ${{ steps.auth.outputs.method }}
           USE_PASSPHRASE: ${{ steps.auth.outputs.use_passphrase }}
           HAS_PASSWORD:   ${{ steps.auth.outputs.has_password }}
@@ -533,9 +511,9 @@ jobs:
         env:
           SFTP_HOST:       ${{ steps.conn.outputs.host }}
           SFTP_PORT:       ${{ steps.conn.outputs.port }}
-          SFTP_USER:       ${{ vars.DEV_FTP_USERNAME }}
-          SFTP_KEY:        ${{ secrets.DEV_FTP_KEY }}
-          SFTP_PASSWORD:   ${{ secrets.DEV_FTP_PASSWORD }}
+          SFTP_USER:       ${{ vars.RS_FTP_USERNAME }}
+          SFTP_KEY:        ${{ secrets.RS_FTP_KEY }}
+          SFTP_PASSWORD:   ${{ secrets.RS_FTP_PASSWORD }}
           AUTH_METHOD:     ${{ steps.auth.outputs.method }}
           USE_PASSPHRASE:  ${{ steps.auth.outputs.use_passphrase }}
           REMOTE_PATH:     ${{ steps.remote.outputs.path }}
@@ -574,25 +552,6 @@ jobs:
             DEPLOY_ARGS+=(--key-passphrase "$SFTP_PASSWORD")
           fi
 
-          # ── For Dolibarr (crm-module): set version to "development" before deploy ─
-          PLATFORM=""
-          if [ -f ".moko-standards" ]; then
-            PLATFORM=$(grep -E '^platform:' .moko-standards | sed 's/.*:[[:space:]]*//' | tr -d '"')
-          fi
-
-          if [ "$PLATFORM" = "crm-module" ]; then
-            echo "📦 Dolibarr dev deploy — setting module version to 'development'"
-            find "$SOURCE_DIR" -path "*/core/modules/mod*.class.php" -exec \
-              sed -i "s/\(\$this->version\s*=\s*\)['\"][^'\"]*['\"]/\1'development'/" {} + 2>/dev/null || true
-          fi
-
-          if [ "$PLATFORM" = "waas-component" ]; then
-            echo "📦 Joomla dev deploy — setting manifest version to 'development'"
-            find "$SOURCE_DIR" -maxdepth 2 -name "*.xml" -exec grep -l '<extension' {} \; 2>/dev/null | while read -r manifest; do
-              sed -i "s|<version>[^<]*</version>|<version>development</version>|" "$manifest" 2>/dev/null || true
-            done
-          fi
-
           php /tmp/mokostandards/api/deploy/deploy-sftp.php "${DEPLOY_ARGS[@]}"
           # (deploy-sftp.php handles dotfile skipping and .ftp_ignore natively)
           # Remove temp files that should never be left behind
@@ -611,10 +570,10 @@ jobs:
           NOW=$(date -u '+%Y-%m-%d %H:%M:%S UTC')
           LABEL="deploy-failure"
 
-          TITLE="fix: Dev deployment failed — ${REPO}"
-          BODY="## Dev Deployment Failed
+          TITLE="fix: RS deployment failed — ${REPO}"
+          BODY="## RS Deployment Failed
 
-          A deployment to the dev server failed and requires attention.
+          A deployment to the RS server failed and requires attention.
 
           | Field | Value |
           |-------|-------|
@@ -628,10 +587,10 @@ jobs:
           ### Next steps
           1. Review the [workflow run log](${RUN_URL}) for the specific error.
           2. Fix the underlying issue (credentials, SFTP connectivity, permissions).
-          3. Re-trigger the deployment via **Actions → Deploy to Dev Server → Run workflow**.
+          3. Re-trigger the deployment via **Actions → Deploy to RS Server → Run workflow**.
 
           ---
-          *Auto-created by deploy-dev.yml — close this issue once the deployment is resolved.*"
+          *Auto-created by deploy-rs.yml — close this issue once the deployment is resolved.*"
 
           # Ensure the label exists (idempotent — no-op if already present)
           gh label create "$LABEL" \
@@ -669,7 +628,7 @@ jobs:
             echo "No \`src/\` directory found in this repository." >> "$GITHUB_STEP_SUMMARY"
           elif [ "${{ job.status }}" == "success" ]; then
             echo "" >> "$GITHUB_STEP_SUMMARY"
-            echo "### ✅ Dev Deployment Successful" >> "$GITHUB_STEP_SUMMARY"
+            echo "### ✅ RS Deployment Successful" >> "$GITHUB_STEP_SUMMARY"
             echo "" >> "$GITHUB_STEP_SUMMARY"
             echo "| Field | Value |" >> "$GITHUB_STEP_SUMMARY"
             echo "|-------|-------|" >> "$GITHUB_STEP_SUMMARY"
@@ -680,7 +639,7 @@ jobs:
             echo "| Auth | ${{ steps.auth.outputs.method }} |" >> "$GITHUB_STEP_SUMMARY"
             echo "| Clear remote | ${{ inputs.clear_remote || 'false' }} |" >> "$GITHUB_STEP_SUMMARY"
           else
-            echo "### ❌ Dev Deployment Failed" >> "$GITHUB_STEP_SUMMARY"
+            echo "### ❌ RS Deployment Failed" >> "$GITHUB_STEP_SUMMARY"
             echo "" >> "$GITHUB_STEP_SUMMARY"
             echo "Check the job log above for error details." >> "$GITHUB_STEP_SUMMARY"
           fi
