@@ -5,7 +5,7 @@
 # INGROUP: MokoStandards.Compliance
 # REPO: https://github.com/mokoconsulting-tech/MokoStandards
 # PATH: /.github/workflows/standards-compliance.yml
-# VERSION: 04.01.00
+# VERSION: 04.02.00
 # BRIEF: MokoStandards compliance validation workflow
 # NOTE: Validates repository structure, documentation, and coding standards
 
@@ -740,10 +740,16 @@ jobs:
           fi
 
           # Check for recommended workflows
-          if [ -f "$WORKFLOWS_DIR/ci.yml" ] || [ -f "$WORKFLOWS_DIR/build.yml" ]; then
-            echo "✅ CI workflow present" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "⚠️ No CI workflow found (ci.yml or build.yml)" >> $GITHUB_STEP_SUMMARY
+          CI_FOUND=false
+          for wf in ci.yml build.yml ci-dolibarr.yml ci-joomla.yml; do
+            if [ -f "$WORKFLOWS_DIR/$wf" ]; then
+              echo "✅ CI workflow present ($wf)" >> $GITHUB_STEP_SUMMARY
+              CI_FOUND=true
+              break
+            fi
+          done
+          if [ "$CI_FOUND" = "false" ]; then
+            echo "⚠️ No CI workflow found (ci.yml, build.yml, ci-dolibarr.yml, or ci-joomla.yml)" >> $GITHUB_STEP_SUMMARY
           fi
 
           if [ -f "$WORKFLOWS_DIR/codeql-analysis.yml" ]; then
@@ -751,6 +757,15 @@ jobs:
           else
             echo "⚠️ CodeQL workflow not found" >> $GITHUB_STEP_SUMMARY
           fi
+
+          # Check for MokoStandards-synced workflows
+          for wf in deploy-dev.yml deploy-demo.yml deploy-rs.yml sync-version-on-merge.yml auto-release.yml standards-compliance.yml enterprise-firewall-setup.yml; do
+            if [ -f "$WORKFLOWS_DIR/$wf" ]; then
+              echo "✅ ${wf}" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "⚠️ ${wf} not found (synced from MokoStandards)" >> $GITHUB_STEP_SUMMARY
+            fi
+          done
 
       - name: Validate Workflow Syntax
         run: |
@@ -962,27 +977,30 @@ jobs:
           echo "## 🔢 Version Consistency Validation" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
-          if [ -f "api/validate/check_version_consistency.php" ]; then
-            php api/validate/check_version_consistency.php --verbose | tee /tmp/version-check.log
-            EXIT_CODE=$?
-
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-            cat /tmp/version-check.log >> $GITHUB_STEP_SUMMARY
-            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-
-            if [ "$EXIT_CODE" -eq 0 ]; then
-              echo "" >> $GITHUB_STEP_SUMMARY
-              echo "✅ All version numbers are consistent!" >> $GITHUB_STEP_SUMMARY
-              exit 0
-            else
-              echo "" >> $GITHUB_STEP_SUMMARY
-              echo "❌ Version mismatches detected - Please update all version references" >> $GITHUB_STEP_SUMMARY
-              exit 1
-            fi
+          # Use PHP enterprise library for version consistency check
+          if [ -f "vendor/bin/moko" ]; then
+            php vendor/bin/moko check:version -- --path . --verbose 2>&1 | tee /tmp/version-check.log
+            EXIT_CODE=${PIPESTATUS[0]}
+          elif [ -f "/tmp/mokostandards/api/validate/check_version_consistency.php" ]; then
+            php /tmp/mokostandards/api/validate/check_version_consistency.php --path . --verbose 2>&1 | tee /tmp/version-check.log
+            EXIT_CODE=${PIPESTATUS[0]}
+          elif [ -f "api/validate/check_version_consistency.php" ]; then
+            php api/validate/check_version_consistency.php --path . --verbose 2>&1 | tee /tmp/version-check.log
+            EXIT_CODE=${PIPESTATUS[0]}
           else
-            echo "ℹ️ Version consistency check script not found - skipping" >> $GITHUB_STEP_SUMMARY
+            echo "⏭️ Install mokoconsulting-tech/enterprise via Composer for version checks" >> $GITHUB_STEP_SUMMARY
             exit 0
+          fi
+
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          cat /tmp/version-check.log >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+
+          if [ "$EXIT_CODE" -eq 0 ]; then
+            echo "✅ All version numbers are consistent" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Version drift detected" >> $GITHUB_STEP_SUMMARY
+            exit 1
           fi
 
   script-integrity:
@@ -1256,58 +1274,63 @@ jobs:
           echo "### Secret Patterns" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
+          # Helper: scan with a pattern, show results with file:line, return count
+          scan_pattern() {
+            local label="$1" icon="$2" tmpfile="$3"
+            local count=0
+            if [ -f "$tmpfile" ]; then
+              count=$(wc -l < "$tmpfile")
+            fi
+            if [ "$count" -gt 0 ]; then
+              echo "${icon} **${label}**: ${count} finding(s)" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "<details>" >> $GITHUB_STEP_SUMMARY
+              echo "<summary>View locations</summary>" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "| File | Line | Match |" >> $GITHUB_STEP_SUMMARY
+              echo "|------|------|-------|" >> $GITHUB_STEP_SUMMARY
+              head -20 "$tmpfile" | while IFS= read -r line; do
+                FILE=$(echo "$line" | cut -d: -f1 | sed 's|^\./||')
+                LINENO=$(echo "$line" | cut -d: -f2)
+                MATCH=$(echo "$line" | cut -d: -f3- | head -c 80 | sed 's/|/\\|/g')
+                echo "| \`${FILE}\` | ${LINENO} | \`${MATCH}\` |" >> $GITHUB_STEP_SUMMARY
+              done
+              if [ "$count" -gt 20 ]; then
+                echo "" >> $GITHUB_STEP_SUMMARY
+                echo "*... and $((count - 20)) more*" >> $GITHUB_STEP_SUMMARY
+              fi
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "</details>" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              VIOLATIONS=$((VIOLATIONS + count))
+            fi
+          }
+
           # Pattern 1: password/secret assignments
-          # Exclusions:
-          #   test|example|sample     - test/example files
-          #   getenv                  - environment-variable reads
-          #   /\.\*/|^\s*//           - regex patterns and commented lines
-          #   CREDENTIAL_PATTERNS|SecurityValidator|SECRET_PATTERN - scanner internals
-          #   ===|!==                 - strict comparison operators (not assignments)
-          #   ApiClient               - constructor calls where token is a variable arg
-          if grep -r -n -E "(password|passwd|pwd|secret|api[_-]?key|token).*=.*['\"]" . \
+          grep -r -n -E "(password|passwd|pwd|secret|api[_-]?key|token).*=.*['\"]" . \
             --include="*.php" --include="*.py" --include="*.js" --include="*.ts" \
             --exclude-dir=".git" --exclude-dir="vendor" --exclude-dir="node_modules" 2>/dev/null | \
             grep -v -E '(test|example|sample|getenv|/\.\*/|^\s*//|CREDENTIAL_PATTERNS|SecurityValidator|SECRET_PATTERN|===|!==|ApiClient)' | \
-            grep -v "= ''" | grep -v '= ""' > /tmp/secrets1.txt 2>/dev/null; then
-            COUNT=$(wc -l < /tmp/secrets1.txt)
-            if [ "$COUNT" -gt 0 ]; then
-              echo "⚠️ Found $COUNT potential secret assignment(s)" >> $GITHUB_STEP_SUMMARY
-              VIOLATIONS=$((VIOLATIONS + COUNT))
-            fi
-          fi
+            grep -v "= ''" | grep -v '= ""' > /tmp/secrets1.txt 2>/dev/null || true
+          scan_pattern "Secret assignments" "⚠️" /tmp/secrets1.txt
 
           # Pattern 2: Private keys
-          if grep -r -n "BEGIN.*PRIVATE KEY" . \
+          grep -r -n "BEGIN.*PRIVATE KEY" . \
             --include="*.pem" --include="*.key" --include="*.txt" \
-            --exclude-dir=".git" --exclude-dir="vendor" --exclude-dir="node_modules" 2>/dev/null > /tmp/secrets2.txt; then
-            COUNT=$(wc -l < /tmp/secrets2.txt)
-            if [ "$COUNT" -gt 0 ]; then
-              echo "❌ Found $COUNT private key file(s)" >> $GITHUB_STEP_SUMMARY
-              VIOLATIONS=$((VIOLATIONS + COUNT))
-            fi
-          fi
+            --exclude-dir=".git" --exclude-dir="vendor" --exclude-dir="node_modules" 2>/dev/null > /tmp/secrets2.txt || true
+          scan_pattern "Private keys" "❌" /tmp/secrets2.txt
 
           # Pattern 3: AWS keys
-          if grep -r -n -E "AKIA[0-9A-Z]{16}" . \
+          grep -r -n -E "AKIA[0-9A-Z]{16}" . \
             --include="*.php" --include="*.py" --include="*.js" --include="*.txt" --include="*.env" \
-            --exclude-dir=".git" --exclude-dir="vendor" --exclude-dir="node_modules" 2>/dev/null > /tmp/secrets3.txt; then
-            COUNT=$(wc -l < /tmp/secrets3.txt)
-            if [ "$COUNT" -gt 0 ]; then
-              echo "❌ Found $COUNT potential AWS access key(s)" >> $GITHUB_STEP_SUMMARY
-              VIOLATIONS=$((VIOLATIONS + COUNT))
-            fi
-          fi
+            --exclude-dir=".git" --exclude-dir="vendor" --exclude-dir="node_modules" 2>/dev/null > /tmp/secrets3.txt || true
+          scan_pattern "AWS access keys" "❌" /tmp/secrets3.txt
 
           # Pattern 4: GitHub tokens
-          if grep -r -n -E "gh[ps]_[a-zA-Z0-9]{36}" . \
+          grep -r -n -E "gh[ps]_[a-zA-Z0-9]{36}" . \
             --include="*.php" --include="*.py" --include="*.js" --include="*.txt" --include="*.env" \
-            --exclude-dir=".git" --exclude-dir="vendor" --exclude-dir="node_modules" 2>/dev/null > /tmp/secrets4.txt; then
-            COUNT=$(wc -l < /tmp/secrets4.txt)
-            if [ "$COUNT" -gt 0 ]; then
-              echo "❌ Found $COUNT potential GitHub token(s)" >> $GITHUB_STEP_SUMMARY
-              VIOLATIONS=$((VIOLATIONS + COUNT))
-            fi
-          fi
+            --exclude-dir=".git" --exclude-dir="vendor" --exclude-dir="node_modules" 2>/dev/null > /tmp/secrets4.txt || true
+          scan_pattern "GitHub tokens" "❌" /tmp/secrets4.txt
 
           echo "" >> $GITHUB_STEP_SUMMARY
 
