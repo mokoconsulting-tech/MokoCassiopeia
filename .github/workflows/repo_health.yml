@@ -10,7 +10,7 @@
 # INGROUP: MokoStandards.Validation
 # REPO: https://github.com/mokoconsulting-tech/MokoStandards
 # PATH: /.github/workflows/repo_health.yml
-# VERSION: 04.01.00
+# VERSION: 04.02.00
 # BRIEF: Enforces repository guardrails by validating release configuration, scripts governance, tooling availability, and core repository health artifacts.
 # NOTE: Field is user-managed.
 # ============================================================================
@@ -82,6 +82,9 @@ env:
   WORKFLOWS_DIR: .github/workflows
   SHELLCHECK_PATTERN: '*.sh'
   SPDX_FILE_GLOBS: '*.sh,*.php,*.js,*.ts,*.css,*.xml,*.yml,*.yaml'
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   access_check:
