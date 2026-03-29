@@ -9,7 +9,7 @@
 # INGROUP: MokoStandards.Security
 # REPO: https://github.com/mokoconsulting-tech/MokoStandards
 # PATH: /.github/workflows/codeql-analysis.yml
-# VERSION: 04.01.00
+# VERSION: 04.02.00
 # BRIEF: CodeQL security scanning workflow for PHP codebase
 # NOTE: Repository is PHP-only (v04.00.04). Python was removed Feb 12, 2026.
 
