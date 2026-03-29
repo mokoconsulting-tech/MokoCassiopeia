@@ -1,0 +1,85 @@
+# Copyright (C) 2026 Moko Consulting <hello@mokoconsulting.tech>
+#
+# This file is part of a Moko Consulting project.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# FILE INFORMATION
+# DEFGROUP: GitHub.Workflow
+# INGROUP: MokoStandards.Automation
+# REPO: https://github.com/mokoconsulting-tech/MokoStandards
+# PATH: /templates/workflows/shared/auto-version-branch.yml
+# VERSION: 04.02.00
+# BRIEF: Auto-create version/ branch on every push to main — preserves release snapshots
+# NOTE: Synced via bulk-repo-sync. Works alongside auto-release.yml which handles
+#       tags, GitHub Releases, and platform version updates.
+
+name: Auto Version Branch
+
+on:
+  push:
+    branches:
+      - main
+      - master
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+permissions:
+  contents: write
+
+jobs:
+  version-branch:
+    name: Create version branch
+    runs-on: ubuntu-latest
+    if: >-
+      !contains(github.event.head_commit.message, '[skip ci]') &&
+      github.actor != 'github-actions[bot]'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          token: ${{ secrets.GH_TOKEN || github.token }}
+          fetch-depth: 0
+
+      - name: Setup MokoStandards tools
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN || github.token }}
+          COMPOSER_AUTH: '{"github-oauth":{"github.com":"${{ secrets.GH_TOKEN || github.token }}"}}'
+        run: |
+          git clone --depth 1 --branch version/04.02.00 --quiet \
+            "https://x-access-token:${GH_TOKEN}@github.com/mokoconsulting-tech/MokoStandards.git" \
+            /tmp/mokostandards
+          cd /tmp/mokostandards
+          composer install --no-dev --no-interaction --quiet
+
+      - name: Read version and create branch
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN || github.token }}
+        run: |
+          VERSION=$(php /tmp/mokostandards/api/cli/version_read.php --path . 2>/dev/null)
+          if [ -z "$VERSION" ]; then
+            echo "⏭️ No VERSION in README.md — skipping" >> $GITHUB_STEP_SUMMARY
+            exit 0
+          fi
+
+          BRANCH="version/${VERSION}"
+
+          # Check if branch already exists
+          if git ls-remote --heads origin "$BRANCH" 2>/dev/null | grep -q "$BRANCH"; then
+            echo "ℹ️ Branch \`${BRANCH}\` already exists" >> $GITHUB_STEP_SUMMARY
+            exit 0
+          fi
+
+          # Create and push version branch
+          git checkout -b "$BRANCH"
+          git push origin "$BRANCH"
+
+          echo "## 🌿 Version Branch Created" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Field | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| **Version** | \`${VERSION}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Branch** | \`${BRANCH}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Source** | \`${{ github.ref_name }}\` @ \`${GITHUB_SHA:0:8}\` |" >> $GITHUB_STEP_SUMMARY
