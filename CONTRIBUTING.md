@@ -1,145 +1,128 @@
 <!--
- Copyright (C) 2025 Moko Consulting <hello@mokoconsulting.tech>
+ Copyright (C) 2026 Moko Consulting <hello@mokoconsulting.tech>
 
  This file is part of a Moko Consulting project.
 
  SPDX-License-Identifier: GPL-3.0-or-later
 
+ This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the IMPLIED WARRANTY of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License (./LICENSE).
+
  # FILE INFORMATION
- DEFGROUP: Joomla.Template
- INGROUP: MokoCassiopeia.Governance
+ DEFGROUP: {{DEFGROUP}}
+ INGROUP: Project.Documentation
  REPO: https://github.com/mokoconsulting-tech/MokoCassiopeia
- FILE: CONTRIBUTING.md
- VERSION: 03.06.03
- BRIEF: Contribution guidelines for the MokoCassiopeia project.
- PATH: /CONTRIBUTING.md
- NOTE: This document defines contribution workflow, standards, and governance alignment.
--->
+ VERSION: 04.04.00
+ PATH: ./CONTRIBUTING.md
+ BRIEF: How to contribute; branch strategy, commit conventions, PR workflow, and release pipeline
+ -->
 
-## Contributing
+# Contributing
 
-This document defines how to contribute to the MokoCassiopeia project. The goal is to ensure changes are reviewable, auditable, and aligned with project governance and release processes.
+Thank you for your interest in contributing to **MokoCassiopeia**!
 
-## Scope
+This repository is governed by **[MokoStandards](https://github.com/mokoconsulting-tech/MokoStandards)** — the authoritative source of coding standards, workflows, and policies for all Moko Consulting repositories.
 
-These guidelines apply to all contributions, including:
+## Branch Strategy
 
-* Source code changes
-* Documentation updates
-* Bug reports and enhancement proposals
+| Branch | Purpose | Deploys To |
+|--------|---------|------------|
+| `main` | Bleeding edge — all development merges here | CI only |
+| `dev/XX.YY.ZZ` | Feature development | Dev server (version: "development") |
+| `version/XX.YY.ZZ` | Stable frozen snapshot | Demo + RS servers |
 
-## Prerequisites
+### Development Workflow
 
-Contributors are expected to:
-
-* Have a working understanding of Joomla template structure.
-* Be familiar with Git and GitHub pull request workflows.
-* Review repository governance documents prior to submitting changes.
-* Set up the development environment using the provided tools.
-
-### Quick Setup
-
-For first-time contributors:
-
-```bash
-# Clone the repository
-git clone https://github.com/mokoconsulting-tech/MokoCassiopeia.git
-cd MokoCassiopeia
+```
+1. Create branch:   git checkout -b dev/XX.YY.ZZ/my-feature
+2. Develop + test    (dev server auto-deploys on push)
+3. Open PR → main    (squash merge only)
+4. Auto-release      (version branch + tag + GitHub Release created automatically)
 ```
 
-See [docs/QUICK_START.md](./docs/QUICK_START.md) for detailed setup instructions.
+### Branch Naming
 
-## Development Tools
+| Prefix | Use |
+|--------|-----|
+| `dev/XX.YY.ZZ` | Feature development (e.g., `dev/02.00.00/add-extrafields`) |
+| `version/XX.YY.ZZ` | Stable release (auto-created, never manually pushed) |
+| `chore/` | Automated sync branches (managed by MokoStandards) |
 
-The repository provides several tools to streamline development:
+> **Never use** `feature/`, `hotfix/`, or `release/` prefixes — they are not part of the MokoStandards branch strategy.
 
-* **Pre-commit Hooks**: Automatic local validation before commits
+## Commit Conventions
 
-## Contribution Workflow
+Use [conventional commits](https://www.conventionalcommits.org/):
 
-1. Fork the repository.
-2. Create a branch from the active development branch.
-3. Make focused, minimal changes that address a single concern.
-4. Submit a pull request with a clear description of intent and impact.
+```
+feat(scope): add new extrafield for invoice tracking
+fix(sql): correct column type in llx_mytable
+docs(readme): update installation instructions
+chore(deps): bump enterprise library to 04.02.30
+```
 
-Direct commits to protected branches are not permitted.
+**Valid types:** `feat` | `fix` | `docs` | `chore` | `ci` | `refactor` | `style` | `test` | `perf` | `revert` | `build`
 
-## Branching and Versioning
+## Pull Request Workflow
 
-* Development work occurs on designated development branches.
-* Releases are produced from versioned branches following repository standards.
-* Contributors should not bump version numbers unless explicitly requested.
+1. **Branch** from `main` using `dev/XX.YY.ZZ/description` format
+2. **Bump** the patch version in `README.md` before opening the PR
+3. **Title** must be a valid conventional commit subject line
+4. **Target** `main` — squash merge only (merge commits are disabled)
+5. **CI checks** must pass before merge
 
-## Coding and Formatting Standards
+### What Happens on Merge
 
-All contributions must:
+When your PR is merged to `main`, these workflows run automatically:
 
-* Follow Joomla coding standards where applicable.
-* Conform to Moko Consulting repository standards for headers, metadata, and file structure.
-* Avoid introducing tabs, inconsistent path separators, or non portable assumptions.
+1. **sync-version-on-merge** — auto-bumps patch version, propagates to all file headers
+2. **auto-release** — creates `version/XX.YY.ZZ` branch, git tag, and GitHub Release
+3. **deploy-demo / deploy-rs** — deploys to demo and RS servers (if `src/**` changed)
 
-Automated checks may reject changes that do not meet these requirements.
+## Coding Standards
 
-## Documentation Standards
+All contributions must follow [MokoStandards](https://github.com/mokoconsulting-tech/MokoStandards):
 
-Documentation changes must:
+| Standard | Reference |
+|----------|-----------|
+| Coding Style | [coding-style-guide.md](https://github.com/mokoconsulting-tech/MokoStandards/blob/main/docs/policy/coding-style-guide.md) |
+| File Headers | [file-header-standards.md](https://github.com/mokoconsulting-tech/MokoStandards/blob/main/docs/policy/file-header-standards.md) |
+| Branching | [branch-release-strategy.md](https://github.com/mokoconsulting-tech/MokoStandards/blob/main/docs/policy/branch-release-strategy.md) |
+| Merge Strategy | [merge-strategy.md](https://github.com/mokoconsulting-tech/MokoStandards/blob/main/docs/policy/merge-strategy.md) |
+| Scripting | [scripting-standards.md](https://github.com/mokoconsulting-tech/MokoStandards/blob/main/docs/policy/scripting-standards.md) |
+| Build & Release | [build-release.md](https://github.com/mokoconsulting-tech/MokoStandards/blob/main/docs/workflows/build-release.md) |
 
-* Include required metadata and revision history sections.
-* Avoid embedding version numbers in revision history tables.
-* Preserve existing structure unless a structural change is explicitly proposed.
+## PR Checklist
 
-## Commit Messages
+- [ ] Branch named `dev/XX.YY.ZZ/description`
+- [ ] Patch version bumped in `README.md`
+- [ ] Conventional commit format for PR title
+- [ ] All new files have FILE INFORMATION headers
+- [ ] `declare(strict_types=1)` in all PHP files
+- [ ] PHPDoc on all public methods
+- [ ] Tests pass
+- [ ] CHANGELOG.md updated
+- [ ] No secrets, tokens, or credentials committed
 
-Commit messages should:
+## Custom Workflows
 
-* Be concise and descriptive.
-* Focus on what changed and why.
-* Avoid referencing internal issue trackers unless required.
+Place repo-specific workflows in `.github/workflows/custom/` — they are **never overwritten or deleted** by MokoStandards sync:
 
-## Reporting Issues
-
-Bug reports and enhancement requests should be filed as GitHub issues and include:
-
-* Clear reproduction steps or use cases.
-* Expected versus actual behavior.
-* Relevant environment details.
-
-Security related issues must follow the process defined in SECURITY.md and must not be reported publicly.
-
-## Review Process
-
-All pull requests are subject to review. Review criteria include:
-
-* Technical correctness
-* Alignment with project goals
-* Maintainability and clarity
-* Risk introduced to release and update processes
-
-Maintainers may request changes prior to approval.
+```
+.github/workflows/
+├── deploy-dev.yml              ← Synced from MokoStandards
+├── auto-release.yml            ← Synced from MokoStandards
+└── custom/                     ← Your custom workflows (safe)
+    └── my-custom-ci.yml
+```
 
 ## License
 
-By contributing, you agree that your contributions will be licensed under GPL-3.0-or-later, consistent with the rest of the project.
-
-## Code of Conduct
-
-Participation in this project is governed by the Code of Conduct. Unacceptable behavior may result in contribution restrictions.
+By contributing, you agree that your contributions will be licensed under the [GPL-3.0-or-later](LICENSE) license.
 
 ---
 
-## Metadata
-
-* **Document:** CONTRIBUTING.md
-* **Repository:** [https://github.com/mokoconsulting-tech/MokoCassiopeia](https://github.com/mokoconsulting-tech/MokoCassiopeia)
-* **Path:** /CONTRIBUTING.md
-* **Owner:** Moko Consulting
-* **Version:** 03.06.00
-* **Status:** Active
-* **Effective Date:** 2025-12-18
-* **Last Reviewed:** 2025-12-18
-
-## Revision History
-
-| Date       | Change Summary                                                            | Author          |
-| ---------- | ------------------------------------------------------------------------- | --------------- |
-| 2025-12-18 | Initial publication of contribution guidelines and workflow expectations. | Moko Consulting |
+*This file is synced from [MokoStandards](https://github.com/mokoconsulting-tech/MokoStandards). Do not edit directly — changes will be overwritten on the next sync.*
