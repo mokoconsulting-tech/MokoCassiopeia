@@ -22,7 +22,7 @@
 # INGROUP: MokoStandards.Deploy
 # REPO: https://github.com/mokoconsulting-tech/MokoStandards
 # PATH: /templates/workflows/shared/deploy-rs.yml
-# VERSION: 04.01.00
+# VERSION: 04.03.00
 # BRIEF: SFTP deployment workflow for release staging server — synced to all governed repos
 # NOTE: Synced via bulk-repo-sync to .github/workflows/deploy-rs.yml in all governed repos.
 #       Port is resolved in order: RS_FTP_PORT variable → :port suffix in RS_FTP_HOST → 22.
@@ -69,6 +69,9 @@ on:
 permissions:
   contents: read
   pull-requests: write
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   check-permission:
@@ -344,8 +347,8 @@ jobs:
 
           # ── Platform-specific path safety guards ──────────────────────────────
           PLATFORM=""
-          if [ -f ".moko-standards" ]; then
-            PLATFORM=$(grep -E '^platform:' .moko-standards | sed 's/.*:[[:space:]]*//' | tr -d '"')
+          MOKO_FILE=".github/.mokostandards"; [ ! -f "$MOKO_FILE" ] && MOKO_FILE=".mokostandards"; if [ -f "$MOKO_FILE" ]; then
+            PLATFORM=$(grep -E '^platform:' "$MOKO_FILE" | sed 's/.*:[[:space:]]*//' | tr -d '"')
           fi
 
           # RS deployment: no path restrictions for any platform
@@ -387,7 +390,7 @@ jobs:
 
       - name: Setup PHP
         if: steps.source.outputs.skip == 'false' && steps.remote.outputs.skip != 'true'
-        uses: shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1 # v2.31.0
+        uses: shivammathur/setup-php@fcafdd6392932010c2bd5094439b8e33be2a8a09 # v2.37.0
         with:
           php-version: '8.1'
           tools: composer
@@ -398,14 +401,17 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN || github.token }}
           COMPOSER_AUTH: '{"github-oauth":{"github.com":"${{ secrets.GH_TOKEN || github.token }}"}}'
         run: |
-          git clone --depth 1 --quiet \
+          git clone --depth 1 --branch version/04.03.00 --quiet \
             "https://x-access-token:${GH_TOKEN}@github.com/mokoconsulting-tech/MokoStandards.git" \
             /tmp/mokostandards
           cd /tmp/mokostandards
           composer install --no-dev --no-interaction --quiet
 
-      - name: Clear remote destination folder
-        if: steps.source.outputs.skip == 'false' && steps.remote.outputs.skip != 'true'
+      - name: Clear remote destination folder (manual only)
+        if: >-
+          steps.source.outputs.skip == 'false' &&
+          steps.remote.outputs.skip != 'true' &&
+          inputs.clear_remote == true
         env:
           SFTP_HOST:      ${{ steps.conn.outputs.host }}
           SFTP_PORT:      ${{ steps.conn.outputs.port }}
@@ -558,7 +564,7 @@ jobs:
           rm -f /tmp/deploy_key /tmp/sftp-config.json
 
       - name: Create or update failure issue
-        if: failure()
+        if: failure() && steps.remote.outputs.skip != 'true'
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN || github.token }}
         run: |
@@ -599,8 +605,8 @@ jobs:
             --description "Automated deploy failure tracking" \
             --force 2>/dev/null || true
 
-          # Look for an existing open deploy-failure issue
-          EXISTING=$(gh api "repos/${REPO}/issues?labels=${LABEL}&state=open&per_page=1" \
+          # Look for an existing deploy-failure issue (any state — reopen if closed)
+          EXISTING=$(gh api "repos/${REPO}/issues?labels=${LABEL}&state=all&per_page=1&sort=created&direction=desc" \
             --jq '.[0].number' 2>/dev/null)
 
           if [ -n "$EXISTING" ] && [ "$EXISTING" != "null" ]; then
@@ -608,14 +614,16 @@ jobs:
               -X PATCH \
               -f title="$TITLE" \
               -f body="$BODY" \
+              -f state="open" \
               --silent
-            echo "📋 Failure issue #${EXISTING} updated: ${REPO}" >> "$GITHUB_STEP_SUMMARY"
+            echo "📋 Failure issue #${EXISTING} updated/reopened: ${REPO}" >> "$GITHUB_STEP_SUMMARY"
           else
             gh issue create \
               --repo "$REPO" \
               --title "$TITLE" \
               --body "$BODY" \
               --label "$LABEL" \
+              --assignee "jmiller-moko" \
               | tee -a "$GITHUB_STEP_SUMMARY"
           fi
 
