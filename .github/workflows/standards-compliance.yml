@@ -5,16 +5,41 @@
 # INGROUP: MokoStandards.Compliance
 # REPO: https://github.com/mokoconsulting-tech/MokoStandards
 # PATH: /.github/workflows/standards-compliance.yml
-# VERSION: 04.01.00
+# VERSION: 04.03.00
 # BRIEF: MokoStandards compliance validation workflow
 # NOTE: Validates repository structure, documentation, and coding standards
 
 name: Standards Compliance
 
+# ╔════════════════════════════════════════════════════════════════════════╗
+# ║                  MOKOSTANDARDS COMPLIANCE WORKFLOW                     ║
+# ╠════════════════════════════════════════════════════════════════════════╣
+# ║                                                                        ║
+# ║  28 checks across 4 priority tiers:                                    ║
+# ║                                                                        ║
+# ║  TIER 1 — CRITICAL (must pass)                                         ║
+# ║    secret-scanning, license-compliance, repository-structure,          ║
+# ║    coding-standards, version-consistency                               ║
+# ║                                                                        ║
+# ║  TIER 2 — IMPORTANT (should pass)                                      ║
+# ║    workflow-validation, documentation-quality, readme-completeness,    ║
+# ║    git-hygiene, script-integrity                                       ║
+# ║                                                                        ║
+# ║  TIER 3 — QUALITY (code metrics)                                       ║
+# ║    line-length, file-naming, insecure-patterns, complexity,            ║
+# ║    duplication, dead-code                                              ║
+# ║                                                                        ║
+# ║  TIER 4 — SUPPLEMENTARY (informational)                                ║
+# ║    file-size, binary, todo, deps, links, api-docs, accessibility,     ║
+# ║    performance, enterprise, health, terraform                          ║
+# ║                                                                        ║
+# ║  File size: warning >15MB, critical >20MB                              ║
+# ║  Exempt: .mmdb, .woff2, .woff, .ttf, .otf                             ║
+# ║                                                                        ║
+# ╚════════════════════════════════════════════════════════════════════════╝
+
 env:
-  ACTIONS_STEP_DEBUG: true
-  ACTIONS_RUNNER_DEBUG: true
-  WORKFLOW_VERSION: "04.00.05"
+  WORKFLOW_VERSION: "04.02.12"
 
 # MokoStandards Policy Compliance:
 # - File formatting: Enforces organizational coding standards
@@ -63,22 +88,191 @@ env:
 
 on:
   push:
-    branches:
-      - main
-      - dev/**
-      - rc/**
+    branches: [main, dev/**, rc/**, version/**]
   pull_request:
-    branches:
-      - main
-      - dev/**
-      - rc/**
+    branches: [main, dev/**, rc/**]
   workflow_dispatch:
 
 permissions:
   contents: read
   pull-requests: write
+  issues: write
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
+  # ════════════════════════════════════════════════════════════════════════
+  # TIER 1 — CRITICAL (must pass, blocks merge)
+  # ════════════════════════════════════════════════════════════════════════
+  secret-scanning:
+    name: Secret Scanning
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: Scan for Secrets
+        run: |
+          set -x
+          echo "## 🔒 Secret Scanning" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Scanning for hardcoded secrets and credentials." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Define secret patterns
+          VIOLATIONS=0
+
+          # Check for common secret patterns
+          echo "### Secret Patterns" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Helper: scan with a pattern, show results with file:line, return count
+          scan_pattern() {
+            local label="$1" icon="$2" tmpfile="$3"
+            local count=0
+            if [ -f "$tmpfile" ]; then
+              count=$(wc -l < "$tmpfile")
+            fi
+            if [ "$count" -gt 0 ]; then
+              echo "${icon} **${label}**: ${count} finding(s)" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "<details>" >> $GITHUB_STEP_SUMMARY
+              echo "<summary>View locations</summary>" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "| File | Line | Match |" >> $GITHUB_STEP_SUMMARY
+              echo "|------|------|-------|" >> $GITHUB_STEP_SUMMARY
+              head -20 "$tmpfile" | while IFS= read -r line; do
+                FILE=$(echo "$line" | cut -d: -f1 | sed 's|^\./||')
+                LINENO=$(echo "$line" | cut -d: -f2)
+                MATCH=$(echo "$line" | cut -d: -f3- | head -c 80 | sed 's/|/\\|/g')
+                echo "| \`${FILE}\` | ${LINENO} | \`${MATCH}\` |" >> $GITHUB_STEP_SUMMARY
+              done
+              if [ "$count" -gt 20 ]; then
+                echo "" >> $GITHUB_STEP_SUMMARY
+                echo "*... and $((count - 20)) more*" >> $GITHUB_STEP_SUMMARY
+              fi
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "</details>" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              VIOLATIONS=$((VIOLATIONS + count))
+            fi
+          }
+
+          # Pattern 1: password/secret assignments
+          grep -r -n -E "(password|passwd|pwd|secret|api[_-]?key|token).*=.*['\"]" . \
+            --include="*.php" --include="*.py" --include="*.js" --include="*.ts" \
+            --exclude-dir=".git" --exclude-dir="vendor" --exclude-dir="node_modules" 2>/dev/null | \
+            grep -v -E '(test|example|sample|getenv|getString|getArgument|config\[|/\.\*/|^\s*//|^\s*\*|CREDENTIAL_PATTERNS|SecurityValidator|SECRET_PATTERN|===|!==|ApiClient|str_contains|gen_wrappers)' | \
+            grep -v "= ''" | grep -v '= ""' | grep -v '\$this->config' > /tmp/secrets1.txt 2>/dev/null || true
+          scan_pattern "Secret assignments" "⚠️" /tmp/secrets1.txt
+
+          # Pattern 2: Private keys
+          grep -r -n "BEGIN.*PRIVATE KEY" . \
+            --include="*.pem" --include="*.key" --include="*.txt" \
+            --exclude-dir=".git" --exclude-dir="vendor" --exclude-dir="node_modules" 2>/dev/null > /tmp/secrets2.txt || true
+          scan_pattern "Private keys" "❌" /tmp/secrets2.txt
+
+          # Pattern 3: AWS keys
+          grep -r -n -E "AKIA[0-9A-Z]{16}" . \
+            --include="*.php" --include="*.py" --include="*.js" --include="*.txt" --include="*.env" \
+            --exclude-dir=".git" --exclude-dir="vendor" --exclude-dir="node_modules" 2>/dev/null > /tmp/secrets3.txt || true
+          scan_pattern "AWS access keys" "❌" /tmp/secrets3.txt
+
+          # Pattern 4: GitHub tokens
+          grep -r -n -E "gh[ps]_[a-zA-Z0-9]{36}" . \
+            --include="*.php" --include="*.py" --include="*.js" --include="*.txt" --include="*.env" \
+            --exclude-dir=".git" --exclude-dir="vendor" --exclude-dir="node_modules" 2>/dev/null > /tmp/secrets4.txt || true
+          scan_pattern "GitHub tokens" "❌" /tmp/secrets4.txt
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "$VIOLATIONS" -gt 0 ]; then
+            echo "**Total Violations**: $VIOLATIONS" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "<details>" >> $GITHUB_STEP_SUMMARY
+            echo "<summary>View detected secrets (file paths only)</summary>" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            cat /tmp/secrets*.txt 2>/dev/null | cut -d: -f1 | sort -u >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            echo "</details>" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "**Action Required**: Remove hardcoded secrets immediately!" >> $GITHUB_STEP_SUMMARY
+            echo "Use environment variables or secrets management instead." >> $GITHUB_STEP_SUMMARY
+            exit 1
+          else
+            echo "✅ No hardcoded secrets detected" >> $GITHUB_STEP_SUMMARY
+          fi
+
+  license-compliance:
+    name: License Header Validation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: Check SPDX Headers
+        run: |
+          set -x
+          echo "### SPDX License Header Check" >> $GITHUB_STEP_SUMMARY
+
+          # Count source files with and without SPDX headers
+          TOTAL_PHP=0
+          WITH_SPDX_PHP=0
+
+          if find . -name "*.php" -type f ! -path "./vendor/*" | head -1 | grep -q .; then
+            TOTAL_PHP=$(find . -name "*.php" -type f ! -path "./vendor/*" | wc -l)
+            WITH_SPDX_PHP=$(find . -name "*.php" -type f ! -path "./vendor/*" -exec grep -l "SPDX-License-Identifier" {} \; | wc -l)
+          fi
+
+          if [ "$TOTAL_PHP" -gt 0 ]; then
+            PERCENT=$((WITH_SPDX_PHP * 100 / TOTAL_PHP))
+            echo "- PHP files: $WITH_SPDX_PHP/$TOTAL_PHP ($PERCENT%) with SPDX headers" >> $GITHUB_STEP_SUMMARY
+
+            if [ "$PERCENT" -lt 80 ]; then
+              echo "⚠️ Less than 80% of PHP files have SPDX headers" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "✅ Good SPDX header coverage" >> $GITHUB_STEP_SUMMARY
+            fi
+          fi
+
+      - name: Validate License File
+        run: |
+          set -x
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### License File Validation" >> $GITHUB_STEP_SUMMARY
+
+          if [ ! -f "LICENSE" ]; then
+            echo "❌ LICENSE file not found" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### ❌ Validation Failed: LICENSE File Missing" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "**Error:** LICENSE file is required for all MokoStandards-compliant repositories" >> $GITHUB_STEP_SUMMARY
+            echo "**Action Required:** Add LICENSE file with appropriate open-source license (GPL-3.0-or-later recommended)" >> $GITHUB_STEP_SUMMARY
+            echo ""
+            echo "❌ ERROR: LICENSE file not found - This is a critical requirement"
+            exit 1
+          fi
+
+          # Check license type
+          if grep -qi "GNU GENERAL PUBLIC LICENSE" LICENSE; then
+            VERSION=$(grep -i "Version 3" LICENSE || echo "")
+            if [ -n "$VERSION" ]; then
+              echo "✅ GPL-3.0-or-later license detected" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "⚠️ GPL license detected but version unclear" >> $GITHUB_STEP_SUMMARY
+            fi
+          elif grep -qi "MIT License" LICENSE; then
+            echo "✅ MIT license detected" >> $GITHUB_STEP_SUMMARY
+          elif grep -qi "Apache License" LICENSE; then
+            echo "✅ Apache license detected" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "ℹ️ License type could not be automatically detected" >> $GITHUB_STEP_SUMMARY
+          fi
+
   repository-structure:
     name: Repository Structure Validation
     runs-on: ubuntu-latest
@@ -205,6 +399,387 @@ jobs:
             echo "❌ ERROR: Required files missing - See job summary for remediation steps"
             exit 1
           fi
+
+  coding-standards:
+    name: Coding Standards Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: Check for Tab Characters
+        run: |
+          set -x
+          echo "### Tab Character Detection" >> $GITHUB_STEP_SUMMARY
+
+          # Policy: Tabs are DEFAULT. Only check for tabs in files that REQUIRE spaces.
+          # Languages requiring spaces: YAML, Python, Haskell, F#, CoffeeScript, Nim, JSON, RST
+          TABS_IN_SPACES_FILES=$(find . -type f \
+            \( -name "*.yml" -o -name "*.yaml" \
+            -o -name "*.py" \
+            -o -name "*.hs" -o -name "*.lhs" \
+            -o -name "*.fs" -o -name "*.fsx" -o -name "*.fsi" \
+            -o -name "*.coffee" -o -name "*.litcoffee" \
+            -o -name "*.nim" -o -name "*.nims" -o -name "*.nimble" \
+            -o -name "*.json" \
+            -o -name "*.rst" \) \
+            ! -path "./vendor/*" \
+            ! -path "./node_modules/*" \
+            ! -path "./.git/*" \
+            -exec grep -l $'\t' {} \; 2>/dev/null | head -10)
+
+          if [ -n "$TABS_IN_SPACES_FILES" ]; then
+            echo "⚠️ Tab characters found in files that require spaces:" >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            echo "$TABS_IN_SPACES_FILES" >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            echo "These languages require spaces (tabs will break): YAML, Python, Haskell, F#, CoffeeScript, Nim, JSON, RST" >> $GITHUB_STEP_SUMMARY
+            echo "All other files (including .md, .ps1, LICENSE, etc.) may use tabs per MokoStandards policy" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ No tabs found in files requiring spaces" >> $GITHUB_STEP_SUMMARY
+            echo "Note: Tabs are allowed in most files (policy default). Only checked files requiring spaces." >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Check File Encoding
+        run: |
+          set -x
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### File Encoding Check" >> $GITHUB_STEP_SUMMARY
+
+          # Check for UTF-8 encoding (ASCII is a subset of UTF-8 and is acceptable)
+          NON_UTF8=$(find . -type f \( -name "*.php" -o -name "*.js" -o -name "*.md" \) \
+            ! -path "./vendor/*" \
+            ! -path "./node_modules/*" \
+            ! -path "./.git/*" \
+            -exec file {} \; | grep -v "UTF-8" | grep -v "ASCII" | head -5)
+
+          if [ -n "$NON_UTF8" ]; then
+            echo "⚠️ Non-UTF-8 files detected:" >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            echo "$NON_UTF8" >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ All source files appear to be UTF-8 encoded" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Check Line Endings
+        run: |
+          set -x
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Line Ending Check" >> $GITHUB_STEP_SUMMARY
+
+          # Check for CRLF line endings
+          CRLF_FILES=$(find . -type f \( -name "*.php" -o -name "*.js" -o -name "*.md" \) \
+            ! -path "./vendor/*" \
+            ! -path "./node_modules/*" \
+            ! -path "./.git/*" \
+            -exec file {} \; | grep "CRLF" | head -5)
+
+          if [ -n "$CRLF_FILES" ]; then
+            echo "⚠️ Files with CRLF line endings found:" >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            echo "$CRLF_FILES" >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            echo "MokoStandards requires LF line endings" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ Line endings are consistent (LF)" >> $GITHUB_STEP_SUMMARY
+          fi
+
+  version-consistency:
+    name: Version Consistency Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@accd6127cb78bee3e8082180cb391013d204ef9f # v2.31.0
+        with:
+          php-version: '8.1'
+          extensions: json
+          tools: composer
+          coverage: none
+
+      - name: Install API Package
+        run: composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+        env:
+          COMPOSER_AUTH: '{"github-oauth":{"github.com":"${{ secrets.GH_TOKEN }}"}}'
+
+      - name: Run Version Consistency Check
+        id: version_check
+        run: |
+          set -x
+          echo "## 🔢 Version Consistency Validation" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Use PHP enterprise library for version consistency check
+          if [ -f "vendor/bin/moko" ]; then
+            php vendor/bin/moko check:version -- --path . --verbose 2>&1 | tee /tmp/version-check.log
+            EXIT_CODE=${PIPESTATUS[0]}
+          elif [ -f "/tmp/mokostandards/api/validate/check_version_consistency.php" ]; then
+            php /tmp/mokostandards/api/validate/check_version_consistency.php --path . --verbose 2>&1 | tee /tmp/version-check.log
+            EXIT_CODE=${PIPESTATUS[0]}
+          elif [ -f "api/validate/check_version_consistency.php" ]; then
+            php api/validate/check_version_consistency.php --path . --verbose 2>&1 | tee /tmp/version-check.log
+            EXIT_CODE=${PIPESTATUS[0]}
+          else
+            echo "⏭️ Install mokoconsulting-tech/enterprise via Composer for version checks" >> $GITHUB_STEP_SUMMARY
+            exit 0
+          fi
+
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          cat /tmp/version-check.log >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+
+          if [ "$EXIT_CODE" -eq 0 ]; then
+            echo "✅ All version numbers are consistent" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Version drift detected" >> $GITHUB_STEP_SUMMARY
+            exit 1
+          fi
+
+
+  # ════════════════════════════════════════════════════════════════════════
+  # TIER 2 — IMPORTANT (should pass)
+  # ════════════════════════════════════════════════════════════════════════
+  workflow-validation:
+    name: Workflow Configuration Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: Check Required Workflows
+        run: |
+          set -x
+          echo "### GitHub Actions Workflows" >> $GITHUB_STEP_SUMMARY
+
+          WORKFLOWS_DIR=".github/workflows"
+
+          if [ ! -d "$WORKFLOWS_DIR" ]; then
+            echo "❌ No workflows directory found" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### ❌ Validation Failed: Workflows Directory Missing" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "**Error:** .github/workflows directory is required for CI/CD automation" >> $GITHUB_STEP_SUMMARY
+            echo "**Action Required:** Create .github/workflows directory and add GitHub Actions workflows" >> $GITHUB_STEP_SUMMARY
+            echo ""
+            echo "❌ ERROR: .github/workflows directory not found"
+            exit 1
+          fi
+
+          # Check for recommended workflows
+          CI_FOUND=false
+          for wf in ci.yml build.yml ci-dolibarr.yml ci-joomla.yml; do
+            if [ -f "$WORKFLOWS_DIR/$wf" ]; then
+              echo "✅ CI workflow present ($wf)" >> $GITHUB_STEP_SUMMARY
+              CI_FOUND=true
+              break
+            fi
+          done
+          if [ "$CI_FOUND" = "false" ]; then
+            echo "⚠️ No CI workflow found (ci.yml, build.yml, ci-dolibarr.yml, or ci-joomla.yml)" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if [ -f "$WORKFLOWS_DIR/codeql-analysis.yml" ]; then
+            echo "✅ CodeQL security scanning present" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "⚠️ CodeQL workflow not found" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          # Check for MokoStandards-synced workflows
+          for wf in deploy-dev.yml deploy-demo.yml deploy-rs.yml sync-version-on-merge.yml auto-release.yml standards-compliance.yml enterprise-firewall-setup.yml; do
+            if [ -f "$WORKFLOWS_DIR/$wf" ]; then
+              echo "✅ ${wf}" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "⚠️ ${wf} not found (synced from MokoStandards)" >> $GITHUB_STEP_SUMMARY
+            fi
+          done
+
+      - name: Validate Workflow Syntax
+        run: |
+          set -x
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Workflow YAML Syntax" >> $GITHUB_STEP_SUMMARY
+
+          INVALID=0
+          for workflow in $(find .github/workflows -maxdepth 1 -type f \( -name "*.yml" -o -name "*.yaml" \) 2>/dev/null); do
+            if [ -f "$workflow" ]; then
+              if python3 -c "import yaml, sys; yaml.safe_load(open(sys.argv[1]))" "$workflow" 2>/dev/null; then
+                echo "✅ $(basename $workflow)" >> $GITHUB_STEP_SUMMARY
+              else
+                echo "❌ $(basename $workflow) - invalid YAML" >> $GITHUB_STEP_SUMMARY
+                INVALID=$((INVALID + 1))
+              fi
+            fi
+          done
+
+          if [ "$INVALID" -gt 0 ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### ❌ Validation Failed: Invalid Workflow YAML Syntax" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "**Error:** $INVALID workflow file(s) have invalid YAML syntax" >> $GITHUB_STEP_SUMMARY
+            echo "**Action Required:** Fix YAML syntax errors in the marked workflow files" >> $GITHUB_STEP_SUMMARY
+            echo "**Tool:** Run \`python3 -c \"import yaml; yaml.safe_load(open('.github/workflows/FILE.yml'))\"\` locally" >> $GITHUB_STEP_SUMMARY
+            echo ""
+            echo "❌ ERROR: $INVALID workflow file(s) with invalid YAML syntax"
+            exit 1
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### ✅ All Workflow Files Have Valid YAML Syntax" >> $GITHUB_STEP_SUMMARY
+          echo ""
+          echo "✅ SUCCESS: All workflow files passed YAML validation"
+
+      - name: Validate CodeQL Configuration
+        if: hashFiles('.github/workflows/codeql-analysis.yml') != ''
+        run: |
+          set -e
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### CodeQL Language Configuration" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Inline validation (rewritten from Python to bash for PHP-only architecture)
+          CODEQL_FILE=".github/workflows/codeql-analysis.yml"
+
+          if [ ! -f "$CODEQL_FILE" ]; then
+            echo "⚠️ CodeQL workflow file not found" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### ⚠️ CodeQL Workflow Not Found" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "**Status:** CodeQL workflow file not present - skipping language validation" >> $GITHUB_STEP_SUMMARY
+            echo ""
+            echo "⚠️ INFO: CodeQL workflow not found - Skipping validation"
+            exit 0
+          fi
+
+          echo "**CodeQL Configuration Analysis**" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Extract configured languages from workflow
+          LANGUAGES=$(grep -A5 "language:" "$CODEQL_FILE" | grep -oP "(?<=')[^']+(?=')" | tr '\n' ' ' || echo "")
+
+          # Check if this is a configuration-only scan (no languages specified)
+          if grep -q "category.*language:config" "$CODEQL_FILE"; then
+            echo "**Scan Type:** Configuration-only (no language matrix)" >> $GITHUB_STEP_SUMMARY
+            echo "**Status:** ✅ Valid configuration for PHP-only repository" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "This CodeQL workflow scans YAML, JSON, shell scripts for security issues." >> $GITHUB_STEP_SUMMARY
+            echo "PHP security is handled by SecurityValidator enterprise library." >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "✅ SUCCESS: CodeQL configuration-only scan properly configured"
+            exit 0
+          fi
+
+          if [ -z "$LANGUAGES" ]; then
+            echo "❌ No languages configured in CodeQL workflow" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### ❌ Validation Failed: CodeQL Languages Not Configured" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "**Error:** CodeQL workflow exists but has no languages configured" >> $GITHUB_STEP_SUMMARY
+            echo "**Action Required:** Configure appropriate languages in codeql-analysis.yml" >> $GITHUB_STEP_SUMMARY
+            echo ""
+            echo "❌ ERROR: No languages configured in CodeQL workflow"
+            exit 1
+          fi
+
+          echo "**Configured Languages:** $LANGUAGES" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Validate language presence in repository
+          INVALID_LANGS=""
+          VALID_LANGS=""
+
+          for LANG in $LANGUAGES; do
+            case "$LANG" in
+              python)
+                # Check for Python files (should be none in v04.00.04)
+                if find . -name "*.py" -type f ! -path "./.git/*" | grep -q .; then
+                  VALID_LANGS="$VALID_LANGS python"
+                  echo "✅ Python: Found Python files" >> $GITHUB_STEP_SUMMARY
+                else
+                  INVALID_LANGS="$INVALID_LANGS python"
+                  echo "❌ Python: No Python files found (PHP-only repository)" >> $GITHUB_STEP_SUMMARY
+                fi
+                ;;
+              javascript|typescript)
+                # Check for JS/TS files
+                if find . \( -name "*.js" -o -name "*.ts" -o -name "*.json" \) -type f ! -path "./.git/*" ! -path "./node_modules/*" | grep -q .; then
+                  VALID_LANGS="$VALID_LANGS $LANG"
+                  echo "✅ $LANG: Found JavaScript/TypeScript/JSON files" >> $GITHUB_STEP_SUMMARY
+                else
+                  INVALID_LANGS="$INVALID_LANGS $LANG"
+                  echo "⚠️ $LANG: No JavaScript/TypeScript files found" >> $GITHUB_STEP_SUMMARY
+                fi
+                ;;
+              java)
+                if find . -name "*.java" -type f ! -path "./.git/*" | grep -q .; then
+                  VALID_LANGS="$VALID_LANGS java"
+                  echo "✅ Java: Found Java files" >> $GITHUB_STEP_SUMMARY
+                else
+                  INVALID_LANGS="$INVALID_LANGS java"
+                  echo "⚠️ Java: No Java files found" >> $GITHUB_STEP_SUMMARY
+                fi
+                ;;
+              go)
+                if find . -name "*.go" -type f ! -path "./.git/*" | grep -q .; then
+                  VALID_LANGS="$VALID_LANGS go"
+                  echo "✅ Go: Found Go files" >> $GITHUB_STEP_SUMMARY
+                else
+                  INVALID_LANGS="$INVALID_LANGS go"
+                  echo "⚠️ Go: No Go files found" >> $GITHUB_STEP_SUMMARY
+                fi
+                ;;
+              cpp|c)
+                if find . \( -name "*.cpp" -o -name "*.c" -o -name "*.h" \) -type f ! -path "./.git/*" | grep -q .; then
+                  VALID_LANGS="$VALID_LANGS $LANG"
+                  echo "✅ $LANG: Found C/C++ files" >> $GITHUB_STEP_SUMMARY
+                else
+                  INVALID_LANGS="$INVALID_LANGS $LANG"
+                  echo "⚠️ $LANG: No C/C++ files found" >> $GITHUB_STEP_SUMMARY
+                fi
+                ;;
+              ruby)
+                if find . -name "*.rb" -type f ! -path "./.git/*" | grep -q .; then
+                  VALID_LANGS="$VALID_LANGS ruby"
+                  echo "✅ Ruby: Found Ruby files" >> $GITHUB_STEP_SUMMARY
+                else
+                  INVALID_LANGS="$INVALID_LANGS ruby"
+                  echo "⚠️ Ruby: No Ruby files found" >> $GITHUB_STEP_SUMMARY
+                fi
+                ;;
+              *)
+                echo "⚠️ $LANG: Unknown language, skipping validation" >> $GITHUB_STEP_SUMMARY
+                ;;
+            esac
+          done
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Report results
+          if [ -n "$INVALID_LANGS" ]; then
+            echo "**⚠️ Warning:** Some configured languages may not have corresponding files:" >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            echo "Invalid languages: $INVALID_LANGS" >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "**Note:** This is informational. CodeQL will skip languages without source files." >> $GITHUB_STEP_SUMMARY
+            echo "For PHP repository (v04.00.04), JavaScript language covers JSON/YAML/shell scripts." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ **All configured CodeQL languages have corresponding source files**" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          # Always succeed - this is informational only
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### ✅ CodeQL Configuration Validation Complete" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Status:** CodeQL language configuration reviewed successfully" >> $GITHUB_STEP_SUMMARY
+          echo ""
+          echo "✅ SUCCESS: CodeQL validation complete"
+          exit 0
 
   documentation-quality:
     name: Documentation Quality Check
@@ -407,92 +982,164 @@ jobs:
             echo "⚠️ No documentation index (docs/index.md or docs/README.md)" >> $GITHUB_STEP_SUMMARY
           fi
 
-  coding-standards:
-    name: Coding Standards Check
+  readme-completeness:
+    name: README Completeness Check
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
-      - name: Check for Tab Characters
+      - name: Check README Sections
         run: |
           set -x
-          echo "### Tab Character Detection" >> $GITHUB_STEP_SUMMARY
+          echo "## 📄 README Completeness Check" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
 
-          # Policy: Tabs are DEFAULT. Only check for tabs in files that REQUIRE spaces.
-          # Languages requiring spaces: YAML, Python, Haskell, F#, CoffeeScript, Nim, JSON, RST
-          TABS_IN_SPACES_FILES=$(find . -type f \
-            \( -name "*.yml" -o -name "*.yaml" \
-            -o -name "*.py" \
-            -o -name "*.hs" -o -name "*.lhs" \
-            -o -name "*.fs" -o -name "*.fsx" -o -name "*.fsi" \
-            -o -name "*.coffee" -o -name "*.litcoffee" \
-            -o -name "*.nim" -o -name "*.nims" -o -name "*.nimble" \
-            -o -name "*.json" \
-            -o -name "*.rst" \) \
-            ! -path "./vendor/*" \
-            ! -path "./node_modules/*" \
-            ! -path "./.git/*" \
-            -exec grep -l $'\t' {} \; 2>/dev/null | head -10)
-
-          if [ -n "$TABS_IN_SPACES_FILES" ]; then
-            echo "⚠️ Tab characters found in files that require spaces:" >> $GITHUB_STEP_SUMMARY
-            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-            echo "$TABS_IN_SPACES_FILES" >> $GITHUB_STEP_SUMMARY
-            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-            echo "These languages require spaces (tabs will break): YAML, Python, Haskell, F#, CoffeeScript, Nim, JSON, RST" >> $GITHUB_STEP_SUMMARY
-            echo "All other files (including .md, .ps1, LICENSE, etc.) may use tabs per MokoStandards policy" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "✅ No tabs found in files requiring spaces" >> $GITHUB_STEP_SUMMARY
-            echo "Note: Tabs are allowed in most files (policy default). Only checked files requiring spaces." >> $GITHUB_STEP_SUMMARY
+          if [ ! -f "README.md" ]; then
+            echo "❌ README.md not found" >> $GITHUB_STEP_SUMMARY
+            exit 1
           fi
 
-      - name: Check File Encoding
+          # Required sections
+          REQUIRED_SECTIONS=("Installation" "Usage" "Contributing" "License")
+          MISSING=0
+          PRESENT=0
+
+          echo "### Required Sections" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          for section in "${REQUIRED_SECTIONS[@]}"; do
+            if grep -qi "##.*$section" README.md; then
+              echo "✅ $section" >> $GITHUB_STEP_SUMMARY
+              PRESENT=$((PRESENT + 1))
+            else
+              echo "❌ $section" >> $GITHUB_STEP_SUMMARY
+              MISSING=$((MISSING + 1))
+            fi
+          done
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Completeness**: $PRESENT/${#REQUIRED_SECTIONS[@]} required sections present" >> $GITHUB_STEP_SUMMARY
+
+          if [ "$MISSING" -gt 0 ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "**Action Required**: Add missing sections to README.md" >> $GITHUB_STEP_SUMMARY
+            exit 1
+          fi
+
+  # ============================================================================
+  # PHASE 3: Future Enhancements
+  # ============================================================================
+
+  git-hygiene:
+    name: Git Repository Hygiene
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          fetch-depth: 0
+
+      - name: Check .gitignore
+        run: |
+          set -x
+          echo "### .gitignore Validation" >> $GITHUB_STEP_SUMMARY
+
+          if [ ! -f ".gitignore" ]; then
+            echo "⚠️ .gitignore file not found" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### ⚠️ Warning: .gitignore Not Found" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "**Status:** .gitignore file is recommended but not required" >> $GITHUB_STEP_SUMMARY
+            echo "**Recommendation:** Add .gitignore to exclude build artifacts, dependencies, and temporary files" >> $GITHUB_STEP_SUMMARY
+            echo ""
+            echo "⚠️ WARNING: .gitignore file not found - Continuing validation"
+            exit 0
+          fi
+
+          # Check for common exclusions
+          MISSING=""
+          grep -q "vendor/" .gitignore || MISSING="${MISSING}vendor/ "
+          grep -q "node_modules/" .gitignore || MISSING="${MISSING}node_modules/ "
+
+          if [ -n "$MISSING" ]; then
+            echo "⚠️ .gitignore may be missing common exclusions: $MISSING" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ .gitignore appears complete" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Check for Large Files
         run: |
           set -x
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### File Encoding Check" >> $GITHUB_STEP_SUMMARY
+          echo "### Large File Detection" >> $GITHUB_STEP_SUMMARY
 
-          # Check for UTF-8 encoding (ASCII is a subset of UTF-8 and is acceptable)
-          NON_UTF8=$(find . -type f \( -name "*.php" -o -name "*.js" -o -name "*.md" \) \
-            ! -path "./vendor/*" \
-            ! -path "./node_modules/*" \
-            ! -path "./.git/*" \
-            -exec file {} \; | grep -v "UTF-8" | grep -v "ASCII" | head -5)
+          # Find files larger than 1MB
+          LARGE_FILES=$(find . -type f -size +1M ! -path "./.git/*" ! -path "./vendor/*" ! -path "./node_modules/*" | head -5)
 
-          if [ -n "$NON_UTF8" ]; then
-            echo "⚠️ Non-UTF-8 files detected:" >> $GITHUB_STEP_SUMMARY
+          if [ -n "$LARGE_FILES" ]; then
+            echo "⚠️ Large files detected (>1MB):" >> $GITHUB_STEP_SUMMARY
             echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-            echo "$NON_UTF8" >> $GITHUB_STEP_SUMMARY
+            echo "$LARGE_FILES" >> $GITHUB_STEP_SUMMARY
             echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            echo "Consider using Git LFS for large binary files" >> $GITHUB_STEP_SUMMARY
           else
-            echo "✅ All source files appear to be UTF-8 encoded" >> $GITHUB_STEP_SUMMARY
+            echo "✅ No unusually large files detected" >> $GITHUB_STEP_SUMMARY
           fi
 
-      - name: Check Line Endings
+  script-integrity:
+    name: Script Integrity Validation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: Set up Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: '3.x'
+
+      - name: Validate Script Integrity
+        id: script_check
         run: |
           set -x
+          echo "## 🔐 Script Integrity Validation" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Line Ending Check" >> $GITHUB_STEP_SUMMARY
 
-          # Check for CRLF line endings
-          CRLF_FILES=$(find . -type f \( -name "*.php" -o -name "*.js" -o -name "*.md" \) \
-            ! -path "./vendor/*" \
-            ! -path "./node_modules/*" \
-            ! -path "./.git/*" \
-            -exec file {} \; | grep "CRLF" | head -5)
+          if [ -f "api/.script-registry.json" ]; then
+            echo "### Critical Scripts" >> $GITHUB_STEP_SUMMARY
+            php api/maintenance/update_sha_hashes.php \
+              --dry-run --verbose | tee /tmp/script-validation.log
 
-          if [ -n "$CRLF_FILES" ]; then
-            echo "⚠️ Files with CRLF line endings found:" >> $GITHUB_STEP_SUMMARY
+            EXIT_CODE=$?
+
+            echo "" >> $GITHUB_STEP_SUMMARY
             echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-            echo "$CRLF_FILES" >> $GITHUB_STEP_SUMMARY
+            cat /tmp/script-validation.log >> $GITHUB_STEP_SUMMARY
             echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-            echo "MokoStandards requires LF line endings" >> $GITHUB_STEP_SUMMARY
+
+            if [ "$EXIT_CODE" -eq 0 ]; then
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "✅ All critical scripts validated successfully!" >> $GITHUB_STEP_SUMMARY
+              exit 0
+            else
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "❌ Script integrity violations detected" >> $GITHUB_STEP_SUMMARY
+              echo "**Action Required:** Review validation report and update registry" >> $GITHUB_STEP_SUMMARY
+              exit 1
+            fi
           else
-            echo "✅ Line endings are consistent (LF)" >> $GITHUB_STEP_SUMMARY
+            echo "ℹ️ Script registry not found - skipping integrity check" >> $GITHUB_STEP_SUMMARY
+            exit 0
           fi
 
+
+  # ════════════════════════════════════════════════════════════════════════
+  # TIER 3 — QUALITY (code quality metrics)
+  # ════════════════════════════════════════════════════════════════════════
   line-length-validation:
     name: Line Length Check
     runs-on: ubuntu-latest
@@ -588,549 +1235,337 @@ jobs:
           echo "Line length standards help maintain code readability." >> $GITHUB_STEP_SUMMARY
           echo "Exceptions documented in: \`docs/policy/coding-style-guide.md\`" >> $GITHUB_STEP_SUMMARY
 
-  license-compliance:
-    name: License Header Validation
+  file-naming-standards:
+    name: File Naming Standards
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
-      - name: Check SPDX Headers
+      - name: Check File Naming
         run: |
           set -x
-          echo "### SPDX License Header Check" >> $GITHUB_STEP_SUMMARY
-
-          # Count source files with and without SPDX headers
-          TOTAL_PHP=0
-          WITH_SPDX_PHP=0
-
-          if find . -name "*.php" -type f ! -path "./vendor/*" | head -1 | grep -q .; then
-            TOTAL_PHP=$(find . -name "*.php" -type f ! -path "./vendor/*" | wc -l)
-            WITH_SPDX_PHP=$(find . -name "*.php" -type f ! -path "./vendor/*" -exec grep -l "SPDX-License-Identifier" {} \; | wc -l)
-          fi
-
-          if [ "$TOTAL_PHP" -gt 0 ]; then
-            PERCENT=$((WITH_SPDX_PHP * 100 / TOTAL_PHP))
-            echo "- PHP files: $WITH_SPDX_PHP/$TOTAL_PHP ($PERCENT%) with SPDX headers" >> $GITHUB_STEP_SUMMARY
-
-            if [ "$PERCENT" -lt 80 ]; then
-              echo "⚠️ Less than 80% of PHP files have SPDX headers" >> $GITHUB_STEP_SUMMARY
-            else
-              echo "✅ Good SPDX header coverage" >> $GITHUB_STEP_SUMMARY
-            fi
-          fi
-
-      - name: Validate License File
-        run: |
-          set -x
+          echo "## 📝 File Naming Standards" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### License File Validation" >> $GITHUB_STEP_SUMMARY
 
-          if [ ! -f "LICENSE" ]; then
-            echo "❌ LICENSE file not found" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "### ❌ Validation Failed: LICENSE File Missing" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "**Error:** LICENSE file is required for all MokoStandards-compliant repositories" >> $GITHUB_STEP_SUMMARY
-            echo "**Action Required:** Add LICENSE file with appropriate open-source license (GPL-3.0-or-later recommended)" >> $GITHUB_STEP_SUMMARY
-            echo ""
-            echo "❌ ERROR: LICENSE file not found - This is a critical requirement"
-            exit 1
-          fi
+          VIOLATIONS=0
 
-          # Check license type
-          if grep -qi "GNU GENERAL PUBLIC LICENSE" LICENSE; then
-            VERSION=$(grep -i "Version 3" LICENSE || echo "")
-            if [ -n "$VERSION" ]; then
-              echo "✅ GPL-3.0-or-later license detected" >> $GITHUB_STEP_SUMMARY
-            else
-              echo "⚠️ GPL license detected but version unclear" >> $GITHUB_STEP_SUMMARY
-            fi
-          elif grep -qi "MIT License" LICENSE; then
-            echo "✅ MIT license detected" >> $GITHUB_STEP_SUMMARY
-          elif grep -qi "Apache License" LICENSE; then
-            echo "✅ Apache license detected" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "ℹ️ License type could not be automatically detected" >> $GITHUB_STEP_SUMMARY
-          fi
+          # Check PHP files (should be PascalCase for classes)
+          INVALID_PHP=$(find . -name "*.php" ! -path "./vendor/*" ! -path "./.git/*" ! -regex ".*/[A-Z][a-zA-Z0-9]*\.php" ! -name "index.php" ! -name "functions.php" | wc -l || echo 0)
 
-  git-hygiene:
-    name: Git Repository Hygiene
-    runs-on: ubuntu-latest
+          # Check config files (should be kebab-case)
+          INVALID_CONFIG=$(find . -name "*.yml" -o -name "*.yaml" -o -name "*.json" ! -path "./vendor/*" ! -path "./.git/*" ! -path "./node_modules/*" | grep -E "[A-Z_]" | wc -l || echo 0)
 
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-        with:
-          fetch-depth: 0
-
-      - name: Check .gitignore
-        run: |
-          set -x
-          echo "### .gitignore Validation" >> $GITHUB_STEP_SUMMARY
-
-          if [ ! -f ".gitignore" ]; then
-            echo "⚠️ .gitignore file not found" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "### ⚠️ Warning: .gitignore Not Found" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "**Status:** .gitignore file is recommended but not required" >> $GITHUB_STEP_SUMMARY
-            echo "**Recommendation:** Add .gitignore to exclude build artifacts, dependencies, and temporary files" >> $GITHUB_STEP_SUMMARY
-            echo ""
-            echo "⚠️ WARNING: .gitignore file not found - Continuing validation"
-            exit 0
-          fi
-
-          # Check for common exclusions
-          MISSING=""
-          grep -q "vendor/" .gitignore || MISSING="${MISSING}vendor/ "
-          grep -q "node_modules/" .gitignore || MISSING="${MISSING}node_modules/ "
-
-          if [ -n "$MISSING" ]; then
-            echo "⚠️ .gitignore may be missing common exclusions: $MISSING" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "✅ .gitignore appears complete" >> $GITHUB_STEP_SUMMARY
-          fi
-
-      - name: Check for Large Files
-        run: |
-          set -x
+          echo "### Naming Violations" >> $GITHUB_STEP_SUMMARY
+          echo "- **PHP files not PascalCase**: $INVALID_PHP" >> $GITHUB_STEP_SUMMARY
+          echo "- **Config files not kebab-case**: $INVALID_CONFIG" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Large File Detection" >> $GITHUB_STEP_SUMMARY
 
-          # Find files larger than 1MB
-          LARGE_FILES=$(find . -type f -size +1M ! -path "./.git/*" ! -path "./vendor/*" ! -path "./node_modules/*" | head -5)
+          VIOLATIONS=$((INVALID_PHP + INVALID_CONFIG))
 
-          if [ -n "$LARGE_FILES" ]; then
-            echo "⚠️ Large files detected (>1MB):" >> $GITHUB_STEP_SUMMARY
-            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-            echo "$LARGE_FILES" >> $GITHUB_STEP_SUMMARY
-            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-            echo "Consider using Git LFS for large binary files" >> $GITHUB_STEP_SUMMARY
+          if [ "$VIOLATIONS" -gt 0 ]; then
+            echo "⚠️ Found $VIOLATIONS naming convention violation(s)" >> $GITHUB_STEP_SUMMARY
+            echo "**Recommendation**: Follow naming conventions for consistency" >> $GITHUB_STEP_SUMMARY
           else
-            echo "✅ No unusually large files detected" >> $GITHUB_STEP_SUMMARY
+            echo "✅ File naming conventions followed" >> $GITHUB_STEP_SUMMARY
           fi
 
-  workflow-validation:
-    name: Workflow Configuration Check
+  insecure-patterns:
+    name: Insecure Code Pattern Detection
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
-      - name: Check Required Workflows
+      - name: Scan for Insecure Patterns
         run: |
           set -x
-          echo "### GitHub Actions Workflows" >> $GITHUB_STEP_SUMMARY
+          echo "## 🔒 Insecure Code Pattern Detection" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
 
-          WORKFLOWS_DIR=".github/workflows"
+          VIOLATIONS=0
 
-          if [ ! -d "$WORKFLOWS_DIR" ]; then
-            echo "❌ No workflows directory found" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "### ❌ Validation Failed: Workflows Directory Missing" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "**Error:** .github/workflows directory is required for CI/CD automation" >> $GITHUB_STEP_SUMMARY
-            echo "**Action Required:** Create .github/workflows directory and add GitHub Actions workflows" >> $GITHUB_STEP_SUMMARY
-            echo ""
-            echo "❌ ERROR: .github/workflows directory not found"
-            exit 1
+          # PHP: SQL injection patterns
+          if grep -r -n "\\$_\(GET\|POST\|REQUEST\).*mysql_query\|mysqli_query" . --include="*.php" ! -path "./vendor/*" 2>/dev/null > /tmp/sql_inject.txt; then
+            COUNT=$(wc -l < /tmp/sql_inject.txt)
+            echo "⚠️ Found $COUNT potential SQL injection pattern(s)" >> $GITHUB_STEP_SUMMARY
+            VIOLATIONS=$((VIOLATIONS + COUNT))
           fi
 
-          # Check for recommended workflows
-          if [ -f "$WORKFLOWS_DIR/ci.yml" ] || [ -f "$WORKFLOWS_DIR/build.yml" ]; then
-            echo "✅ CI workflow present" >> $GITHUB_STEP_SUMMARY
+          # PHP: eval/exec usage
+          if grep -r -n "eval\|exec\|system\|passthru\|shell_exec" . --include="*.php" ! -path "./vendor/*" 2>/dev/null > /tmp/exec.txt; then
+            COUNT=$(wc -l < /tmp/exec.txt)
+            echo "⚠️ Found $COUNT dangerous function call(s)" >> $GITHUB_STEP_SUMMARY
+            VIOLATIONS=$((VIOLATIONS + COUNT))
+          fi
+
+          # Python: eval usage
+          if grep -r -n "eval(" . --include="*.py" 2>/dev/null > /tmp/py_eval.txt; then
+            COUNT=$(wc -l < /tmp/py_eval.txt)
+            echo "⚠️ Found $COUNT Python eval() usage(s)" >> $GITHUB_STEP_SUMMARY
+            VIOLATIONS=$((VIOLATIONS + COUNT))
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "$VIOLATIONS" -gt 0 ]; then
+            echo "**Total Violations**: $VIOLATIONS" >> $GITHUB_STEP_SUMMARY
+            echo "**Recommendation**: Review and secure flagged patterns" >> $GITHUB_STEP_SUMMARY
           else
-            echo "⚠️ No CI workflow found (ci.yml or build.yml)" >> $GITHUB_STEP_SUMMARY
+            echo "✅ No insecure patterns detected" >> $GITHUB_STEP_SUMMARY
           fi
 
-          if [ -f "$WORKFLOWS_DIR/codeql-analysis.yml" ]; then
-            echo "✅ CodeQL security scanning present" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "⚠️ CodeQL workflow not found" >> $GITHUB_STEP_SUMMARY
-          fi
-
-      - name: Validate Workflow Syntax
-        run: |
-          set -x
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Workflow YAML Syntax" >> $GITHUB_STEP_SUMMARY
-
-          INVALID=0
-          for workflow in $(find .github/workflows -maxdepth 1 -type f \( -name "*.yml" -o -name "*.yaml" \) 2>/dev/null); do
-            if [ -f "$workflow" ]; then
-              if python3 -c "import yaml, sys; yaml.safe_load(open(sys.argv[1]))" "$workflow" 2>/dev/null; then
-                echo "✅ $(basename $workflow)" >> $GITHUB_STEP_SUMMARY
-              else
-                echo "❌ $(basename $workflow) - invalid YAML" >> $GITHUB_STEP_SUMMARY
-                INVALID=$((INVALID + 1))
-              fi
-            fi
-          done
-
-          if [ "$INVALID" -gt 0 ]; then
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "### ❌ Validation Failed: Invalid Workflow YAML Syntax" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "**Error:** $INVALID workflow file(s) have invalid YAML syntax" >> $GITHUB_STEP_SUMMARY
-            echo "**Action Required:** Fix YAML syntax errors in the marked workflow files" >> $GITHUB_STEP_SUMMARY
-            echo "**Tool:** Run \`python3 -c \"import yaml; yaml.safe_load(open('.github/workflows/FILE.yml'))\"\` locally" >> $GITHUB_STEP_SUMMARY
-            echo ""
-            echo "❌ ERROR: $INVALID workflow file(s) with invalid YAML syntax"
-            exit 1
-          fi
-
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### ✅ All Workflow Files Have Valid YAML Syntax" >> $GITHUB_STEP_SUMMARY
-          echo ""
-          echo "✅ SUCCESS: All workflow files passed YAML validation"
-
-      - name: Validate CodeQL Configuration
-        if: hashFiles('.github/workflows/codeql-analysis.yml') != ''
-        run: |
-          set -e
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### CodeQL Language Configuration" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-
-          # Inline validation (rewritten from Python to bash for PHP-only architecture)
-          CODEQL_FILE=".github/workflows/codeql-analysis.yml"
-
-          if [ ! -f "$CODEQL_FILE" ]; then
-            echo "⚠️ CodeQL workflow file not found" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "### ⚠️ CodeQL Workflow Not Found" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "**Status:** CodeQL workflow file not present - skipping language validation" >> $GITHUB_STEP_SUMMARY
-            echo ""
-            echo "⚠️ INFO: CodeQL workflow not found - Skipping validation"
-            exit 0
-          fi
-
-          echo "**CodeQL Configuration Analysis**" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-
-          # Extract configured languages from workflow
-          LANGUAGES=$(grep -A5 "language:" "$CODEQL_FILE" | grep -oP "(?<=')[^']+(?=')" | tr '\n' ' ' || echo "")
-
-          # Check if this is a configuration-only scan (no languages specified)
-          if grep -q "category.*language:config" "$CODEQL_FILE"; then
-            echo "**Scan Type:** Configuration-only (no language matrix)" >> $GITHUB_STEP_SUMMARY
-            echo "**Status:** ✅ Valid configuration for PHP-only repository" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "This CodeQL workflow scans YAML, JSON, shell scripts for security issues." >> $GITHUB_STEP_SUMMARY
-            echo "PHP security is handled by SecurityValidator enterprise library." >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "✅ SUCCESS: CodeQL configuration-only scan properly configured"
-            exit 0
-          fi
-
-          if [ -z "$LANGUAGES" ]; then
-            echo "❌ No languages configured in CodeQL workflow" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "### ❌ Validation Failed: CodeQL Languages Not Configured" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "**Error:** CodeQL workflow exists but has no languages configured" >> $GITHUB_STEP_SUMMARY
-            echo "**Action Required:** Configure appropriate languages in codeql-analysis.yml" >> $GITHUB_STEP_SUMMARY
-            echo ""
-            echo "❌ ERROR: No languages configured in CodeQL workflow"
-            exit 1
-          fi
-
-          echo "**Configured Languages:** $LANGUAGES" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-
-          # Validate language presence in repository
-          INVALID_LANGS=""
-          VALID_LANGS=""
-
-          for LANG in $LANGUAGES; do
-            case "$LANG" in
-              python)
-                # Check for Python files (should be none in v04.00.04)
-                if find . -name "*.py" -type f ! -path "./.git/*" | grep -q .; then
-                  VALID_LANGS="$VALID_LANGS python"
-                  echo "✅ Python: Found Python files" >> $GITHUB_STEP_SUMMARY
-                else
-                  INVALID_LANGS="$INVALID_LANGS python"
-                  echo "❌ Python: No Python files found (PHP-only repository)" >> $GITHUB_STEP_SUMMARY
-                fi
-                ;;
-              javascript|typescript)
-                # Check for JS/TS files
-                if find . \( -name "*.js" -o -name "*.ts" -o -name "*.json" \) -type f ! -path "./.git/*" ! -path "./node_modules/*" | grep -q .; then
-                  VALID_LANGS="$VALID_LANGS $LANG"
-                  echo "✅ $LANG: Found JavaScript/TypeScript/JSON files" >> $GITHUB_STEP_SUMMARY
-                else
-                  INVALID_LANGS="$INVALID_LANGS $LANG"
-                  echo "⚠️ $LANG: No JavaScript/TypeScript files found" >> $GITHUB_STEP_SUMMARY
-                fi
-                ;;
-              java)
-                if find . -name "*.java" -type f ! -path "./.git/*" | grep -q .; then
-                  VALID_LANGS="$VALID_LANGS java"
-                  echo "✅ Java: Found Java files" >> $GITHUB_STEP_SUMMARY
-                else
-                  INVALID_LANGS="$INVALID_LANGS java"
-                  echo "⚠️ Java: No Java files found" >> $GITHUB_STEP_SUMMARY
-                fi
-                ;;
-              go)
-                if find . -name "*.go" -type f ! -path "./.git/*" | grep -q .; then
-                  VALID_LANGS="$VALID_LANGS go"
-                  echo "✅ Go: Found Go files" >> $GITHUB_STEP_SUMMARY
-                else
-                  INVALID_LANGS="$INVALID_LANGS go"
-                  echo "⚠️ Go: No Go files found" >> $GITHUB_STEP_SUMMARY
-                fi
-                ;;
-              cpp|c)
-                if find . \( -name "*.cpp" -o -name "*.c" -o -name "*.h" \) -type f ! -path "./.git/*" | grep -q .; then
-                  VALID_LANGS="$VALID_LANGS $LANG"
-                  echo "✅ $LANG: Found C/C++ files" >> $GITHUB_STEP_SUMMARY
-                else
-                  INVALID_LANGS="$INVALID_LANGS $LANG"
-                  echo "⚠️ $LANG: No C/C++ files found" >> $GITHUB_STEP_SUMMARY
-                fi
-                ;;
-              ruby)
-                if find . -name "*.rb" -type f ! -path "./.git/*" | grep -q .; then
-                  VALID_LANGS="$VALID_LANGS ruby"
-                  echo "✅ Ruby: Found Ruby files" >> $GITHUB_STEP_SUMMARY
-                else
-                  INVALID_LANGS="$INVALID_LANGS ruby"
-                  echo "⚠️ Ruby: No Ruby files found" >> $GITHUB_STEP_SUMMARY
-                fi
-                ;;
-              *)
-                echo "⚠️ $LANG: Unknown language, skipping validation" >> $GITHUB_STEP_SUMMARY
-                ;;
-            esac
-          done
-
-          echo "" >> $GITHUB_STEP_SUMMARY
-
-          # Report results
-          if [ -n "$INVALID_LANGS" ]; then
-            echo "**⚠️ Warning:** Some configured languages may not have corresponding files:" >> $GITHUB_STEP_SUMMARY
-            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-            echo "Invalid languages: $INVALID_LANGS" >> $GITHUB_STEP_SUMMARY
-            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "**Note:** This is informational. CodeQL will skip languages without source files." >> $GITHUB_STEP_SUMMARY
-            echo "For PHP repository (v04.00.04), JavaScript language covers JSON/YAML/shell scripts." >> $GITHUB_STEP_SUMMARY
-          else
-            echo "✅ **All configured CodeQL languages have corresponding source files**" >> $GITHUB_STEP_SUMMARY
-          fi
-
-          # Always succeed - this is informational only
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### ✅ CodeQL Configuration Validation Complete" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Status:** CodeQL language configuration reviewed successfully" >> $GITHUB_STEP_SUMMARY
-          echo ""
-          echo "✅ SUCCESS: CodeQL validation complete"
-          exit 0
-
-  version-consistency:
-    name: Version Consistency Check
+  code-complexity:
+    name: Code Complexity Analysis
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
-      - name: Set up PHP
-        uses: shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1 # v2.31.0
+      - name: Setup PHP
+        uses: shivammathur/setup-php@accd6127cb78bee3e8082180cb391013d204ef9f # v2.31.0
         with:
           php-version: '8.1'
-          extensions: json
-          tools: composer
-          coverage: none
 
-      - name: Install API Package
-        run: composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
-        env:
-          COMPOSER_AUTH: '{"github-oauth":{"github.com":"${{ secrets.GH_TOKEN }}"}}'
-
-      - name: Run Version Consistency Check
-        id: version_check
+      - name: Analyze Complexity
         run: |
           set -x
-          echo "## 🔢 Version Consistency Validation" >> $GITHUB_STEP_SUMMARY
+          echo "## 📊 Code Complexity Analysis" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
-          if [ -f "api/validate/check_version_consistency.php" ]; then
-            php api/validate/check_version_consistency.php --verbose | tee /tmp/version-check.log
-            EXIT_CODE=$?
+          PHP_COUNT=$(find . -name "*.php" ! -path "./vendor/*" ! -path "./.git/*" | wc -l)
 
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-            cat /tmp/version-check.log >> $GITHUB_STEP_SUMMARY
-            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          if [ "$PHP_COUNT" -gt 0 ]; then
+            # Install phploc
+            wget https://phar.phpunit.de/phploc.phar 2>/dev/null
+            chmod +x phploc.phar
 
-            if [ "$EXIT_CODE" -eq 0 ]; then
+            echo "### PHP Code Metrics" >> $GITHUB_STEP_SUMMARY
+            if ./phploc.phar --exclude vendor --exclude .git . 2>&1 | tee /tmp/phploc.txt; then
+              COMPLEXITY=$(grep "Cyclomatic Complexity" /tmp/phploc.txt | grep "Average" | awk '{print $NF}' || echo "N/A")
+              echo "**Average Cyclomatic Complexity**: $COMPLEXITY" >> $GITHUB_STEP_SUMMARY
               echo "" >> $GITHUB_STEP_SUMMARY
-              echo "✅ All version numbers are consistent!" >> $GITHUB_STEP_SUMMARY
-              exit 0
-            else
-              echo "" >> $GITHUB_STEP_SUMMARY
-              echo "❌ Version mismatches detected - Please update all version references" >> $GITHUB_STEP_SUMMARY
-              exit 1
+
+              if [ "$COMPLEXITY" != "N/A" ] && [ $(echo "$COMPLEXITY > 10" | bc -l) -eq 1 ]; then
+                echo "⚠️ Average complexity exceeds recommended threshold (10)" >> $GITHUB_STEP_SUMMARY
+                echo "**Recommendation**: Refactor complex functions" >> $GITHUB_STEP_SUMMARY
+              else
+                echo "✅ Code complexity within acceptable limits" >> $GITHUB_STEP_SUMMARY
+              fi
             fi
           else
-            echo "ℹ️ Version consistency check script not found - skipping" >> $GITHUB_STEP_SUMMARY
-            exit 0
+            echo "ℹ️ No PHP files found for complexity analysis" >> $GITHUB_STEP_SUMMARY
           fi
 
-  script-integrity:
-    name: Script Integrity Validation
+  code-duplication:
+    name: Code Duplication Detection
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
-      - name: Set up Python
+      - name: Setup PHP
+        uses: shivammathur/setup-php@accd6127cb78bee3e8082180cb391013d204ef9f # v2.31.0
+        with:
+          php-version: '8.1'
+
+      - name: Detect Duplicates
+        run: |
+          set -x
+          echo "## 🔁 Code Duplication Detection" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Check if PHP files exist
+          PHP_COUNT=$(find . -name "*.php" ! -path "./vendor/*" ! -path "./.git/*" | wc -l)
+
+          if [ "$PHP_COUNT" -gt 0 ]; then
+            echo "### PHP Code Duplication" >> $GITHUB_STEP_SUMMARY
+
+            # Install phpcpd
+            wget https://phar.phpunit.de/phpcpd.phar 2>/dev/null
+            chmod +x phpcpd.phar
+
+            # Run duplication detection
+            if ./phpcpd.phar --exclude vendor --exclude .git . 2>&1 | tee /tmp/phpcpd.txt; then
+              DUPLICATION=$(grep "Found" /tmp/phpcpd.txt | grep -oE "[0-9]+\.[0-9]+%" | head -1 || echo "0.00%")
+              echo "📊 **Duplication Rate**: $DUPLICATION" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+
+              DUPLICATION_NUM=$(echo "$DUPLICATION" | sed 's/%//')
+              if [ $(echo "$DUPLICATION_NUM > 5.0" | bc -l) -eq 1 ]; then
+                echo "⚠️ Code duplication exceeds 5% threshold" >> $GITHUB_STEP_SUMMARY
+                echo "" >> $GITHUB_STEP_SUMMARY
+                echo "<details>" >> $GITHUB_STEP_SUMMARY
+                echo "<summary>View duplication details</summary>" >> $GITHUB_STEP_SUMMARY
+                echo "" >> $GITHUB_STEP_SUMMARY
+                echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+                cat /tmp/phpcpd.txt >> $GITHUB_STEP_SUMMARY
+                echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+                echo "</details>" >> $GITHUB_STEP_SUMMARY
+              else
+                echo "✅ Code duplication within acceptable limits (<5%)" >> $GITHUB_STEP_SUMMARY
+              fi
+            else
+              echo "✅ No significant code duplication detected" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "ℹ️ No PHP files found for duplication analysis" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Note**: This is an informational check to encourage DRY principles." >> $GITHUB_STEP_SUMMARY
+
+  dead-code-detection:
+    name: Dead Code Detection
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: Setup Python
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
         with:
           python-version: '3.x'
 
-      - name: Validate Script Integrity
-        id: script_check
+      - name: Detect Dead Code
         run: |
           set -x
-          echo "## 🔐 Script Integrity Validation" >> $GITHUB_STEP_SUMMARY
+          echo "## 🗑️ Dead Code Detection" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
-          if [ -f "api/.script-registry.json" ]; then
-            echo "### Critical Scripts" >> $GITHUB_STEP_SUMMARY
-            php api/maintenance/update_sha_hashes.php \
-              --dry-run --verbose | tee /tmp/script-validation.log
+          PY_COUNT=$(find . -name "*.py" ! -path "./vendor/*" ! -path "./.git/*" ! -path "./venv/*" | wc -l)
 
-            EXIT_CODE=$?
+          if [ "$PY_COUNT" -gt 0 ]; then
+            pip install vulture 2>/dev/null
+            echo "### Python Dead Code" >> $GITHUB_STEP_SUMMARY
 
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-            cat /tmp/script-validation.log >> $GITHUB_STEP_SUMMARY
-            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-
-            if [ "$EXIT_CODE" -eq 0 ]; then
-              echo "" >> $GITHUB_STEP_SUMMARY
-              echo "✅ All critical scripts validated successfully!" >> $GITHUB_STEP_SUMMARY
-              exit 0
-            else
-              echo "" >> $GITHUB_STEP_SUMMARY
-              echo "❌ Script integrity violations detected" >> $GITHUB_STEP_SUMMARY
-              echo "**Action Required:** Review validation report and update registry" >> $GITHUB_STEP_SUMMARY
-              exit 1
+            if vulture . --exclude vendor,venv,.git 2>&1 | tee /tmp/vulture.txt; then
+              DEAD_COUNT=$(wc -l < /tmp/vulture.txt || echo 0)
+              if [ "$DEAD_COUNT" -gt 0 ]; then
+                echo "⚠️ Found $DEAD_COUNT potential dead code item(s)" >> $GITHUB_STEP_SUMMARY
+                echo "" >> $GITHUB_STEP_SUMMARY
+                echo "<details>" >> $GITHUB_STEP_SUMMARY
+                echo "<summary>View dead code</summary>" >> $GITHUB_STEP_SUMMARY
+                echo "" >> $GITHUB_STEP_SUMMARY
+                echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+                head -50 /tmp/vulture.txt >> $GITHUB_STEP_SUMMARY
+                echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+                echo "</details>" >> $GITHUB_STEP_SUMMARY
+              else
+                echo "✅ No dead code detected" >> $GITHUB_STEP_SUMMARY
+              fi
             fi
           else
-            echo "ℹ️ Script registry not found - skipping integrity check" >> $GITHUB_STEP_SUMMARY
-            exit 0
+            echo "ℹ️ No Python files found for dead code analysis" >> $GITHUB_STEP_SUMMARY
           fi
 
-  enterprise-readiness:
-    name: Enterprise Readiness Check
+
+  # ════════════════════════════════════════════════════════════════════════
+  # TIER 4 — SUPPLEMENTARY (informational)
+  # ════════════════════════════════════════════════════════════════════════
+  file-size-limits:
+    name: File Size Limits
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
-      - name: Set up PHP
-        uses: shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1 # v2.31.0
-        with:
-          php-version: '8.1'
-          extensions: json, mbstring
-          tools: composer
-          coverage: none
-
-      - name: Install API Package
-        run: composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
-        env:
-          COMPOSER_AUTH: '{"github-oauth":{"github.com":"${{ secrets.GH_TOKEN }}"}}'
-
-      - name: Check Enterprise Readiness
-        id: enterprise_check
+      - name: Check File Sizes
         run: |
+          set -x
+          echo "## 📦 File Size Validation" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
-          if [ -f "api/validate/check_enterprise_readiness.php" ]; then
-            php api/validate/check_enterprise_readiness.php --verbose | tee /tmp/enterprise-check.log
-            EXIT_CODE=$?
+          # Exempt file types (allowed to be large)
+          EXEMPT="! -name *.mmdb ! -name *.woff2 ! -name *.woff ! -name *.ttf ! -name *.otf"
 
+          # Find large files (>15MB warning, >20MB critical)
+          LARGE_FILES=$(find . -type f -size +15M $EXEMPT ! -path "./.git/*" ! -path "./vendor/*" ! -path "./node_modules/*" 2>/dev/null | wc -l)
+          HUGE_FILES=$(find . -type f -size +20M $EXEMPT ! -path "./.git/*" ! -path "./vendor/*" ! -path "./node_modules/*" 2>/dev/null | wc -l)
+
+          echo "### Size Thresholds" >> $GITHUB_STEP_SUMMARY
+          echo "- **Warning**: Files >15MB" >> $GITHUB_STEP_SUMMARY
+          echo "- **Critical**: Files >20MB" >> $GITHUB_STEP_SUMMARY
+          echo "- **Exempt**: .mmdb, .woff2, .woff, .ttf, .otf" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "$HUGE_FILES" -gt 0 ]; then
+            echo "❌ **Critical**: Found $HUGE_FILES file(s) exceeding 20MB" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "<details>" >> $GITHUB_STEP_SUMMARY
+            echo "<summary>View files >20MB</summary>" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-            cat /tmp/enterprise-check.log >> $GITHUB_STEP_SUMMARY
+            find . -type f -size +20M $EXEMPT ! -path "./.git/*" ! -path "./vendor/*" ! -path "./node_modules/*" -exec ls -lh {} + 2>/dev/null | awk '{print $5, $9}' >> $GITHUB_STEP_SUMMARY
             echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-
-            if [ "$EXIT_CODE" -eq 0 ]; then
-              echo "" >> $GITHUB_STEP_SUMMARY
-              echo "✅ Repository meets enterprise readiness criteria!" >> $GITHUB_STEP_SUMMARY
-              exit 0
-            else
-              echo "" >> $GITHUB_STEP_SUMMARY
-              echo "⚠️ Enterprise readiness issues detected" >> $GITHUB_STEP_SUMMARY
-              echo "**Note:** This is informational - review recommendations to improve" >> $GITHUB_STEP_SUMMARY
-              exit 0  # Non-blocking
-            fi
+            echo "</details>" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "**Action Required**: Remove or optimize files >20MB" >> $GITHUB_STEP_SUMMARY
+            exit 1
+          elif [ "$LARGE_FILES" -gt 0 ]; then
+            echo "⚠️ **Warning**: Found $LARGE_FILES file(s) between 15MB and 20MB" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "<details>" >> $GITHUB_STEP_SUMMARY
+            echo "<summary>View files >15MB</summary>" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            find . -type f -size +15M $EXEMPT ! -path "./.git/*" ! -path "./vendor/*" ! -path "./node_modules/*" -exec ls -lh {} + 2>/dev/null | awk '{print $5, $9}' >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            echo "</details>" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "**Recommendation**: Consider optimizing large files" >> $GITHUB_STEP_SUMMARY
           else
-            echo "ℹ️ Enterprise readiness check script not found - skipping" >> $GITHUB_STEP_SUMMARY
-            exit 0
+            echo "✅ All files within acceptable size limits" >> $GITHUB_STEP_SUMMARY
           fi
 
-  repository-health:
-    name: Repository Health Check
+  binary-file-detection:
+    name: Binary File Detection
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
-      - name: Set up PHP
-        uses: shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1 # v2.31.0
-        with:
-          php-version: '8.1'
-          extensions: json, mbstring
-          tools: composer
-          coverage: none
-
-      - name: Install API Package
-        run: composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
-        env:
-          COMPOSER_AUTH: '{"github-oauth":{"github.com":"${{ secrets.GH_TOKEN }}"}}'
-
-      - name: Check Repository Health
-        id: health_check
+      - name: Detect Binary Files
         run: |
+          set -x
+          echo "## 🔍 Binary File Detection" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
-          if [ -f "api/validate/check_repo_health.php" ]; then
-            php api/validate/check_repo_health.php --verbose | tee /tmp/health-check.log
-            EXIT_CODE=$?
+          # Find binary files excluding allowed types
+          BINARIES=$(find . -type f ! -path "./.git/*" ! -path "./vendor/*" ! -path "./node_modules/*" \
+            ! -name "*.png" ! -name "*.jpg" ! -name "*.jpeg" ! -name "*.gif" ! -name "*.svg" ! -name "*.ico" \
+            ! -name "*.woff" ! -name "*.woff2" ! -name "*.ttf" ! -name "*.eot" \
+            -exec file {} \; | grep -v "text" | grep -v "empty" | wc -l || echo 0)
 
+          if [ "$BINARIES" -gt 0 ]; then
+            echo "⚠️ Found $BINARIES non-image binary file(s)" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "<details>" >> $GITHUB_STEP_SUMMARY
+            echo "<summary>View binary files</summary>" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-            cat /tmp/health-check.log >> $GITHUB_STEP_SUMMARY
+            find . -type f ! -path "./.git/*" ! -path "./vendor/*" ! -path "./node_modules/*" \
+              ! -name "*.png" ! -name "*.jpg" ! -name "*.jpeg" ! -name "*.gif" ! -name "*.svg" ! -name "*.ico" \
+              ! -name "*.woff" ! -name "*.woff2" ! -name "*.ttf" ! -name "*.eot" \
+              -exec file {} \; | grep -v "text" | grep -v "empty" | cut -d: -f1 >> $GITHUB_STEP_SUMMARY
             echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-
-            if [ "$EXIT_CODE" -eq 0 ]; then
-              echo "" >> $GITHUB_STEP_SUMMARY
-              echo "✅ Repository health check passed!" >> $GITHUB_STEP_SUMMARY
-              exit 0
-            else
-              echo "" >> $GITHUB_STEP_SUMMARY
-              echo "⚠️ Repository health issues detected" >> $GITHUB_STEP_SUMMARY
-              echo "**Note:** This is informational - review recommendations to improve" >> $GITHUB_STEP_SUMMARY
-              exit 0  # Non-blocking
-            fi
+            echo "</details>" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "**Recommendation**: Source control should primarily contain text files" >> $GITHUB_STEP_SUMMARY
           else
-            echo "ℹ️ Repository health check script not found - skipping" >> $GITHUB_STEP_SUMMARY
-            exit 0
+            echo "✅ No unexpected binary files detected" >> $GITHUB_STEP_SUMMARY
           fi
+
+  # ============================================================================
+  # PHASE 4: Nice to Have Checks
+  # ============================================================================
 
   todo-fixme-tracking:
     name: TODO/FIXME Tracking
@@ -1181,153 +1616,130 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Note**: This is an informational check. Technical debt items don't block compliance." >> $GITHUB_STEP_SUMMARY
 
-  file-size-limits:
-    name: File Size Limits
+  dependency-vulnerabilities:
+    name: Dependency Vulnerability Scanning
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
-      - name: Check File Sizes
+      - name: Setup PHP
+        uses: shivammathur/setup-php@accd6127cb78bee3e8082180cb391013d204ef9f # v2.31.0
+        with:
+          php-version: '8.1'
+
+      - name: Setup Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: '3.x'
+
+      - name: Scan Dependencies
         run: |
           set -x
-          echo "## 📦 File Size Validation" >> $GITHUB_STEP_SUMMARY
+          echo "## 🛡️ Dependency Vulnerability Scanning" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
-          # Find large files (>1MB)
-          LARGE_FILES=$(find . -type f -size +1M ! -path "./.git/*" ! -path "./vendor/*" ! -path "./node_modules/*" 2>/dev/null | wc -l)
-          HUGE_FILES=$(find . -type f -size +15M ! -path "./.git/*" ! -path "./vendor/*" ! -path "./node_modules/*" 2>/dev/null | wc -l)
+          VULNERABILITIES=0
 
-          echo "### Size Thresholds" >> $GITHUB_STEP_SUMMARY
-          echo "- **Warning**: Files >1MB" >> $GITHUB_STEP_SUMMARY
-          echo "- **Critical**: Files >15MB" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-
-          if [ "$HUGE_FILES" -gt 0 ]; then
-            echo "❌ **Critical**: Found $HUGE_FILES file(s) exceeding 15MB" >> $GITHUB_STEP_SUMMARY
+          # PHP Dependencies
+          if [ -f "composer.json" ]; then
+            echo "### PHP Dependencies (composer)" >> $GITHUB_STEP_SUMMARY
+            if composer audit --no-dev 2>&1 | tee /tmp/php_audit.txt; then
+              echo "✅ No PHP vulnerabilities detected" >> $GITHUB_STEP_SUMMARY
+            else
+              VULN_COUNT=$(grep -c "vulnerability" /tmp/php_audit.txt || echo 0)
+              echo "⚠️ Found $VULN_COUNT PHP vulnerability/vulnerabilities" >> $GITHUB_STEP_SUMMARY
+              VULNERABILITIES=$((VULNERABILITIES + VULN_COUNT))
+            fi
             echo "" >> $GITHUB_STEP_SUMMARY
-            echo "<details>" >> $GITHUB_STEP_SUMMARY
-            echo "<summary>View files >15MB</summary>" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-            find . -type f -size +15M ! -path "./.git/*" ! -path "./vendor/*" ! -path "./node_modules/*" -exec ls -lh {} + 2>/dev/null | awk '{print $5, $9}' >> $GITHUB_STEP_SUMMARY
-            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-            echo "</details>" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "**Action Required**: Remove or optimize files >15MB" >> $GITHUB_STEP_SUMMARY
-            exit 1
-          elif [ "$LARGE_FILES" -gt 0 ]; then
-            echo "⚠️ **Warning**: Found $LARGE_FILES file(s) between 1MB and 15MB" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "<details>" >> $GITHUB_STEP_SUMMARY
-            echo "<summary>View files >1MB</summary>" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-            find . -type f -size +1M ! -path "./.git/*" ! -path "./vendor/*" ! -path "./node_modules/*" -exec ls -lh {} + 2>/dev/null | awk '{print $5, $9}' >> $GITHUB_STEP_SUMMARY
-            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-            echo "</details>" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "**Recommendation**: Consider optimizing or documenting large files" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "✅ All files within acceptable size limits (<1MB)" >> $GITHUB_STEP_SUMMARY
           fi
 
-  secret-scanning:
-    name: Secret Scanning
+          # Python Dependencies
+          if [ -f "requirements.txt" ]; then
+            echo "### Python Dependencies" >> $GITHUB_STEP_SUMMARY
+            pip install pip-audit 2>&1 > /dev/null
+            if pip-audit -r requirements.txt 2>&1 | tee /tmp/py_audit.txt; then
+              echo "✅ No Python vulnerabilities detected" >> $GITHUB_STEP_SUMMARY
+            else
+              VULN_COUNT=$(grep -c "vulnerability" /tmp/py_audit.txt || echo 0)
+              echo "⚠️ Found $VULN_COUNT Python vulnerability/vulnerabilities" >> $GITHUB_STEP_SUMMARY
+              VULNERABILITIES=$((VULNERABILITIES + VULN_COUNT))
+            fi
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          # NPM Dependencies
+          if [ -f "package.json" ]; then
+            echo "### NPM Dependencies" >> $GITHUB_STEP_SUMMARY
+            if npm audit --production 2>&1 | tee /tmp/npm_audit.txt; then
+              echo "✅ No NPM vulnerabilities detected" >> $GITHUB_STEP_SUMMARY
+            else
+              VULN_COUNT=$(grep -c "vulnerability" /tmp/npm_audit.txt || echo 0)
+              echo "⚠️ Found $VULN_COUNT NPM vulnerability/vulnerabilities" >> $GITHUB_STEP_SUMMARY
+              VULNERABILITIES=$((VULNERABILITIES + VULN_COUNT))
+            fi
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if [ "$VULNERABILITIES" -gt 0 ]; then
+            echo "**Total Vulnerabilities**: $VULNERABILITIES" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "**Action Required**: Update vulnerable dependencies" >> $GITHUB_STEP_SUMMARY
+            exit 1
+          else
+            echo "✅ No dependency vulnerabilities detected" >> $GITHUB_STEP_SUMMARY
+          fi
+
+  unused-dependencies:
+    name: Unused Dependencies Check
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
-      - name: Scan for Secrets
+      - name: Setup PHP
+        uses: shivammathur/setup-php@accd6127cb78bee3e8082180cb391013d204ef9f # v2.31.0
+        with:
+          php-version: '8.1'
+
+      - name: Check Unused Dependencies
         run: |
           set -x
-          echo "## 🔒 Secret Scanning" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Scanning for hardcoded secrets and credentials." >> $GITHUB_STEP_SUMMARY
+          echo "## 📦 Unused Dependencies Check" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
-          # Define secret patterns
-          VIOLATIONS=0
+          if [ -f "composer.json" ]; then
+            echo "### PHP Dependencies" >> $GITHUB_STEP_SUMMARY
 
-          # Check for common secret patterns
-          echo "### Secret Patterns" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
+            # Install composer-unused
+            composer global require icanhazstring/composer-unused 2>/dev/null || true
 
-          # Pattern 1: password/secret assignments
-          # Exclusions:
-          #   test|example|sample     - test/example files
-          #   getenv                  - environment-variable reads
-          #   /\.\*/|^\s*//           - regex patterns and commented lines
-          #   CREDENTIAL_PATTERNS|SecurityValidator|SECRET_PATTERN - scanner internals
-          #   ===|!==                 - strict comparison operators (not assignments)
-          #   ApiClient               - constructor calls where token is a variable arg
-          if grep -r -n -E "(password|passwd|pwd|secret|api[_-]?key|token).*=.*['\"]" . \
-            --include="*.php" --include="*.py" --include="*.js" --include="*.ts" \
-            --exclude-dir=".git" --exclude-dir="vendor" --exclude-dir="node_modules" 2>/dev/null | \
-            grep -v -E '(test|example|sample|getenv|/\.\*/|^\s*//|CREDENTIAL_PATTERNS|SecurityValidator|SECRET_PATTERN|===|!==|ApiClient)' | \
-            grep -v "= ''" | grep -v '= ""' > /tmp/secrets1.txt 2>/dev/null; then
-            COUNT=$(wc -l < /tmp/secrets1.txt)
-            if [ "$COUNT" -gt 0 ]; then
-              echo "⚠️ Found $COUNT potential secret assignment(s)" >> $GITHUB_STEP_SUMMARY
-              VIOLATIONS=$((VIOLATIONS + COUNT))
+            if composer global exec composer-unused 2>&1 | tee /tmp/unused.txt; then
+              UNUSED_COUNT=$(grep "unused" /tmp/unused.txt | wc -l || echo 0)
+              if [ "$UNUSED_COUNT" -gt 0 ]; then
+                echo "⚠️ Found $UNUSED_COUNT unused dependency/dependencies" >> $GITHUB_STEP_SUMMARY
+                echo "" >> $GITHUB_STEP_SUMMARY
+                echo "<details>" >> $GITHUB_STEP_SUMMARY
+                echo "<summary>View unused dependencies</summary>" >> $GITHUB_STEP_SUMMARY
+                echo "" >> $GITHUB_STEP_SUMMARY
+                echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+                cat /tmp/unused.txt >> $GITHUB_STEP_SUMMARY
+                echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+                echo "</details>" >> $GITHUB_STEP_SUMMARY
+              else
+                echo "✅ No unused dependencies detected" >> $GITHUB_STEP_SUMMARY
+              fi
+            else
+              echo "✅ All dependencies appear to be in use" >> $GITHUB_STEP_SUMMARY
             fi
-          fi
-
-          # Pattern 2: Private keys
-          if grep -r -n "BEGIN.*PRIVATE KEY" . \
-            --include="*.pem" --include="*.key" --include="*.txt" \
-            --exclude-dir=".git" --exclude-dir="vendor" --exclude-dir="node_modules" 2>/dev/null > /tmp/secrets2.txt; then
-            COUNT=$(wc -l < /tmp/secrets2.txt)
-            if [ "$COUNT" -gt 0 ]; then
-              echo "❌ Found $COUNT private key file(s)" >> $GITHUB_STEP_SUMMARY
-              VIOLATIONS=$((VIOLATIONS + COUNT))
-            fi
-          fi
-
-          # Pattern 3: AWS keys
-          if grep -r -n -E "AKIA[0-9A-Z]{16}" . \
-            --include="*.php" --include="*.py" --include="*.js" --include="*.txt" --include="*.env" \
-            --exclude-dir=".git" --exclude-dir="vendor" --exclude-dir="node_modules" 2>/dev/null > /tmp/secrets3.txt; then
-            COUNT=$(wc -l < /tmp/secrets3.txt)
-            if [ "$COUNT" -gt 0 ]; then
-              echo "❌ Found $COUNT potential AWS access key(s)" >> $GITHUB_STEP_SUMMARY
-              VIOLATIONS=$((VIOLATIONS + COUNT))
-            fi
-          fi
-
-          # Pattern 4: GitHub tokens
-          if grep -r -n -E "gh[ps]_[a-zA-Z0-9]{36}" . \
-            --include="*.php" --include="*.py" --include="*.js" --include="*.txt" --include="*.env" \
-            --exclude-dir=".git" --exclude-dir="vendor" --exclude-dir="node_modules" 2>/dev/null > /tmp/secrets4.txt; then
-            COUNT=$(wc -l < /tmp/secrets4.txt)
-            if [ "$COUNT" -gt 0 ]; then
-              echo "❌ Found $COUNT potential GitHub token(s)" >> $GITHUB_STEP_SUMMARY
-              VIOLATIONS=$((VIOLATIONS + COUNT))
-            fi
-          fi
-
-          echo "" >> $GITHUB_STEP_SUMMARY
-
-          if [ "$VIOLATIONS" -gt 0 ]; then
-            echo "**Total Violations**: $VIOLATIONS" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "<details>" >> $GITHUB_STEP_SUMMARY
-            echo "<summary>View detected secrets (file paths only)</summary>" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-            cat /tmp/secrets*.txt 2>/dev/null | cut -d: -f1 | sort -u >> $GITHUB_STEP_SUMMARY
-            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-            echo "</details>" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "**Action Required**: Remove hardcoded secrets immediately!" >> $GITHUB_STEP_SUMMARY
-            echo "Use environment variables or secrets management instead." >> $GITHUB_STEP_SUMMARY
-            exit 1
           else
-            echo "✅ No hardcoded secrets detected" >> $GITHUB_STEP_SUMMARY
+            echo "ℹ️ No composer.json found" >> $GITHUB_STEP_SUMMARY
           fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Recommendation**: Remove unused dependencies to reduce attack surface" >> $GITHUB_STEP_SUMMARY
 
   broken-link-detection:
     name: Broken Link Detection
@@ -1418,283 +1830,6 @@ jobs:
   # PHASE 2: Medium Priority Checks
   # ============================================================================
 
-  dependency-vulnerabilities:
-    name: Dependency Vulnerability Scanning
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1 # v2.31.0
-        with:
-          php-version: '8.1'
-
-      - name: Setup Python
-        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
-        with:
-          python-version: '3.x'
-
-      - name: Scan Dependencies
-        run: |
-          set -x
-          echo "## 🛡️ Dependency Vulnerability Scanning" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-
-          VULNERABILITIES=0
-
-          # PHP Dependencies
-          if [ -f "composer.json" ]; then
-            echo "### PHP Dependencies (composer)" >> $GITHUB_STEP_SUMMARY
-            if composer audit --no-dev 2>&1 | tee /tmp/php_audit.txt; then
-              echo "✅ No PHP vulnerabilities detected" >> $GITHUB_STEP_SUMMARY
-            else
-              VULN_COUNT=$(grep -c "vulnerability" /tmp/php_audit.txt || echo 0)
-              echo "⚠️ Found $VULN_COUNT PHP vulnerability/vulnerabilities" >> $GITHUB_STEP_SUMMARY
-              VULNERABILITIES=$((VULNERABILITIES + VULN_COUNT))
-            fi
-            echo "" >> $GITHUB_STEP_SUMMARY
-          fi
-
-          # Python Dependencies
-          if [ -f "requirements.txt" ]; then
-            echo "### Python Dependencies" >> $GITHUB_STEP_SUMMARY
-            pip install pip-audit 2>&1 > /dev/null
-            if pip-audit -r requirements.txt 2>&1 | tee /tmp/py_audit.txt; then
-              echo "✅ No Python vulnerabilities detected" >> $GITHUB_STEP_SUMMARY
-            else
-              VULN_COUNT=$(grep -c "vulnerability" /tmp/py_audit.txt || echo 0)
-              echo "⚠️ Found $VULN_COUNT Python vulnerability/vulnerabilities" >> $GITHUB_STEP_SUMMARY
-              VULNERABILITIES=$((VULNERABILITIES + VULN_COUNT))
-            fi
-            echo "" >> $GITHUB_STEP_SUMMARY
-          fi
-
-          # NPM Dependencies
-          if [ -f "package.json" ]; then
-            echo "### NPM Dependencies" >> $GITHUB_STEP_SUMMARY
-            if npm audit --production 2>&1 | tee /tmp/npm_audit.txt; then
-              echo "✅ No NPM vulnerabilities detected" >> $GITHUB_STEP_SUMMARY
-            else
-              VULN_COUNT=$(grep -c "vulnerability" /tmp/npm_audit.txt || echo 0)
-              echo "⚠️ Found $VULN_COUNT NPM vulnerability/vulnerabilities" >> $GITHUB_STEP_SUMMARY
-              VULNERABILITIES=$((VULNERABILITIES + VULN_COUNT))
-            fi
-            echo "" >> $GITHUB_STEP_SUMMARY
-          fi
-
-          if [ "$VULNERABILITIES" -gt 0 ]; then
-            echo "**Total Vulnerabilities**: $VULNERABILITIES" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "**Action Required**: Update vulnerable dependencies" >> $GITHUB_STEP_SUMMARY
-            exit 1
-          else
-            echo "✅ No dependency vulnerabilities detected" >> $GITHUB_STEP_SUMMARY
-          fi
-
-  code-duplication:
-    name: Code Duplication Detection
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1 # v2.31.0
-        with:
-          php-version: '8.1'
-
-      - name: Detect Duplicates
-        run: |
-          set -x
-          echo "## 🔁 Code Duplication Detection" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-
-          # Check if PHP files exist
-          PHP_COUNT=$(find . -name "*.php" ! -path "./vendor/*" ! -path "./.git/*" | wc -l)
-
-          if [ "$PHP_COUNT" -gt 0 ]; then
-            echo "### PHP Code Duplication" >> $GITHUB_STEP_SUMMARY
-
-            # Install phpcpd
-            wget https://phar.phpunit.de/phpcpd.phar 2>/dev/null
-            chmod +x phpcpd.phar
-
-            # Run duplication detection
-            if ./phpcpd.phar --exclude vendor --exclude .git . 2>&1 | tee /tmp/phpcpd.txt; then
-              DUPLICATION=$(grep "Found" /tmp/phpcpd.txt | grep -oE "[0-9]+\.[0-9]+%" | head -1 || echo "0.00%")
-              echo "📊 **Duplication Rate**: $DUPLICATION" >> $GITHUB_STEP_SUMMARY
-              echo "" >> $GITHUB_STEP_SUMMARY
-
-              DUPLICATION_NUM=$(echo "$DUPLICATION" | sed 's/%//')
-              if [ $(echo "$DUPLICATION_NUM > 5.0" | bc -l) -eq 1 ]; then
-                echo "⚠️ Code duplication exceeds 5% threshold" >> $GITHUB_STEP_SUMMARY
-                echo "" >> $GITHUB_STEP_SUMMARY
-                echo "<details>" >> $GITHUB_STEP_SUMMARY
-                echo "<summary>View duplication details</summary>" >> $GITHUB_STEP_SUMMARY
-                echo "" >> $GITHUB_STEP_SUMMARY
-                echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-                cat /tmp/phpcpd.txt >> $GITHUB_STEP_SUMMARY
-                echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-                echo "</details>" >> $GITHUB_STEP_SUMMARY
-              else
-                echo "✅ Code duplication within acceptable limits (<5%)" >> $GITHUB_STEP_SUMMARY
-              fi
-            else
-              echo "✅ No significant code duplication detected" >> $GITHUB_STEP_SUMMARY
-            fi
-          else
-            echo "ℹ️ No PHP files found for duplication analysis" >> $GITHUB_STEP_SUMMARY
-          fi
-
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Note**: This is an informational check to encourage DRY principles." >> $GITHUB_STEP_SUMMARY
-
-  unused-dependencies:
-    name: Unused Dependencies Check
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1 # v2.31.0
-        with:
-          php-version: '8.1'
-
-      - name: Check Unused Dependencies
-        run: |
-          set -x
-          echo "## 📦 Unused Dependencies Check" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-
-          if [ -f "composer.json" ]; then
-            echo "### PHP Dependencies" >> $GITHUB_STEP_SUMMARY
-
-            # Install composer-unused
-            composer global require icanhazstring/composer-unused 2>/dev/null || true
-
-            if composer global exec composer-unused 2>&1 | tee /tmp/unused.txt; then
-              UNUSED_COUNT=$(grep "unused" /tmp/unused.txt | wc -l || echo 0)
-              if [ "$UNUSED_COUNT" -gt 0 ]; then
-                echo "⚠️ Found $UNUSED_COUNT unused dependency/dependencies" >> $GITHUB_STEP_SUMMARY
-                echo "" >> $GITHUB_STEP_SUMMARY
-                echo "<details>" >> $GITHUB_STEP_SUMMARY
-                echo "<summary>View unused dependencies</summary>" >> $GITHUB_STEP_SUMMARY
-                echo "" >> $GITHUB_STEP_SUMMARY
-                echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-                cat /tmp/unused.txt >> $GITHUB_STEP_SUMMARY
-                echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-                echo "</details>" >> $GITHUB_STEP_SUMMARY
-              else
-                echo "✅ No unused dependencies detected" >> $GITHUB_STEP_SUMMARY
-              fi
-            else
-              echo "✅ All dependencies appear to be in use" >> $GITHUB_STEP_SUMMARY
-            fi
-          else
-            echo "ℹ️ No composer.json found" >> $GITHUB_STEP_SUMMARY
-          fi
-
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Recommendation**: Remove unused dependencies to reduce attack surface" >> $GITHUB_STEP_SUMMARY
-
-  readme-completeness:
-    name: README Completeness Check
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-
-      - name: Check README Sections
-        run: |
-          set -x
-          echo "## 📄 README Completeness Check" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-
-          if [ ! -f "README.md" ]; then
-            echo "❌ README.md not found" >> $GITHUB_STEP_SUMMARY
-            exit 1
-          fi
-
-          # Required sections
-          REQUIRED_SECTIONS=("Installation" "Usage" "Contributing" "License")
-          MISSING=0
-          PRESENT=0
-
-          echo "### Required Sections" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-
-          for section in "${REQUIRED_SECTIONS[@]}"; do
-            if grep -qi "##.*$section" README.md; then
-              echo "✅ $section" >> $GITHUB_STEP_SUMMARY
-              PRESENT=$((PRESENT + 1))
-            else
-              echo "❌ $section" >> $GITHUB_STEP_SUMMARY
-              MISSING=$((MISSING + 1))
-            fi
-          done
-
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Completeness**: $PRESENT/${#REQUIRED_SECTIONS[@]} required sections present" >> $GITHUB_STEP_SUMMARY
-
-          if [ "$MISSING" -gt 0 ]; then
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "**Action Required**: Add missing sections to README.md" >> $GITHUB_STEP_SUMMARY
-            exit 1
-          fi
-
-  # ============================================================================
-  # PHASE 3: Future Enhancements
-  # ============================================================================
-
-  code-complexity:
-    name: Code Complexity Analysis
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1 # v2.31.0
-        with:
-          php-version: '8.1'
-
-      - name: Analyze Complexity
-        run: |
-          set -x
-          echo "## 📊 Code Complexity Analysis" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-
-          PHP_COUNT=$(find . -name "*.php" ! -path "./vendor/*" ! -path "./.git/*" | wc -l)
-
-          if [ "$PHP_COUNT" -gt 0 ]; then
-            # Install phploc
-            wget https://phar.phpunit.de/phploc.phar 2>/dev/null
-            chmod +x phploc.phar
-
-            echo "### PHP Code Metrics" >> $GITHUB_STEP_SUMMARY
-            if ./phploc.phar --exclude vendor --exclude .git . 2>&1 | tee /tmp/phploc.txt; then
-              COMPLEXITY=$(grep "Cyclomatic Complexity" /tmp/phploc.txt | grep "Average" | awk '{print $NF}' || echo "N/A")
-              echo "**Average Cyclomatic Complexity**: $COMPLEXITY" >> $GITHUB_STEP_SUMMARY
-              echo "" >> $GITHUB_STEP_SUMMARY
-
-              if [ "$COMPLEXITY" != "N/A" ] && [ $(echo "$COMPLEXITY > 10" | bc -l) -eq 1 ]; then
-                echo "⚠️ Average complexity exceeds recommended threshold (10)" >> $GITHUB_STEP_SUMMARY
-                echo "**Recommendation**: Refactor complex functions" >> $GITHUB_STEP_SUMMARY
-              else
-                echo "✅ Code complexity within acceptable limits" >> $GITHUB_STEP_SUMMARY
-              fi
-            fi
-          else
-            echo "ℹ️ No PHP files found for complexity analysis" >> $GITHUB_STEP_SUMMARY
-          fi
-
   api-documentation:
     name: API Documentation Coverage
     runs-on: ubuntu-latest
@@ -1726,176 +1861,6 @@ jobs:
             fi
           else
             echo "ℹ️ No public methods found for documentation check" >> $GITHUB_STEP_SUMMARY
-          fi
-
-  insecure-patterns:
-    name: Insecure Code Pattern Detection
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-
-      - name: Scan for Insecure Patterns
-        run: |
-          set -x
-          echo "## 🔒 Insecure Code Pattern Detection" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-
-          VIOLATIONS=0
-
-          # PHP: SQL injection patterns
-          if grep -r -n "\\$_\(GET\|POST\|REQUEST\).*mysql_query\|mysqli_query" . --include="*.php" ! -path "./vendor/*" 2>/dev/null > /tmp/sql_inject.txt; then
-            COUNT=$(wc -l < /tmp/sql_inject.txt)
-            echo "⚠️ Found $COUNT potential SQL injection pattern(s)" >> $GITHUB_STEP_SUMMARY
-            VIOLATIONS=$((VIOLATIONS + COUNT))
-          fi
-
-          # PHP: eval/exec usage
-          if grep -r -n "eval\|exec\|system\|passthru\|shell_exec" . --include="*.php" ! -path "./vendor/*" 2>/dev/null > /tmp/exec.txt; then
-            COUNT=$(wc -l < /tmp/exec.txt)
-            echo "⚠️ Found $COUNT dangerous function call(s)" >> $GITHUB_STEP_SUMMARY
-            VIOLATIONS=$((VIOLATIONS + COUNT))
-          fi
-
-          # Python: eval usage
-          if grep -r -n "eval(" . --include="*.py" 2>/dev/null > /tmp/py_eval.txt; then
-            COUNT=$(wc -l < /tmp/py_eval.txt)
-            echo "⚠️ Found $COUNT Python eval() usage(s)" >> $GITHUB_STEP_SUMMARY
-            VIOLATIONS=$((VIOLATIONS + COUNT))
-          fi
-
-          echo "" >> $GITHUB_STEP_SUMMARY
-
-          if [ "$VIOLATIONS" -gt 0 ]; then
-            echo "**Total Violations**: $VIOLATIONS" >> $GITHUB_STEP_SUMMARY
-            echo "**Recommendation**: Review and secure flagged patterns" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "✅ No insecure patterns detected" >> $GITHUB_STEP_SUMMARY
-          fi
-
-  binary-file-detection:
-    name: Binary File Detection
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-
-      - name: Detect Binary Files
-        run: |
-          set -x
-          echo "## 🔍 Binary File Detection" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-
-          # Find binary files excluding allowed types
-          BINARIES=$(find . -type f ! -path "./.git/*" ! -path "./vendor/*" ! -path "./node_modules/*" \
-            ! -name "*.png" ! -name "*.jpg" ! -name "*.jpeg" ! -name "*.gif" ! -name "*.svg" ! -name "*.ico" \
-            ! -name "*.woff" ! -name "*.woff2" ! -name "*.ttf" ! -name "*.eot" \
-            -exec file {} \; | grep -v "text" | grep -v "empty" | wc -l || echo 0)
-
-          if [ "$BINARIES" -gt 0 ]; then
-            echo "⚠️ Found $BINARIES non-image binary file(s)" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "<details>" >> $GITHUB_STEP_SUMMARY
-            echo "<summary>View binary files</summary>" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-            find . -type f ! -path "./.git/*" ! -path "./vendor/*" ! -path "./node_modules/*" \
-              ! -name "*.png" ! -name "*.jpg" ! -name "*.jpeg" ! -name "*.gif" ! -name "*.svg" ! -name "*.ico" \
-              ! -name "*.woff" ! -name "*.woff2" ! -name "*.ttf" ! -name "*.eot" \
-              -exec file {} \; | grep -v "text" | grep -v "empty" | cut -d: -f1 >> $GITHUB_STEP_SUMMARY
-            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-            echo "</details>" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "**Recommendation**: Source control should primarily contain text files" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "✅ No unexpected binary files detected" >> $GITHUB_STEP_SUMMARY
-          fi
-
-  # ============================================================================
-  # PHASE 4: Nice to Have Checks
-  # ============================================================================
-
-  dead-code-detection:
-    name: Dead Code Detection
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-
-      - name: Setup Python
-        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
-        with:
-          python-version: '3.x'
-
-      - name: Detect Dead Code
-        run: |
-          set -x
-          echo "## 🗑️ Dead Code Detection" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-
-          PY_COUNT=$(find . -name "*.py" ! -path "./vendor/*" ! -path "./.git/*" ! -path "./venv/*" | wc -l)
-
-          if [ "$PY_COUNT" -gt 0 ]; then
-            pip install vulture 2>/dev/null
-            echo "### Python Dead Code" >> $GITHUB_STEP_SUMMARY
-
-            if vulture . --exclude vendor,venv,.git 2>&1 | tee /tmp/vulture.txt; then
-              DEAD_COUNT=$(wc -l < /tmp/vulture.txt || echo 0)
-              if [ "$DEAD_COUNT" -gt 0 ]; then
-                echo "⚠️ Found $DEAD_COUNT potential dead code item(s)" >> $GITHUB_STEP_SUMMARY
-                echo "" >> $GITHUB_STEP_SUMMARY
-                echo "<details>" >> $GITHUB_STEP_SUMMARY
-                echo "<summary>View dead code</summary>" >> $GITHUB_STEP_SUMMARY
-                echo "" >> $GITHUB_STEP_SUMMARY
-                echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-                head -50 /tmp/vulture.txt >> $GITHUB_STEP_SUMMARY
-                echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-                echo "</details>" >> $GITHUB_STEP_SUMMARY
-              else
-                echo "✅ No dead code detected" >> $GITHUB_STEP_SUMMARY
-              fi
-            fi
-          else
-            echo "ℹ️ No Python files found for dead code analysis" >> $GITHUB_STEP_SUMMARY
-          fi
-
-  file-naming-standards:
-    name: File Naming Standards
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-
-      - name: Check File Naming
-        run: |
-          set -x
-          echo "## 📝 File Naming Standards" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-
-          VIOLATIONS=0
-
-          # Check PHP files (should be PascalCase for classes)
-          INVALID_PHP=$(find . -name "*.php" ! -path "./vendor/*" ! -path "./.git/*" ! -regex ".*/[A-Z][a-zA-Z0-9]*\.php" ! -name "index.php" ! -name "functions.php" | wc -l || echo 0)
-
-          # Check config files (should be kebab-case)
-          INVALID_CONFIG=$(find . -name "*.yml" -o -name "*.yaml" -o -name "*.json" ! -path "./vendor/*" ! -path "./.git/*" ! -path "./node_modules/*" | grep -E "[A-Z_]" | wc -l || echo 0)
-
-          echo "### Naming Violations" >> $GITHUB_STEP_SUMMARY
-          echo "- **PHP files not PascalCase**: $INVALID_PHP" >> $GITHUB_STEP_SUMMARY
-          echo "- **Config files not kebab-case**: $INVALID_CONFIG" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-
-          VIOLATIONS=$((INVALID_PHP + INVALID_CONFIG))
-
-          if [ "$VIOLATIONS" -gt 0 ]; then
-            echo "⚠️ Found $VIOLATIONS naming convention violation(s)" >> $GITHUB_STEP_SUMMARY
-            echo "**Recommendation**: Follow naming conventions for consistency" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "✅ File naming conventions followed" >> $GITHUB_STEP_SUMMARY
           fi
 
   accessibility-check:
@@ -1978,6 +1943,106 @@ jobs:
             fi
           else
             echo "ℹ️ Not a JavaScript project" >> $GITHUB_STEP_SUMMARY
+          fi
+
+  enterprise-readiness:
+    name: Enterprise Readiness Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@accd6127cb78bee3e8082180cb391013d204ef9f # v2.31.0
+        with:
+          php-version: '8.1'
+          extensions: json, mbstring
+          tools: composer
+          coverage: none
+
+      - name: Install API Package
+        run: composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+        env:
+          COMPOSER_AUTH: '{"github-oauth":{"github.com":"${{ secrets.GH_TOKEN }}"}}'
+
+      - name: Check Enterprise Readiness
+        id: enterprise_check
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ -f "api/validate/check_enterprise_readiness.php" ]; then
+            php api/validate/check_enterprise_readiness.php --verbose | tee /tmp/enterprise-check.log
+            EXIT_CODE=$?
+
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            cat /tmp/enterprise-check.log >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+
+            if [ "$EXIT_CODE" -eq 0 ]; then
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "✅ Repository meets enterprise readiness criteria!" >> $GITHUB_STEP_SUMMARY
+              exit 0
+            else
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "⚠️ Enterprise readiness issues detected" >> $GITHUB_STEP_SUMMARY
+              echo "**Note:** This is informational - review recommendations to improve" >> $GITHUB_STEP_SUMMARY
+              exit 0  # Non-blocking
+            fi
+          else
+            echo "ℹ️ Enterprise readiness check script not found - skipping" >> $GITHUB_STEP_SUMMARY
+            exit 0
+          fi
+
+  repository-health:
+    name: Repository Health Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@accd6127cb78bee3e8082180cb391013d204ef9f # v2.31.0
+        with:
+          php-version: '8.1'
+          extensions: json, mbstring
+          tools: composer
+          coverage: none
+
+      - name: Install API Package
+        run: composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+        env:
+          COMPOSER_AUTH: '{"github-oauth":{"github.com":"${{ secrets.GH_TOKEN }}"}}'
+
+      - name: Check Repository Health
+        id: health_check
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ -f "api/validate/check_repo_health.php" ]; then
+            php api/validate/check_repo_health.php --verbose | tee /tmp/health-check.log
+            EXIT_CODE=$?
+
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            cat /tmp/health-check.log >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+
+            if [ "$EXIT_CODE" -eq 0 ]; then
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "✅ Repository health check passed!" >> $GITHUB_STEP_SUMMARY
+              exit 0
+            else
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "⚠️ Repository health issues detected" >> $GITHUB_STEP_SUMMARY
+              echo "**Note:** This is informational - review recommendations to improve" >> $GITHUB_STEP_SUMMARY
+              exit 0  # Non-blocking
+            fi
+          else
+            echo "ℹ️ Repository health check script not found - skipping" >> $GITHUB_STEP_SUMMARY
+            exit 0
           fi
 
   terraform-validation:
@@ -2420,110 +2485,73 @@ jobs:
 
       - name: Create tracking issue for standards violations
         if: failure() && github.event_name == 'push'
-        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
-        with:
-          script: |
-            const compliancePercent = '${{ needs.compliance-check.outputs.compliance_percentage }}' || '0';
-            const failedChecks = [];
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN || github.token }}
+        run: |
+          REPO="${{ github.repository }}"
+          RUN_URL="${{ github.server_url }}/${REPO}/actions/runs/${{ github.run_id }}"
+          DATE=$(date -u '+%Y-%m-%d')
+          SHA="${{ github.sha }}"
+          ACTOR="${{ github.actor }}"
+          BRANCH="${{ github.ref_name }}"
 
-            // Collect failed checks from job outputs
-            const jobs = [
-              { name: 'File Headers', failed: '${{ needs.compliance-check.outputs.headers_ok }}' !== 'true' },
-              { name: 'Required Files', failed: '${{ needs.compliance-check.outputs.required_files_ok }}' !== 'true' },
-              { name: 'Documentation', failed: '${{ needs.compliance-check.outputs.documentation_ok }}' !== 'true' },
-              { name: 'Code Quality', failed: '${{ needs.compliance-check.outputs.code_quality_ok }}' !== 'true' }
-            ];
+          # Collect failed checks
+          FAILED=""
+          [ "${{ needs.repository-structure.result }}" != "success" ] && FAILED="${FAILED}\n- Repository Structure"
+          [ "${{ needs.documentation-quality.result }}" != "success" ] && FAILED="${FAILED}\n- Documentation Quality"
+          [ "${{ needs.coding-standards.result }}" != "success" ] && FAILED="${FAILED}\n- Coding Standards"
+          [ "${{ needs.license-compliance.result }}" != "success" ] && FAILED="${FAILED}\n- License Compliance"
+          [ "${{ needs.git-hygiene.result }}" != "success" ] && FAILED="${FAILED}\n- Git Hygiene"
+          [ "${{ needs.workflow-validation.result }}" != "success" ] && FAILED="${FAILED}\n- Workflow Validation"
+          [ "${{ needs.version-consistency.result }}" != "success" ] && FAILED="${FAILED}\n- Version Consistency"
+          [ "${{ needs.script-integrity.result }}" != "success" ] && FAILED="${FAILED}\n- Script Integrity"
+          [ "${{ needs.secret-scanning.result }}" != "success" ] && FAILED="${FAILED}\n- Secret Scanning"
+          [ "${{ needs.line-length-validation.result }}" != "success" ] && FAILED="${FAILED}\n- Line Length"
+          [ "${{ needs.file-size-limits.result }}" != "success" ] && FAILED="${FAILED}\n- File Size Limits"
+          [ "${{ needs.readme-completeness.result }}" != "success" ] && FAILED="${FAILED}\n- README Completeness"
 
-            jobs.forEach(job => {
-              if (job.failed) failedChecks.push(job.name);
-            });
+          if [ -z "$FAILED" ]; then
+            echo "No failed checks to report"
+            exit 0
+          fi
 
-            const body = `## 📋 Standards Compliance Violations Detected
+          TITLE="[Standards] Compliance violations — ${DATE}"
+          BODY="## Standards Compliance Violations
 
-            **Branch**: \`${context.ref}\`
-            **Commit**: ${context.sha.substring(0, 7)}
-            **Triggered by**: @${context.actor}
-            **Date**: ${new Date().toISOString()}
+          | Field | Value |
+          |-------|-------|
+          | **Branch** | \`${BRANCH}\` |
+          | **Commit** | \`${SHA:0:7}\` |
+          | **Actor** | @${ACTOR} |
+          | **Run** | [View workflow](${RUN_URL}) |
 
-            ### Compliance Score: ${compliancePercent}%
+          ### Failed Checks
+          $(printf '%b' "$FAILED")
 
-            ### ❌ Failed Checks
-            ${failedChecks.length > 0 ? failedChecks.map(check => `- ${check}`).join('\n') : '_Details available in workflow run_'}
+          ### Required Actions
+          1. Review the [workflow run](${RUN_URL}) for details
+          2. Fix each failed check
+          3. Push to trigger a new scan
 
-            ### 📊 What This Means
-            Your repository does not meet the required MokoStandards compliance threshold. This can affect:
-            - Code quality and maintainability
-            - Team collaboration efficiency
-            - Automated tooling integration
-            - Repository discoverability
+          ---
+          *Auto-created by standards-compliance workflow*"
 
-            ### ✅ Required Actions
-            1. Review the [workflow run](${context.payload.repository.html_url}/actions/runs/${context.runId}) for detailed findings
-            2. Address each failed check according to MokoStandards documentation
-            3. Push changes to trigger a new compliance scan
-            4. Ensure compliance reaches 100% before merging
+          BODY=$(echo "$BODY" | sed 's/^          //')
+          LABEL="standards-violation"
 
-            ### 📚 Resources
-            - [MokoStandards Documentation](https://github.com/mokoconsulting-tech/MokoStandards)
-            - [Repository Structure Guide](https://github.com/mokoconsulting-tech/MokoStandards/tree/main/docs/policy/core-structure.md)
-            - [Documentation Standards](https://github.com/mokoconsulting-tech/MokoStandards/tree/main/docs/policy/document-formatting.md)
-            - [Coding Standards](https://github.com/mokoconsulting-tech/MokoStandards/tree/main/docs/policy/coding-style-guide.md)
+          gh label create "$LABEL" --repo "$REPO" --color "D73A4A" --description "Standards compliance failure" --force 2>/dev/null || true
 
-            ### 🔄 Resolution
-            This issue will be automatically closed when compliance reaches 100%.
+          EXISTING=$(gh api "repos/${REPO}/issues?labels=${LABEL}&state=all&per_page=1&sort=created&direction=desc" \
+            --jq '.[0].number' 2>/dev/null)
 
-            ---
-            *This issue was automatically created by the Standards Compliance workflow.*
-            `;
-
-            // Validate assignees before creating issue
-            async function validateAssignees(assignees) {
-              const validAssignees = [];
-              for (const assignee of assignees) {
-                try {
-                  await github.rest.users.getByUsername({ username: assignee });
-                  validAssignees.push(assignee);
-                  console.log(`✓ Validated assignee: ${assignee}`);
-                } catch (error) {
-                  console.log(`✗ Invalid assignee (skipping): ${assignee} - ${error.message}`);
-                }
-              }
-              return validAssignees;
-            }
-
-            const requestedAssignees = ['jmiller-moko'];
-            const validAssignees = await validateAssignees(requestedAssignees);
-
-            // Check for existing open issue
-            const issues = await github.rest.issues.listForRepo({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              state: 'open',
-              labels: 'standards-violation',
-              per_page: 1
-            });
-
-            if (issues.data.length > 0) {
-              // Update existing issue
-              await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: issues.data[0].number,
-                body: `### 🔄 Updated Scan Results\n\n${body}`
-              });
-              console.log(`Updated existing issue #${issues.data[0].number}`);
-            } else {
-              // Create new issue with validated assignees
-              const issue = await github.rest.issues.create({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                title: `[Standards] Compliance Violations - ${new Date().toISOString().split('T')[0]}`,
-                body: body,
-                labels: ['standards-violation', 'compliance', 'automation'],
-                assignees: validAssignees
-              });
-              console.log(`Created new issue #${issue.data.number}`);
-            }
+          if [ -n "$EXISTING" ] && [ "$EXISTING" != "null" ]; then
+            gh api "repos/${REPO}/issues/${EXISTING}" -X PATCH \
+              -f title="$TITLE" -f body="$BODY" -f state="open" --silent
+            echo "Updated issue #${EXISTING}"
+          else
+            gh issue create --repo "$REPO" --title "$TITLE" --body "$BODY" \
+              --label "$LABEL" --assignee "jmiller-moko"
+          fi
 
 # CUSTOMIZATION:
 #
@@ -2532,3 +2560,4 @@ jobs:
 # 3. Integrate with custom linting tools
 # 4. Add notification steps for compliance failures
 # 5. Customize required files/directories for your project type
+
