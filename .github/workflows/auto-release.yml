@@ -1,7 +1,5 @@
 # Copyright (C) 2026 Moko Consulting <hello@mokoconsulting.tech>
 #
-# This file is part of a Moko Consulting project.
-#
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 # FILE INFORMATION
@@ -9,12 +7,26 @@
 # INGROUP: MokoStandards.Release
 # REPO: https://github.com/mokoconsulting-tech/MokoStandards
 # PATH: /templates/workflows/shared/auto-release.yml
-# VERSION: 04.01.00
-# BRIEF: Auto-create a GitHub Release on every push to main with version from README.md
-# NOTE: Synced via bulk-repo-sync to .github/workflows/auto-release.yml in all governed repos.
-#       For Dolibarr (crm-module) repos, also updates $this->version in the module descriptor.
+# VERSION: 04.02.30
+# BRIEF: Unified build & release pipeline — version branch, platform version, badges, tag, release
+#
+# ╔════════════════════════════════════════════════════════════════════════╗
+# ║                    BUILD & RELEASE PIPELINE                            ║
+# ╠════════════════════════════════════════════════════════════════════════╣
+# ║                                                                        ║
+# ║  Triggers on push to main (skips bot commits + [skip ci]):             ║
+# ║                                                                        ║
+# ║  1. Read version from README.md                                        ║
+# ║  2. Create version/XX.YY.ZZ branch (snapshot)                         ║
+# ║  3. Set platform version (Dolibarr $this->version, Joomla <version>)  ║
+# ║  4. Update [VERSION: XX.YY.ZZ] badges in markdown files               ║
+# ║  5. Write update.txt for Dolibarr module update checks                ║
+# ║  6. Create git tag vXX.YY.ZZ                                          ║
+# ║  7. Create GitHub Release with changelog notes                        ║
+# ║                                                                        ║
+# ╚════════════════════════════════════════════════════════════════════════╝
 
-name: Auto Release
+name: Build & Release
 
 on:
   push:
@@ -22,14 +34,16 @@ on:
       - main
       - master
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 permissions:
   contents: write
 
 jobs:
   release:
-    name: Create Release
+    name: Build & Release Pipeline
     runs-on: ubuntu-latest
-    # Skip bot commits (version sync, [skip ci]) to avoid infinite loops
     if: >-
       !contains(github.event.head_commit.message, '[skip ci]') &&
       github.actor != 'github-actions[bot]'
@@ -41,123 +55,250 @@ jobs:
           token: ${{ secrets.GH_TOKEN || github.token }}
           fetch-depth: 0
 
-      - name: Extract version from README.md
+      - name: Setup MokoStandards tools
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN || github.token }}
+          COMPOSER_AUTH: '{"github-oauth":{"github.com":"${{ secrets.GH_TOKEN || github.token }}"}}'
+        run: |
+          git clone --depth 1 --branch version/04.02.29 --quiet \
+            "https://x-access-token:${GH_TOKEN}@github.com/mokoconsulting-tech/MokoStandards.git" \
+            /tmp/mokostandards
+          cd /tmp/mokostandards
+          composer install --no-dev --no-interaction --quiet
+
+      # ── STEP 1: Read version ───────────────────────────────────────────
+      - name: "Step 1: Read version from README.md"
         id: version
         run: |
-          VERSION=$(grep -oP '^\s*VERSION:\s*\K[0-9]{2}\.[0-9]{2}\.[0-9]{2}' README.md | head -1)
+          VERSION=$(php /tmp/mokostandards/api/cli/version_read.php --path . 2>/dev/null)
           if [ -z "$VERSION" ]; then
-            echo "⚠️ No VERSION found in README.md — skipping release"
+            echo "⏭️ No VERSION in README.md — skipping release"
             echo "skip=true" >> "$GITHUB_OUTPUT"
             exit 0
           fi
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "tag=v${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "branch=version/${VERSION}" >> "$GITHUB_OUTPUT"
           echo "skip=false" >> "$GITHUB_OUTPUT"
-          echo "✅ Version: $VERSION (tag: v${VERSION})"
+          echo "✅ Version: $VERSION"
 
-      - name: Check if tag already exists
+      - name: Check if already released
         if: steps.version.outputs.skip != 'true'
-        id: tag_check
+        id: check
         run: |
           TAG="${{ steps.version.outputs.tag }}"
-          if git rev-parse "$TAG" >/dev/null 2>&1; then
-            echo "ℹ️ Tag $TAG already exists — skipping release"
-            echo "exists=true" >> "$GITHUB_OUTPUT"
+          BRANCH="${{ steps.version.outputs.branch }}"
+
+          TAG_EXISTS=false
+          BRANCH_EXISTS=false
+
+          git rev-parse "$TAG" >/dev/null 2>&1 && TAG_EXISTS=true
+          git ls-remote --heads origin "$BRANCH" 2>/dev/null | grep -q "$BRANCH" && BRANCH_EXISTS=true
+
+          echo "tag_exists=$TAG_EXISTS" >> "$GITHUB_OUTPUT"
+          echo "branch_exists=$BRANCH_EXISTS" >> "$GITHUB_OUTPUT"
+
+          if [ "$TAG_EXISTS" = "true" ] && [ "$BRANCH_EXISTS" = "true" ]; then
+            echo "already_released=true" >> "$GITHUB_OUTPUT"
           else
-            echo "exists=false" >> "$GITHUB_OUTPUT"
+            echo "already_released=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Update Dolibarr module version
+      # ── SANITY CHECKS ────────────────────────────────────────────────────
+      - name: "Sanity: Platform-specific validation"
         if: >-
           steps.version.outputs.skip != 'true' &&
-          steps.tag_check.outputs.exists != 'true'
+          steps.check.outputs.already_released != 'true'
         run: |
-          PLATFORM=""
-          if [ -f ".moko-standards" ]; then
-            PLATFORM=$(grep -E '^platform:' .moko-standards | sed 's/.*:[[:space:]]*//' | tr -d '"')
+          VERSION="${{ steps.version.outputs.version }}"
+          PLATFORM=$(php /tmp/mokostandards/api/cli/platform_detect.php --path . 2>/dev/null)
+          ERRORS=0
+
+          echo "## 🔍 Pre-Release Sanity Checks" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Platform: \`${PLATFORM}\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Common checks
+          if [ ! -f "LICENSE" ]; then
+            echo "❌ Missing LICENSE file" >> $GITHUB_STEP_SUMMARY
+            ERRORS=$((ERRORS+1))
+          else
+            echo "✅ LICENSE" >> $GITHUB_STEP_SUMMARY
           fi
 
-          VERSION="${{ steps.version.outputs.version }}"
+          if [ ! -d "src" ]; then
+            echo "⚠️ No src/ directory" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ src/ directory" >> $GITHUB_STEP_SUMMARY
+          fi
 
+          # Dolibarr-specific checks
           if [ "$PLATFORM" = "crm-module" ]; then
-            echo "📦 Dolibarr release — setting module version to '${VERSION}'"
-            # Update $this->version in the module descriptor (core/modules/mod*.class.php)
-            find . -path "*/core/modules/mod*.class.php" -exec \
-              sed -i "s/\(\$this->version\s*=\s*\)['\"][^'\"]*['\"]/\1'${VERSION}'/" {} + 2>/dev/null || true
+            MOD_FILE=$(find src -path "*/core/modules/mod*.class.php" -print -quit 2>/dev/null)
+            if [ -z "$MOD_FILE" ]; then
+              echo "❌ No module descriptor (src/core/modules/mod*.class.php)" >> $GITHUB_STEP_SUMMARY
+              ERRORS=$((ERRORS+1))
+            else
+              echo "✅ Module descriptor: \`${MOD_FILE}\`" >> $GITHUB_STEP_SUMMARY
+
+              # Check module number
+              NUMERO=$(grep -oP '\$this->numero\s*=\s*\K\d+' "$MOD_FILE" 2>/dev/null || echo "0")
+              if [ "$NUMERO" = "0" ] || [ -z "$NUMERO" ]; then
+                echo "❌ Module number (\$this->numero) is 0 or not set" >> $GITHUB_STEP_SUMMARY
+                ERRORS=$((ERRORS+1))
+              else
+                echo "✅ Module number: ${NUMERO}" >> $GITHUB_STEP_SUMMARY
+              fi
+
+              # Check url_last_version exists
+              if grep -q 'url_last_version' "$MOD_FILE" 2>/dev/null; then
+                echo "✅ url_last_version is set" >> $GITHUB_STEP_SUMMARY
+              else
+                echo "⚠️ url_last_version not set — update checks won't work" >> $GITHUB_STEP_SUMMARY
+              fi
+            fi
           fi
 
+          # Joomla-specific checks
           if [ "$PLATFORM" = "waas-component" ]; then
-            echo "📦 Joomla release — setting manifest version to '${VERSION}'"
-            # Update <version> tag in Joomla XML manifest files
-            find . -maxdepth 2 -name "*.xml" -exec grep -l '<extension' {} \; 2>/dev/null | while read -r manifest; do
-              sed -i "s|<version>[^<]*</version>|<version>${VERSION}</version>|" "$manifest" 2>/dev/null || true
-            done
+            MANIFEST=$(find . -maxdepth 2 -name "*.xml" -exec grep -l '<extension' {} \; 2>/dev/null | head -1)
+            if [ -z "$MANIFEST" ]; then
+              echo "❌ No Joomla XML manifest found" >> $GITHUB_STEP_SUMMARY
+              ERRORS=$((ERRORS+1))
+            else
+              echo "✅ Manifest: \`${MANIFEST}\`" >> $GITHUB_STEP_SUMMARY
+
+              # Check extension type
+              TYPE=$(grep -oP '<extension[^>]+type="\K[^"]+' "$MANIFEST" 2>/dev/null)
+              echo "✅ Extension type: ${TYPE:-unknown}" >> $GITHUB_STEP_SUMMARY
+            fi
           fi
 
-          # Commit the version update if anything changed
-          if ! git diff --quiet; then
-            git config --local user.email "github-actions[bot]@users.noreply.github.com"
-            git config --local user.name "github-actions[bot]"
-            git add -A
-            git commit -m "chore(release): set version to ${VERSION} [skip ci]" \
-              --author="github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
-            git push
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ "$ERRORS" -gt 0 ]; then
+            echo "**❌ ${ERRORS} error(s) — release may be incomplete**" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "**✅ All sanity checks passed**" >> $GITHUB_STEP_SUMMARY
           fi
 
-      - name: Extract changelog entry
+      # ── STEP 2: Create version branch ──────────────────────────────────
+      - name: "Step 2: Create version branch"
         if: >-
           steps.version.outputs.skip != 'true' &&
-          steps.tag_check.outputs.exists != 'true'
-        id: changelog
+          steps.check.outputs.branch_exists != 'true'
+        run: |
+          BRANCH="${{ steps.version.outputs.branch }}"
+          git checkout -b "$BRANCH"
+          git push origin "$BRANCH"
+          echo "🌿 Created branch: ${BRANCH}" >> $GITHUB_STEP_SUMMARY
+
+      # ── STEP 3: Set platform version ───────────────────────────────────
+      - name: "Step 3: Set platform version"
+        if: >-
+          steps.version.outputs.skip != 'true' &&
+          steps.check.outputs.already_released != 'true'
         run: |
           VERSION="${{ steps.version.outputs.version }}"
+          php /tmp/mokostandards/api/cli/version_set_platform.php \
+            --path . --version "$VERSION" --branch main
 
-          # Try to extract the section for this version from CHANGELOG.md
-          NOTES=""
-          if [ -f "CHANGELOG.md" ]; then
-            # Extract text between this version's heading and the next heading
-            NOTES=$(awk "/^##.*${VERSION}/,/^## /" CHANGELOG.md | head -50 | sed '1d;$d')
-          fi
-
-          if [ -z "$NOTES" ]; then
-            NOTES="Release ${VERSION}"
-          fi
-
-          # Write to file to avoid shell escaping issues
-          echo "$NOTES" > /tmp/release_notes.md
-          echo "✅ Release notes prepared"
-
-      - name: Create tag and release
+      # ── STEP 4: Update version badges ──────────────────────────────────
+      - name: "Step 4: Update version badges"
         if: >-
           steps.version.outputs.skip != 'true' &&
-          steps.tag_check.outputs.exists != 'true'
+          steps.check.outputs.already_released != 'true'
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          find . -name "*.md" ! -path "./.git/*" ! -path "./vendor/*" | while read -r f; do
+            if grep -q '\[VERSION:' "$f" 2>/dev/null; then
+              sed -i "s/\[VERSION:[[:space:]]*[0-9]\{2\}\.[0-9]\{2\}\.[0-9]\{2\}\]/[VERSION: ${VERSION}]/" "$f"
+            fi
+          done
+
+      # ── STEP 5: Write update.txt (Dolibarr) ────────────────────────────
+      - name: "Step 5: Write update.txt"
+        if: >-
+          steps.version.outputs.skip != 'true' &&
+          steps.check.outputs.already_released != 'true'
+        run: |
+          PLATFORM=$(php /tmp/mokostandards/api/cli/platform_detect.php --path . 2>/dev/null)
+          if [ "$PLATFORM" = "crm-module" ]; then
+            VERSION="${{ steps.version.outputs.version }}"
+            printf '%s' "$VERSION" > update.txt
+            echo "📦 update.txt: ${VERSION}" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      # ── Commit all changes ─────────────────────────────────────────────
+      - name: Commit release changes
+        if: >-
+          steps.version.outputs.skip != 'true' &&
+          steps.check.outputs.already_released != 'true'
+        run: |
+          if git diff --quiet && git diff --cached --quiet; then
+            echo "ℹ️ No changes to commit"
+            exit 0
+          fi
+          VERSION="${{ steps.version.outputs.version }}"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add -A
+          git commit -m "chore(release): build ${VERSION} [skip ci]" \
+            --author="github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
+          git push
+
+      # ── STEP 6: Create tag ─────────────────────────────────────────────
+      - name: "Step 6: Create git tag"
+        if: >-
+          steps.version.outputs.skip != 'true' &&
+          steps.check.outputs.tag_exists != 'true'
+        run: |
+          TAG="${{ steps.version.outputs.tag }}"
+          git tag "$TAG"
+          git push origin "$TAG"
+          echo "🏷️ Tag: ${TAG}" >> $GITHUB_STEP_SUMMARY
+
+      # ── STEP 7: Create GitHub Release ──────────────────────────────────
+      - name: "Step 7: Create GitHub Release"
+        if: >-
+          steps.version.outputs.skip != 'true' &&
+          steps.check.outputs.tag_exists != 'true'
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN || github.token }}
         run: |
-          TAG="${{ steps.version.outputs.tag }}"
           VERSION="${{ steps.version.outputs.version }}"
+          TAG="${{ steps.version.outputs.tag }}"
+          BRANCH="${{ steps.version.outputs.branch }}"
 
-          # Create the tag
-          git tag "$TAG"
-          git push origin "$TAG"
+          NOTES=$(php /tmp/mokostandards/api/cli/release_notes.php --path . --version "$VERSION" 2>/dev/null)
+          [ -z "$NOTES" ] && NOTES="Release ${VERSION}"
+          echo "$NOTES" > /tmp/release_notes.md
 
-          # Create the release
           gh release create "$TAG" \
             --title "${VERSION}" \
             --notes-file /tmp/release_notes.md \
-            --target main
+            --target "$BRANCH"
 
-          echo "🚀 Release ${VERSION} created: $TAG"
+          echo "🚀 Release ${VERSION}" >> $GITHUB_STEP_SUMMARY
 
-      - name: Summary
-        if: steps.version.outputs.skip != 'true'
+      # ── Summary ────────────────────────────────────────────────────────
+      - name: Pipeline Summary
+        if: always()
         run: |
           VERSION="${{ steps.version.outputs.version }}"
-          TAG="${{ steps.version.outputs.tag }}"
-          if [ "${{ steps.tag_check.outputs.exists }}" = "true" ]; then
-            echo "## ℹ️ Release — ${VERSION}" >> $GITHUB_STEP_SUMMARY
-            echo "Tag \`${TAG}\` already exists — no new release created." >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.version.outputs.skip }}" = "true" ]; then
+            echo "## ⏭️ Release Skipped" >> $GITHUB_STEP_SUMMARY
+            echo "No VERSION in README.md" >> $GITHUB_STEP_SUMMARY
+          elif [ "${{ steps.check.outputs.already_released }}" = "true" ]; then
+            echo "## ℹ️ Already Released — ${VERSION}" >> $GITHUB_STEP_SUMMARY
           else
-            echo "## 🚀 Release — ${VERSION}" >> $GITHUB_STEP_SUMMARY
-            echo "Created tag \`${TAG}\` and GitHub Release." >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "## ✅ Build & Release Complete" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "| Step | Result |" >> $GITHUB_STEP_SUMMARY
+            echo "|------|--------|" >> $GITHUB_STEP_SUMMARY
+            echo "| Version | \`${VERSION}\` |" >> $GITHUB_STEP_SUMMARY
+            echo "| Branch | \`${{ steps.version.outputs.branch }}\` |" >> $GITHUB_STEP_SUMMARY
+            echo "| Tag | \`${{ steps.version.outputs.tag }}\` |" >> $GITHUB_STEP_SUMMARY
+            echo "| Release | [View](https://github.com/${{ github.repository }}/releases/tag/${{ steps.version.outputs.tag }}) |" >> $GITHUB_STEP_SUMMARY
           fi
