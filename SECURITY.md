@@ -1,185 +1,240 @@
 <!--
- Copyright (C) 2025 Moko Consulting <hello@mokoconsulting.tech>
+Copyright (C) 2026 Moko Consulting <hello@mokoconsulting.tech>
 
- This file is part of a Moko Consulting project.
+This file is part of a Moko Consulting project.
 
- SPDX-License-Identifier: GPL-3.0-or-later
+SPDX-License-Identifier: GPL-3.0-or-later
 
- # FILE INFORMATION
- DEFGROUP: Joomla.Template
- INGROUP: MokoCassiopeia.Governance
- REPO: https://github.com/mokoconsulting-tech/MokoCassiopeia
- FILE: SECURITY.md
- VERSION: 03.06.02
- BRIEF: Security policy and vulnerability reporting process for MokoCassiopeia.
- PATH: /SECURITY.md
- NOTE: This policy is process oriented and does not replace secure engineering practices.
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+# FILE INFORMATION
+DEFGROUP: [PROJECT_NAME]
+INGROUP: [PROJECT_NAME].Documentation
+REPO: [REPOSITORY_URL]
+PATH: /SECURITY.md
+VERSION: 04.02.30
+BRIEF: Security vulnerability reporting and handling policy
 -->
 
-## Security Policy
+# Security Policy
 
-This document defines how MokoCassiopeia handles vulnerability intake, triage, remediation, and disclosure. The objective is to reduce risk, protect downstream users, and preserve operational continuity with a verifiable audit trail.
+## Purpose and Scope
 
-## Scope
-
-This policy applies to:
-
-* Repository source code, workflows, scripts, and build artifacts.
-* Release packaging (ZIP outputs) generated from the repository.
-* Configuration and metadata used for distribution (for example manifests and update metadata).
-
-Out of scope:
-
-* Vulnerabilities in upstream Joomla core, third party extensions, or external infrastructure not controlled by this repository.
-* Issues that require physical access to a host, compromised administrator credentials, or a compromised hosting provider, unless the repository materially increases impact.
+This document defines the security vulnerability reporting, response, and disclosure policy for [PROJECT_NAME] and all repositories governed by these standards. It establishes the authoritative process for responsible disclosure, assessment, remediation, and communication of security issues.
 
 ## Supported Versions
 
-Security fixes are prioritized for:
+Security updates are provided for the following versions:
 
-* The latest released version.
-* The current development line when it is actively used for release engineering.
+| Version | Supported          |
+| ------- | ------------------ |
+| [X.x.x] | :white_check_mark: |
+| < [X.0] | :x:                |
 
-Backports may be provided based on impact, deployment footprint, and engineering capacity.
+Only the current major version receives security updates. Users should upgrade to the latest supported version to receive security patches.
 
 ## Reporting a Vulnerability
 
-Use one of the following channels:
+### Where to Report
 
-* GitHub Security Advisories (preferred): use the repository security tab to submit a private report.
-* Email: send details to `hello@mokoconsulting.tech` with subject `SECURITY: MokoCassiopeia vulnerability report`.
+**DO NOT** create public GitHub issues for security vulnerabilities.
 
-Do not file a public GitHub issue for suspected security vulnerabilities.
+Report security vulnerabilities privately to:
 
-### What to include
+**Email**: `security@[DOMAIN]`
 
-Provide enough detail to reproduce and triage:
+**Subject Line**: `[SECURITY] Brief Description`
 
-* A clear description of the vulnerability and expected impact.
-* A minimal proof of concept or reproduction steps.
-* Affected versions, configuration assumptions, and environment details.
-* Any proposed mitigation or patch.
-* Your preferred contact details for follow up.
+### What to Include
 
-## Triage and Response Targets
+A complete vulnerability report should include:
 
-The project operates with response targets aligned to practical delivery realities:
+1. **Description**: Clear explanation of the vulnerability
+2. **Impact**: Potential security impact and severity assessment
+3. **Affected Versions**: Which versions are vulnerable
+4. **Reproduction Steps**: Detailed steps to reproduce the issue
+5. **Proof of Concept**: Code, configuration, or demonstration (if applicable)
+6. **Suggested Fix**: Proposed remediation (if known)
+7. **Disclosure Timeline**: Your expectations for public disclosure
 
-* **Acknowledgement:** within 3 business days.
-* **Initial triage:** within 10 business days.
-* **Fix plan:** communicated once severity is confirmed.
+### Response Timeline
 
-These targets are not guarantees. Complex issues, supply chain considerations, and coordination with upstream vendors may extend timelines.
+* **Initial Response**: Within 3 business days
+* **Assessment Complete**: Within 7 business days
+* **Fix Timeline**: Depends on severity (see below)
+* **Disclosure**: Coordinated with reporter
 
-## Severity Assessment
+## Severity Classification
 
-Issues are triaged based on business impact and technical exploitability, including:
+Vulnerabilities are classified using the following severity levels:
 
-* Remote exploitability and required privileges.
-* Data confidentiality, integrity, and availability impact.
-* Likelihood of exploitation in typical Joomla deployments.
-* Exposure surface (public endpoints, administrator area, installation flows, and update mechanisms).
+### Critical
+* Remote code execution
+* Authentication bypass
+* Data breach or exposure of sensitive information
+* **Fix Timeline**: 7 days
 
-When appropriate, industry standard scoring such as CVSS may be used for internal prioritization.
+### High
+* Privilege escalation
+* SQL injection or command injection
+* Cross-site scripting (XSS) with significant impact
+* **Fix Timeline**: 14 days
 
-## Coordinated Disclosure
+### Medium
+* Information disclosure (limited scope)
+* Denial of service
+* Security misconfigurations with moderate impact
+* **Fix Timeline**: 30 days
 
-The project follows coordinated vulnerability disclosure:
+### Low
+* Security best practice violations
+* Minor information leaks
+* Issues requiring user interaction or complex preconditions
+* **Fix Timeline**: 60 days or next release
 
-* Reports are treated as confidential until remediation is available.
-* A public advisory may be published once a fix is released.
-* A reasonable embargo period is expected to enable patch distribution.
+## Remediation Process
 
-If you believe disclosure is time sensitive due to active exploitation, include that assessment and any supporting indicators.
+1. **Acknowledgment**: Security team confirms receipt and begins investigation
+2. **Assessment**: Vulnerability is validated, severity assigned, and impact analyzed
+3. **Development**: Security patch is developed and tested
+4. **Review**: Patch undergoes security review and validation
+5. **Release**: Fixed version is released with security advisory
+6. **Disclosure**: Public disclosure follows coordinated timeline
 
-## Security Updates and Advisories
+## Security Advisories
 
-Security updates are distributed through:
+Security advisories are published via:
 
-* GitHub releases for the repository.
-* GitHub Security Advisories when applicable.
+* GitHub Security Advisories
+* Release notes and CHANGELOG.md
+* Security mailing list (when established)
 
-Advisories may include:
+Advisories include:
 
-* Affected versions and fixed versions.
-* Mitigations and workarounds when a fix is not immediately available.
-* Upgrade guidance.
+* CVE identifier (if applicable)
+* Severity rating
+* Affected versions
+* Fixed versions
+* Mitigation steps
+* Attribution (with reporter consent)
 
-## Dependencies and Supply Chain Controls
+## Security Best Practices
 
-The project aims to manage supply chain risk through:
+For repositories adopting MokoStandards:
 
-* Pinning and review of workflow dependencies where feasible.
-* Minimizing privileged GitHub token permissions.
-* Validating build inputs prior to packaging releases.
+### Required Controls
 
-If you identify a supply chain issue (for example compromised action, dependency confusion, or malicious upstream artifact), report it as a vulnerability.
+* Enable GitHub security features (Dependabot, code scanning)
+* Implement branch protection on `main`
+* Require code review for all changes
+* Enforce signed commits (recommended)
+* Use secrets management (never commit credentials)
+* Maintain security documentation
+* Follow secure coding standards defined in `/docs/policy/`
 
-## Secure Development and CI Expectations
+### CI/CD Security
 
-Security posture is reinforced through operational controls:
+* Validate all inputs
+* Sanitize outputs
+* Use least privilege access
+* Pin dependencies with hash verification
+* Scan for vulnerabilities in dependencies
+* Audit third-party actions and tools
 
-* CI validation for packaging inputs and manifest integrity.
-* Consistent path normalization and whitespace hygiene checks where required for release correctness.
-* Least privilege for GitHub Actions permissions.
+#### Automated Security Scanning
 
-### Template Security Features
+All repositories MUST implement:
 
-**Custom Head Content Injection**
+**CodeQL Analysis**:
+* Enabled for all supported languages (Python, JavaScript, TypeScript, Java, C/C++, C#, Go, Ruby)
+* Runs on: push to main, pull requests, weekly schedule
+* Query sets: `security-extended` and `security-and-quality`
+* Configuration: `.github/workflows/codeql-analysis.yml`
 
-The template provides Custom Head Code fields (`custom_head_start` and `custom_head_end`) that allow administrators to inject custom HTML, CSS, and JavaScript code. This is an intentional feature for:
+**Dependabot Security Updates**:
+* Weekly scans for vulnerable dependencies
+* Automated pull requests for security patches
+* Configuration: `.github/dependabot.yml`
 
-* Adding analytics scripts (Google Analytics, Google Tag Manager)
-* Custom meta tags
-* Third-party integrations
-* Custom styling
+**Secret Scanning**:
+* Enabled by default with push protection
+* Prevents accidental credential commits
+* Partner patterns enabled
 
-**Security Considerations:**
+**Dependency Review**:
+* Required for all pull requests
+* Blocks introduction of known vulnerable dependencies
+* Automatic license compliance checking
 
-* These fields use `filter="raw"` to allow HTML/JS injection
-* **Access is restricted to Joomla administrators only** via template configuration
-* This is not an XSS vulnerability as it requires administrator privileges
-* Administrators should only add trusted code from verified sources
-* Regular security audits should review custom head content
+See [Security Scanning Policy](docs/policy/security-scanning.md) for detailed requirements.
 
-This policy does not guarantee that all vulnerabilities will be prevented. It defines how risk is managed when issues are discovered.
+### Dependency Management
 
-## Safe Harbor
+* Keep dependencies up to date
+* Monitor security advisories for dependencies
+* Remove unused dependencies
+* Audit new dependencies before adoption
+* Document security-critical dependencies
 
-The project supports good faith security research. When you:
+## Compliance and Governance
 
-* Avoid privacy violations, data destruction, and service disruption.
-* Limit testing to systems you own or have explicit permission to test.
-* Provide a reasonable window for coordinated disclosure.
+This security policy is binding for all repositories governed by MokoStandards. Deviations require documented justification and approval from the Security Owner.
 
-Then the project will treat your report as a constructive security contribution.
+Security policies are reviewed and updated at least annually or following significant security incidents.
 
-Jurisdiction note: this repository is managed from Tennessee, USA. This note is informational only and does not constitute legal advice.
+## Attribution and Recognition
 
-## Public Communications
+We acknowledge and appreciate responsible disclosure. With your permission, we will:
 
-Only maintainers will publish security advisories or public statements for confirmed vulnerabilities. Public communication will focus on actionable remediation and operational risk reduction.
+* Credit you in security advisories
+* List you in CHANGELOG.md for the fix release
+* Recognize your contribution publicly (if desired)
 
-## Acknowledgements
+## Contact and Escalation
 
-If you want credit, include the name or handle to list in an advisory. If you prefer anonymity, state that explicitly.
+* **Security Team**: security@[DOMAIN]
+* **Primary Contact**: [CONTACT_EMAIL]
+* **Escalation**: For urgent matters requiring immediate attention, contact the maintainer directly via GitHub
+
+## Out of Scope
+
+The following are explicitly out of scope:
+
+* Issues in third-party dependencies (report directly to maintainers)
+* Social engineering attacks
+* Physical security issues
+* Denial of service via resource exhaustion without amplification
+* Issues requiring physical access to systems
+* Theoretical vulnerabilities without proof of exploitability
 
 ---
 
 ## Metadata
 
-* **Document:** SECURITY.md
-* **Repository:** [https://github.com/mokoconsulting-tech/MokoCassiopeia](https://github.com/mokoconsulting-tech/MokoCassiopeia)
-* **Path:** /SECURITY.md
-* **Owner:** Moko Consulting
-* **Version:** 03.06.00
-* **Status:** Active
-* **Effective Date:** 2025-12-18
-* **Last Reviewed:** 2025-12-18
+| Field        | Value                                           |
+| ------------ | ----------------------------------------------- |
+| Document     | Security Policy                                 |
+| Path         | /SECURITY.md                                    |
+| Repository   | [REPOSITORY_URL]                                |
+| Owner        | [OWNER_NAME]                                    |
+| Scope        | Security vulnerability handling                 |
+| Applies To   | All repositories governed by MokoStandards      |
+| Status       | Active                                          |
+| Effective    | [YYYY-MM-DD]                                    |
 
 ## Revision History
 
-| Date       | Change Summary                                                                                   | Author          |
-| ---------- | ------------------------------------------------------------------------------------------------ | --------------- |
-| 2026-01-30 | Added Template Security Features section documenting custom head content injection controls.    | Copilot Agent   |
-| 2025-12-18 | Initial publication of security policy, intake channels, triage targets, and disclosure process. | Moko Consulting |
+| Date       | Change Description                                | Author          |
+| ---------- | ------------------------------------------------- | --------------- |
+| [YYYY-MM-DD] | Initial creation                                | [AUTHOR_NAME]   |
