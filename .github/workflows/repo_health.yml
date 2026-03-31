@@ -10,7 +10,7 @@
 # INGROUP: MokoStandards.Validation
 # REPO: https://github.com/mokoconsulting-tech/MokoStandards
 # PATH: /.github/workflows/repo_health.yml
-# VERSION: 04.04.00
+# VERSION: 04.04.01
 # BRIEF: Enforces repository guardrails by validating release configuration, scripts governance, tooling availability, and core repository health artifacts.
 # NOTE: Field is user-managed.
 # ============================================================================
@@ -56,7 +56,7 @@ env:
 
   # Repo health policy
   # Files are listed as-is; directories must end with a trailing slash.
-  REPO_REQUIRED_ARTIFACTS: README.md,LICENSE,CHANGELOG.md,CONTRIBUTING.md,CODE_OF_CONDUCT.md,.github/workflows/,src/
+  REPO_REQUIRED_ARTIFACTS: README.md,LICENSE,CHANGELOG.md,CONTRIBUTING.md,CODE_OF_CONDUCT.md,.github/workflows/
   REPO_OPTIONAL_FILES: SECURITY.md,GOVERNANCE.md,.editorconfig,.gitattributes,.gitignore,README.md,docs/
   REPO_DISALLOWED_DIRS:
   REPO_DISALLOWED_FILES: TODO.md,todo.md
@@ -70,8 +70,6 @@ env:
   WORKFLOWS_DIR: .github/workflows
   SHELLCHECK_PATTERN: '*.sh'
   SPDX_FILE_GLOBS: '*.sh,*.php,*.js,*.ts,*.css,*.xml,*.yml,*.yaml'
-
-env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
@@ -403,6 +401,15 @@ jobs:
             exit 0
           fi
 
+          # Source directory: src/ or htdocs/ (either is valid)
+          if [ -d "src" ]; then
+            SOURCE_DIR="src"
+          elif [ -d "htdocs" ]; then
+            SOURCE_DIR="htdocs"
+          else
+            missing_required+=("src/ or htdocs/ (source directory required)")
+          fi
+
           IFS=',' read -r -a required_artifacts <<< "${REPO_REQUIRED_ARTIFACTS}"
           IFS=',' read -r -a optional_files <<< "${REPO_OPTIONAL_FILES}"
           IFS=',' read -r -a disallowed_dirs <<< "${REPO_DISALLOWED_DIRS}"
@@ -594,7 +601,7 @@ jobs:
           fi
 
           # index.html files for directory listing protection
-          INDEX_DIRS=("src" "src/admin" "src/site")
+          INDEX_DIRS=("${SOURCE_DIR}" "${SOURCE_DIR}/admin" "${SOURCE_DIR}/site")
           for dir in "${INDEX_DIRS[@]}"; do
             if [ -d "${dir}" ] && [ ! -f "${dir}/index.html" ]; then
               joomla_findings+=("${dir}/index.html missing (directory listing protection)")
