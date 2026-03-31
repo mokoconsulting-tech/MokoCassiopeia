@@ -510,7 +510,7 @@ $wa->useScript('user.js');         // js/user.js
 <!-- Left Offcanvas Drawer -->
 <aside class="offcanvas offcanvas-start" tabindex="-1" id="drawer-left">
   <div class="offcanvas-header">
-	<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="<?php echo Text::_('JLIB_HTML_BEHAVIOR_CLOSE'); ?>"></button>
+	<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="<?php echo Text::_('JLIB_HTML_BEHAVIOR_CLOSE'); ?>"><span class="fa fa-close"></span></button>
   </div>
   <div class="offcanvas-body">
 	<jdoc:include type="modules" name="drawer-left" style="none" />
@@ -522,7 +522,7 @@ $wa->useScript('user.js');         // js/user.js
 <!-- Right Offcanvas Drawer -->
 <aside class="offcanvas offcanvas-end" tabindex="-1" id="drawer-right">
   <div class="offcanvas-header">
-	<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="<?php echo Text::_('JLIB_HTML_BEHAVIOR_CLOSE'); ?>"></button>
+	<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="<?php echo Text::_('JLIB_HTML_BEHAVIOR_CLOSE'); ?>"><span class="fa fa-close"></span></button>
   </div>
   <div class="offcanvas-body">
 	<jdoc:include type="modules" name="drawer-right" style="none" />
