@@ -10,8 +10,8 @@
 # INGROUP: MokoStandards.Validation
 # REPO: https://github.com/mokoconsulting-tech/MokoStandards
 # PATH: /.github/workflows/repo_health.yml
-# VERSION: 04.02.30
-# BRIEF: Enforces repository guardrails by validating release configuration, scripts governance, tooling availability, and core repository health artifacts.
+# VERSION: 04.04.01
+# BRIEF: Dolibarr module health checks — validates release config, module descriptor, repo artifacts, and scripts governance.
 # NOTE: Field is user-managed.
 # ============================================================================
 
@@ -29,7 +29,7 @@ on:
   workflow_dispatch:
     inputs:
       profile:
-        description: Which configuration profile to validate. release checks SFTP variables used by release pipeline. scripts checks baseline script prerequisites. repo runs repository health only. al[...]
+        description: 'Validation profile: all, release, scripts, or repo'
         required: true
         default: all
         type: choice
@@ -39,19 +39,7 @@ on:
           - scripts
           - repo
   pull_request:
-    paths:
-      - .github/workflows/**
-      - scripts/**
-      - docs/**
-      - dev/**
   push:
-    branches:
-      - main
-    paths:
-      - .github/workflows/**
-      - scripts/**
-      - docs/**
-      - dev/**
 
 permissions:
   contents: read
@@ -68,10 +56,10 @@ env:
 
   # Repo health policy
   # Files are listed as-is; directories must end with a trailing slash.
-  REPO_REQUIRED_ARTIFACTS: README.md,LICENSE,CHANGELOG.md,CONTRIBUTING.md,CODE_OF_CONDUCT.md,.github/workflows/,src/
-  REPO_OPTIONAL_FILES: SECURITY.md,GOVERNANCE.md,.editorconfig,.gitattributes,.gitignore,README.md,docs/
+  REPO_REQUIRED_ARTIFACTS: README.md,LICENSE,CHANGELOG.md,CONTRIBUTING.md,CODE_OF_CONDUCT.md,.github/workflows/
+  REPO_OPTIONAL_FILES: SECURITY.md,GOVERNANCE.md,.editorconfig,.gitattributes,.gitignore,docs/,update.txt
   REPO_DISALLOWED_DIRS:
-  REPO_DISALLOWED_FILES: TODO.md,todo.md
+  REPO_DISALLOWED_FILES: TODO.md,todo.md,update.json
 
   # Extended checks toggles
   EXTENDED_CHECKS: "true"
@@ -82,8 +70,6 @@ env:
   WORKFLOWS_DIR: .github/workflows
   SHELLCHECK_PATTERN: '*.sh'
   SPDX_FILE_GLOBS: '*.sh,*.php,*.js,*.ts,*.css,*.xml,*.yml,*.yaml'
-
-env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
@@ -415,6 +401,15 @@ jobs:
             exit 0
           fi
 
+          # Source directory: src/ or htdocs/ (either is valid)
+          if [ -d "src" ]; then
+            SOURCE_DIR="src"
+          elif [ -d "htdocs" ]; then
+            SOURCE_DIR="htdocs"
+          else
+            missing_required+=("src/ or htdocs/ (source directory required)")
+          fi
+
           IFS=',' read -r -a required_artifacts <<< "${REPO_REQUIRED_ARTIFACTS}"
           IFS=',' read -r -a optional_files <<< "${REPO_OPTIONAL_FILES}"
           IFS=',' read -r -a disallowed_dirs <<< "${REPO_DISALLOWED_DIRS}"
@@ -560,6 +555,61 @@ jobs:
             {
               printf '%s\n' '### Repo content warnings'
               for m in "${content_warnings[@]}"; do printf '%s\n' "- ${m}"; done
+              printf '\n'
+            } >> "${GITHUB_STEP_SUMMARY}"
+          fi
+
+          # ── Dolibarr-specific checks ──────────────────────────────────────
+          dolibarr_findings=()
+
+          # Module descriptor: src/core/modules/mod*.class.php
+          MOD_FILE="$(find src htdocs -path '*/core/modules/mod*.class.php' -print -quit 2>/dev/null || true)"
+          if [ -z "${MOD_FILE}" ]; then
+            dolibarr_findings+=("Module descriptor not found (src/core/modules/mod*.class.php)")
+          else
+            # Check $this->numero is set and non-zero
+            if ! grep -qP '\$this->numero\s*=\s*[1-9]' "${MOD_FILE}"; then
+              dolibarr_findings+=("Module descriptor: \$this->numero not set or is zero")
+            fi
+            # Check $this->version is not hardcoded (should be set by workflow)
+            if grep -qP "\\\$this->version\s*=\s*'[0-9]" "${MOD_FILE}"; then
+              dolibarr_findings+=("Module descriptor: \$this->version appears hardcoded (should be set by deploy/release workflow)")
+            fi
+            # Check url_last_version points to update.txt
+            if grep -qP 'url_last_version.*update\.json' "${MOD_FILE}"; then
+              dolibarr_findings+=("Module descriptor: url_last_version points to update.json (must be update.txt)")
+            fi
+            # Check url_last_version contains /main/ for main branch
+            CURRENT_BRANCH="${GITHUB_REF_NAME:-main}"
+            if [ "${CURRENT_BRANCH}" = "main" ] && ! grep -qP 'url_last_version.*\/main\/' "${MOD_FILE}"; then
+              dolibarr_findings+=("Module descriptor: url_last_version does not reference /main/ branch")
+            fi
+          fi
+
+          # Source README should exist (Dolibarr module store requirement)
+          if [ -n "${SOURCE_DIR:-}" ] && [ ! -f "${SOURCE_DIR}/README.md" ]; then
+            dolibarr_findings+=("${SOURCE_DIR}/README.md missing (required for Dolibarr module store)")
+          fi
+
+          # update.txt should exist in root (created by auto-release)
+          if [ ! -f 'update.txt' ]; then
+            dolibarr_findings+=("update.txt missing in root (created by auto-release workflow)")
+          fi
+
+          if [ "${#dolibarr_findings[@]}" -gt 0 ]; then
+            {
+              printf '%s\n' '### Dolibarr module checks'
+              printf '%s\n' '| Check | Status |'
+              printf '%s\n' '|---|---|'
+              for f in "${dolibarr_findings[@]}"; do
+                printf '%s\n' "| ${f} | Warning |"
+              done
+              printf '\n'
+            } >> "${GITHUB_STEP_SUMMARY}"
+          else
+            {
+              printf '%s\n' '### Dolibarr module checks'
+              printf '%s\n' 'All Dolibarr-specific checks passed.'
               printf '\n'
             } >> "${GITHUB_STEP_SUMMARY}"
           fi
