@@ -10,7 +10,7 @@
  * DEFGROUP: Joomla.Template.Site
  * INGROUP: MokoCassiopeia
  * PATH: ./templates/mokocassiopeia/html/com_content/article/toc-left.php
- * VERSION: 03.06.02
+ * VERSION: 03.09.02
  * BRIEF: Article layout with table of contents on the left side using Bootstrap TOC
  */
 

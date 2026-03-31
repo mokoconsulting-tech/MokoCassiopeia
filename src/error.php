@@ -12,7 +12,7 @@
  INGROUP: MokoCassiopeia
  REPO: https://github.com/mokoconsulting-tech/MokoCassiopeia
  PATH: ./templates/mokocassiopeia/error.php
- VERSION: 03.06.02
+ VERSION: 03.09.02
  BRIEF: Error page template file for MokoCassiopeia
  */
 

@@ -25,7 +25,7 @@
 	DEFGROUP: Joomla
 	INGROUP: MokoCassiopeia
 	PATH: templates/mokocassiopeia/templateDetails.xml
-	VERSION: 03.09.01
+	VERSION: 03.09.02
 	BRIEF: Template manifest XML file for MokoCassiopeia
 	=========================================================================
 -->

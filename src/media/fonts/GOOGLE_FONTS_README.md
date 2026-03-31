@@ -8,7 +8,7 @@
  INGROUP: MokoCassiopeia.Documentation
  REPO: https://github.com/mokoconsulting-tech/MokoCassiopeia
  FILE: src/media/fonts/GOOGLE_FONTS_README.md
- VERSION: 03.08.04
+ VERSION: 03.09.02
  BRIEF: Instructions for downloading Google Fonts for self-hosting
 -->
 
