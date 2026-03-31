@@ -22,7 +22,7 @@
 # INGROUP: MokoStandards.Firewall
 # REPO: https://github.com/mokoconsulting-tech/MokoStandards
 # PATH: /templates/workflows/shared/enterprise-firewall-setup.yml
-# VERSION: 04.01.00
+# VERSION: 04.04.01
 # BRIEF: Enterprise firewall configuration — generates outbound allow-rules including SFTP deployment server
 # NOTE: Reads DEV_FTP_HOST / DEV_FTP_PORT variables to include SFTP egress rules alongside HTTPS rules.
 
