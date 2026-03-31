@@ -724,7 +724,6 @@ progress {
 	padding-left: calc(var(--gutter-x) * 0.5);
 	margin-right: auto;
 	margin-left: auto;
-	padding-bottom: calc(var(--gutter-x) * 0.5);
 }
 
 .topten-view,
@@ -6138,7 +6137,7 @@ fieldset:disabled .btn {
 	width: 1em;
 	height: 1em;
 	padding: 0.25em 0.25em;
-	color: hsl(0, 0%, 0%);
+	color: var(--body-color);
 	background: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='hsl%280, 0%, 0%%29'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e") center/1em auto no-repeat;
 	border: 0;
 	border-radius: 0.25rem;
@@ -6146,7 +6145,6 @@ fieldset:disabled .btn {
 }
 
 .btn-close:active {
-	color: hsl(0, 0%, 0%);
 	text-decoration: none;
 	opacity: 0.75;
 }
@@ -7960,6 +7958,7 @@ fieldset:disabled .btn {
 	margin-top: calc(-0.5 * var(--offcanvas-padding-y));
 	margin-right: calc(-0.5 * var(--offcanvas-padding-x));
 	margin-bottom: calc(-0.5 * var(--offcanvas-padding-y));
+	color: var(--mainmenu-nav-link-color);
 }
 
 .offcanvas-title {
@@ -9630,7 +9629,6 @@ fieldset:disabled .btn {
 
 .text-reset {
 	--text-opacity: 1;
-	color: inherit ;
 }
 
 .text-opacity-25 {
@@ -19256,7 +19254,6 @@ nav[data-toggle=toc] .nav-link.active+ul{
 
 /* === Main Menu - Collapsible Dropdown Bootstrap Responsive === */
 .mod-menu-main {
-	background-color: var(--body-bg);
 	padding: 0.5rem 0;
 }
 
@@ -19300,7 +19297,7 @@ nav[data-toggle=toc] .nav-link.active+ul{
 .mod-menu-main__heading {
 	display: block;
 	padding: 0.75rem 1rem;
-	color: var(--link-color);
+	color: var(--mainmenu-nav-link-color);
 	text-decoration: none;
 	transition: background-color 0.2s ease, color 0.2s ease;
 	min-height: 48px; /* WCAG 2.1 touch target on mobile */
@@ -19318,8 +19315,7 @@ nav[data-toggle=toc] .nav-link.active+ul{
 
 .mod-menu-main__item.active > .mod-menu-main__link,
 .mod-menu-main__item.current > .mod-menu-main__link {
-	background-color: var(--primary-bg);
-	color: var(--white);
+	color: var(--mainmenu-nav-link-color);
 	font-weight: 600;
 }
 
