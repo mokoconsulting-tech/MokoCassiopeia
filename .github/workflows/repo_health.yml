@@ -10,7 +10,7 @@
 # INGROUP: MokoStandards.Validation
 # REPO: https://github.com/mokoconsulting-tech/MokoStandards
 # PATH: /.github/workflows/repo_health.yml
-# VERSION: 04.01.00
+# VERSION: 04.04.01
 # BRIEF: Enforces repository guardrails by validating release configuration, scripts governance, tooling availability, and core repository health artifacts.
 # NOTE: Field is user-managed.
 # ============================================================================
@@ -29,7 +29,7 @@ on:
   workflow_dispatch:
     inputs:
       profile:
-        description: Which configuration profile to validate. release checks SFTP variables used by release pipeline. scripts checks baseline script prerequisites. repo runs repository health only. al[...]
+        description: 'Validation profile: all, release, scripts, or repo'
         required: true
         default: all
         type: choice
@@ -39,19 +39,7 @@ on:
           - scripts
           - repo
   pull_request:
-    paths:
-      - .github/workflows/**
-      - scripts/**
-      - docs/**
-      - dev/**
   push:
-    branches:
-      - main
-    paths:
-      - .github/workflows/**
-      - scripts/**
-      - docs/**
-      - dev/**
 
 permissions:
   contents: read
@@ -82,6 +70,9 @@ env:
   WORKFLOWS_DIR: .github/workflows
   SHELLCHECK_PATTERN: '*.sh'
   SPDX_FILE_GLOBS: '*.sh,*.php,*.js,*.ts,*.css,*.xml,*.yml,*.yaml'
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   access_check:
@@ -557,6 +548,73 @@ jobs:
             {
               printf '%s\n' '### Repo content warnings'
               for m in "${content_warnings[@]}"; do printf '%s\n' "- ${m}"; done
+              printf '\n'
+            } >> "${GITHUB_STEP_SUMMARY}"
+          fi
+
+          # ── Joomla-specific checks ───────────────────────────────────────
+          joomla_findings=()
+
+          # XML manifest: find any XML file containing <extension
+          MANIFEST="$(find . -maxdepth 2 -name '*.xml' -exec grep -l '<extension' {} \; 2>/dev/null | head -1 || true)"
+          if [ -z "${MANIFEST}" ]; then
+            joomla_findings+=("Joomla XML manifest not found (no *.xml with <extension> tag)")
+          else
+            # Check <version> tag exists
+            if ! grep -qP '<version>' "${MANIFEST}"; then
+              joomla_findings+=("XML manifest: <version> tag missing")
+            fi
+            # Check extension type attribute
+            if ! grep -qP 'type="(component|module|plugin|library|package|template|language)"' "${MANIFEST}"; then
+              joomla_findings+=("XML manifest: type attribute missing or invalid")
+            fi
+            # Check <name> tag
+            if ! grep -qP '<name>' "${MANIFEST}"; then
+              joomla_findings+=("XML manifest: <name> tag missing")
+            fi
+            # Check <author> tag
+            if ! grep -qP '<author>' "${MANIFEST}"; then
+              joomla_findings+=("XML manifest: <author> tag missing")
+            fi
+            # Check <namespace> for Joomla 4+
+            if ! grep -qP '<namespace' "${MANIFEST}"; then
+              joomla_findings+=("XML manifest: <namespace> missing (required for Joomla 4+)")
+            fi
+          fi
+
+          # Language files: check for at least one .ini file
+          INI_COUNT="$(find . -name '*.ini' -type f 2>/dev/null | wc -l)"
+          if [ "${INI_COUNT}" -eq 0 ]; then
+            joomla_findings+=("No .ini language files found")
+          fi
+
+          # update.xml must exist in root (Joomla update server)
+          if [ ! -f 'update.xml' ]; then
+            joomla_findings+=("update.xml missing in root (required for Joomla update server)")
+          fi
+
+          # index.html files for directory listing protection
+          INDEX_DIRS=("src" "src/admin" "src/site")
+          for dir in "${INDEX_DIRS[@]}"; do
+            if [ -d "${dir}" ] && [ ! -f "${dir}/index.html" ]; then
+              joomla_findings+=("${dir}/index.html missing (directory listing protection)")
+            fi
+          done
+
+          if [ "${#joomla_findings[@]}" -gt 0 ]; then
+            {
+              printf '%s\n' '### Joomla extension checks'
+              printf '%s\n' '| Check | Status |'
+              printf '%s\n' '|---|---|'
+              for f in "${joomla_findings[@]}"; do
+                printf '%s\n' "| ${f} | Warning |"
+              done
+              printf '\n'
+            } >> "${GITHUB_STEP_SUMMARY}"
+          else
+            {
+              printf '%s\n' '### Joomla extension checks'
+              printf '%s\n' 'All Joomla-specific checks passed.'
               printf '\n'
             } >> "${GITHUB_STEP_SUMMARY}"
           fi
