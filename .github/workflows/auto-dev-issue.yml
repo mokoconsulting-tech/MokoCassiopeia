@@ -1,0 +1,102 @@
+# Copyright (C) 2026 Moko Consulting <hello@mokoconsulting.tech>
+#
+# This file is part of a Moko Consulting project.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# FILE INFORMATION
+# DEFGROUP: GitHub.Workflow
+# INGROUP: MokoStandards.Automation
+# REPO: https://github.com/mokoconsulting-tech/MokoStandards
+# PATH: /templates/workflows/shared/auto-dev-issue.yml
+# VERSION: 04.04.01
+# BRIEF: Auto-create tracking issue when a dev/** or rc/** branch is pushed
+# NOTE: Synced via bulk-repo-sync to .github/workflows/auto-dev-issue.yml in all governed repos.
+
+name: Auto Dev Branch Issue
+
+on:
+  create:
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  create-issue:
+    name: Create version tracking issue
+    runs-on: ubuntu-latest
+    if: >-
+      github.event.ref_type == 'branch' &&
+      (startsWith(github.event.ref, 'dev/') || startsWith(github.event.ref, 'rc/'))
+
+    steps:
+      - name: Create tracking issue
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN || github.token }}
+        run: |
+          BRANCH="${{ github.event.ref }}"
+          REPO="${{ github.repository }}"
+          ACTOR="${{ github.actor }}"
+          NOW=$(date -u '+%Y-%m-%d %H:%M UTC')
+
+          # Determine branch type and version
+          if [[ "$BRANCH" == rc/* ]]; then
+            VERSION="${BRANCH#rc/}"
+            BRANCH_TYPE="Release Candidate"
+            LABEL_TYPE="type: release"
+            TITLE_PREFIX="rc"
+          else
+            VERSION="${BRANCH#dev/}"
+            BRANCH_TYPE="Development"
+            LABEL_TYPE="type: feature"
+            TITLE_PREFIX="feat"
+          fi
+
+          TITLE="${TITLE_PREFIX}(${VERSION}): ${BRANCH_TYPE} tracking for ${BRANCH}"
+
+          BODY="## ${BRANCH_TYPE} Branch Created
+
+          | Field | Value |
+          |-------|-------|
+          | **Branch** | \`${BRANCH}\` |
+          | **Version** | \`${VERSION}\` |
+          | **Type** | ${BRANCH_TYPE} |
+          | **Created by** | @${ACTOR} |
+          | **Created at** | ${NOW} |
+          | **Repository** | \`${REPO}\` |
+
+          ## Checklist
+
+          - [ ] Feature development complete
+          - [ ] Tests passing
+          - [ ] README.md version bumped to \`${VERSION}\`
+          - [ ] CHANGELOG.md updated
+          - [ ] PR created targeting \`main\`
+          - [ ] Code reviewed and approved
+          - [ ] Merged to \`main\`
+
+          ---
+          *Auto-created by [auto-dev-issue.yml](.github/workflows/auto-dev-issue.yml) on branch creation.*"
+
+          # Dedent heredoc
+          BODY=$(echo "$BODY" | sed 's/^          //')
+
+          # Check for existing issue with same title prefix
+          EXISTING=$(gh api "repos/${REPO}/issues?state=open&per_page=5" \
+            --jq ".[] | select(.title | startswith(\"${TITLE_PREFIX}(${VERSION})\")) | .number" 2>/dev/null | head -1)
+
+          if [ -n "$EXISTING" ]; then
+            echo "ℹ️ Issue #${EXISTING} already exists for ${VERSION}" >> $GITHUB_STEP_SUMMARY
+          else
+            ISSUE_URL=$(gh issue create \
+              --repo "$REPO" \
+              --title "$TITLE" \
+              --body "$BODY" \
+              --label "${LABEL_TYPE},version" \
+              --assignee "jmiller-moko" 2>&1)
+            echo "✅ Created tracking issue: ${ISSUE_URL}" >> $GITHUB_STEP_SUMMARY
+          fi
