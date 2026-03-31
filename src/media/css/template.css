@@ -13966,10 +13966,13 @@ meter {
 .footer {
 	margin-top: 1em;
 	color: var(--body-color);
-	background: var(--color-primary);
+	background-color: var(--nav-bg-color);
 }
 
 .footer .grid-child {
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
 	-webkit-box-align: center;
 	-ms-flex-align: center;
 	align-items: center;
@@ -13980,7 +13983,7 @@ meter {
 }
 
 .footer a {
-	color: currentColor;
+	color: var(--mainmenu-nav-link-color);
 }
 
 .footer .mod-menu {
@@ -15203,7 +15206,7 @@ ul.tags {
 }
 
 .mod-list li {
-	padding: 0.25em 0;
+	padding: 0.25em 0.5rem;
 }
 
 .mod-list li a {
@@ -16171,7 +16174,16 @@ body:not(.has-sidebar-right) .site-grid .container-component {
 	display: table-cell;
 }
 
-.metismenu.menu-horizontal {
+.menu-horizontal {
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-orient: horizontal;
+	-webkit-box-direction: normal;
+	-ms-flex-direction: row;
+	flex-direction: row;
+	-ms-flex-wrap: wrap;
+	flex-wrap: wrap;
 	-webkit-box-flex: 1;
 	-ms-flex: 1 0 100%;
 	flex: 1 0 100%;
@@ -16181,26 +16193,17 @@ body:not(.has-sidebar-right) .site-grid .container-component {
 }
 
 @media (min-width: 992px) {
-	.metismenu.menu-horizontal {
-		display: -webkit-box;
-		display: -ms-flexbox;
-		display: flex;
+	.menu-horizontal {
+		-ms-flex-wrap: nowrap;
+		flex-wrap: nowrap;
 		-webkit-box-flex: 1;
 		-ms-flex: 1 1 0%;
 		flex: 1 1 0%;
-		-webkit-box-orient: horizontal;
-		-webkit-box-direction: normal;
-		-ms-flex-direction: row;
-		flex-direction: row;
 	}
 }
 
-.metismenu.menu-horizontal>li {
+.menu-horizontal>li {
 	position: relative;
-}
-
-.metismenu.menu-horizontal .level-1>ul {
-	min-width: 12rem;
 }
 
 .metismenu.mod-menu {
@@ -16620,12 +16623,13 @@ body:not(.has-sidebar-right) .site-grid .container-component {
 }
 
 .dropdown-toggle::after {
-	content: "";
+	font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "FontAwesome";
+	font-weight: 900;
+	content: "\f078";
+	display: inline-block;
 	border: none;
-	background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/></svg>');
-	background-repeat: no-repeat;
-	width: 10px;
-	height: 10px
+	font-size: 0.65em;
+	vertical-align: middle;
 }
 
 .btn {
@@ -19355,18 +19359,18 @@ nav[data-toggle=toc] .nav-link.active+ul{
 	padding: 0;
 }
 
-/* Dropdown toggle arrow */
+/* Dropdown toggle arrow — uses FontAwesome instead of CSS borders */
 .mod-menu-main__link.dropdown-toggle::after,
 .mod-menu-main__heading.dropdown-toggle::after {
-	content: "";
+	font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "FontAwesome";
+	font-weight: 900;
+	content: "\f078";
 	display: inline-block;
 	margin-left: auto;
 	padding-left: 0.5rem;
 	vertical-align: middle;
-	border-top: 0.3em solid;
-	border-right: 0.3em solid transparent;
-	border-bottom: 0;
-	border-left: 0.3em solid transparent;
+	font-size: 0.65em;
+	border: none;
 }
 
 /* Desktop styles (≥768px) */

@@ -60,6 +60,7 @@ $params_developmentmode = $this->params->get('developmentmode', false);
 
 // Theme params
 $params_theme_enabled      = $this->params->get('theme_enabled', 1);
+$params_theme_control_type = (string) $this->params->get('theme_control_type', 'radios');
 $params_theme_fab_enabled  = $this->params->get('theme_fab_enabled', 1);
 $params_theme_fab_pos      = $this->params->get('theme_fab_pos', 'br');
 
@@ -286,6 +287,10 @@ $wa->useScript('user.js');         // js/user.js
 	  });
 	</script>
 
+	<?php if ($params_theme_control_type !== 'none') : ?>
+	<style>.footer { padding-right: 300px; }</style>
+	<?php endif; ?>
+
 	<?php if (trim($params_custom_head_end)) : ?><?php echo $params_custom_head_end; ?><?php endif; ?>
 </head>
 <body data-bs-spy="scroll" data-bs-target="#toc" 
@@ -509,7 +514,7 @@ $wa->useScript('user.js');         // js/user.js
 <?php if ($this->countModules('drawer-left', true)) : ?>
 <!-- Left Offcanvas Drawer -->
 <aside class="offcanvas offcanvas-start" tabindex="-1" id="drawer-left">
-  <div class="offcanvas-header">
+  <div class="offcanvas-header justify-content-start">
 	<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="<?php echo Text::_('JLIB_HTML_BEHAVIOR_CLOSE'); ?>"><span class="fa fa-close"></span></button>
   </div>
   <div class="offcanvas-body">
@@ -521,7 +526,7 @@ $wa->useScript('user.js');         // js/user.js
 <?php if ($this->countModules('drawer-right', true)) : ?>
 <!-- Right Offcanvas Drawer -->
 <aside class="offcanvas offcanvas-end" tabindex="-1" id="drawer-right">
-  <div class="offcanvas-header">
+  <div class="offcanvas-header justify-content-end">
 	<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="<?php echo Text::_('JLIB_HTML_BEHAVIOR_CLOSE'); ?>"><span class="fa fa-close"></span></button>
   </div>
   <div class="offcanvas-body">

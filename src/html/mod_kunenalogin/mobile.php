@@ -11,6 +11,7 @@
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 
@@ -88,7 +89,7 @@ $wrapperClass = 'mod-kunena-login mod-kunena-login-responsive ' . $moduleclass_s
 				<input type="hidden" name="option" value="com_users" />
 				<input type="hidden" name="task" value="user.logout" />
 				<input type="hidden" name="return" value="<?php echo $return; ?>" />
-				<?php echo JHtml::_('form.token'); ?>
+				<?php echo HTMLHelper::_('form.token'); ?>
 			</form>
 		</div>
 	<?php else : ?>
@@ -181,7 +182,7 @@ $wrapperClass = 'mod-kunena-login mod-kunena-login-responsive ' . $moduleclass_s
 			<input type="hidden" name="option" value="com_users" />
 			<input type="hidden" name="task" value="user.login" />
 			<input type="hidden" name="return" value="<?php echo $return; ?>" />
-			<?php echo JHtml::_('form.token'); ?>
+			<?php echo HTMLHelper::_('form.token'); ?>
 		</form>
 	<?php endif; ?>
 </div>
