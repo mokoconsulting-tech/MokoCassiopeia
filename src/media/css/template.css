@@ -111,25 +111,25 @@ form {
 }
 
 .drawer-toggle-left{
-  position: fixed !important;
-  top: 250px !important;
-  left: 0px !important;
-  z-index: 1050 !important;
-  background-color: var(--nav-bg-color) !important;
-  color: var(--nav-text-color) !important;
-  padding-left: .5rem !important;
-  padding-right: .5rem !important;
+  position: fixed;
+  top: 50%;
+  left: 0px;
+  z-index: 1050;
+  background-color: var(--nav-bg-color);
+  color: var(--nav-text-color);
+  padding-left: .5rem;
+  padding-right: .5rem;
 }
 
 .drawer-toggle-right{
-  position: fixed !important;
-  top: 250px !important;
-  right: 0px !important;
-  z-index: 1050 !important;
-  background-color: var(--nav-bg-color) !important;
-  color: var(--nav-text-color) !important;
-  padding-left: .5rem !important;
-  padding-right: .5rem !important;
+  position: fixed;
+  top: 50%;
+  right: 0px;
+  z-index: 1050;
+  background-color: var(--nav-bg-color);
+  color: var(--nav-text-color);
+  padding-left: .5rem;
+  padding-right: .5rem;
 }
 
 hr {
