@@ -3,7 +3,7 @@ name: Firewall Request
 about: Request firewall rule changes or access to external resources
 title: '[FIREWALL] [Resource Name] - [Brief Description]'
 labels: ['firewall-request', 'infrastructure', 'security']
-assignees: []
+assignees: ['jmiller-moko']
 ---
 
 
