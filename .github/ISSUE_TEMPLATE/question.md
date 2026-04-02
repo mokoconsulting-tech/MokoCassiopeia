@@ -3,7 +3,7 @@ name: Question
 about: Ask a question about usage, features, or best practices
 title: '[QUESTION] '
 labels: ['question']
-assignees: []
+assignees: ['jmiller-moko']
 ---
 
 
