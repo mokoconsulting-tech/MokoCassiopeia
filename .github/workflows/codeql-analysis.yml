@@ -8,7 +8,7 @@
 # DEFGROUP: GitHub.Workflow.Template
 # INGROUP: MokoStandards.Security
 # REPO: https://github.com/mokoconsulting-tech/MokoStandards
-# PATH: /templates/workflows/generic/codeql-analysis.yml.template
+# PATH: /templates/workflows/generic/codeql-analysis.yml
 # VERSION: 04.04.01
 # BRIEF: CodeQL security scanning workflow (generic — all repo types)
 # NOTE: Deployed to .github/workflows/codeql-analysis.yml in governed repos.
