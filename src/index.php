@@ -364,7 +364,7 @@ $wa->useScript('user.js');         // js/user.js
 
 	<div class="header-top">
 		<?php if ($this->countModules('below-topbar')) : ?>
-			<div class="grid-child container-below-topbar">
+			<div class="grid container-below-topbar">
 				<jdoc:include type="modules" name="below-topbar" style="none" />
 			</div>
 		<?php endif; ?>
