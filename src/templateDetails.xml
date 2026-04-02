@@ -53,6 +53,7 @@
 		<filename>script.php</filename>
 		<filename>sync_custom_vars.php</filename>
 		<filename>templateDetails.xml</filename>
+		<folder>helper</folder>
 		<folder>html</folder>
 		<folder>language</folder>
 		<folder>templates</folder>
@@ -114,6 +115,12 @@
 					<option value="0">TPL_MOKOCASSIOPEIA_STATIC</option>
 					<option value="1">TPL_MOKOCASSIOPEIA_FLUID</option>
 				</field>
+			</fieldset>
+
+			<!-- Favicon tab -->
+			<fieldset name="favicon" label="TPL_MOKOCASSIOPEIA_FAVICON_FIELDSET_LABEL">
+				<field name="favicon_note" type="note" description="TPL_MOKOCASSIOPEIA_FAVICON_NOTE" />
+				<field name="favicon_source" type="media" label="TPL_MOKOCASSIOPEIA_FAVICON_SOURCE_LABEL" description="TPL_MOKOCASSIOPEIA_FAVICON_SOURCE_DESC" directory="favicons" types="images" accept="image/png" />
 			</fieldset>
 
 			<!-- Google tab -->

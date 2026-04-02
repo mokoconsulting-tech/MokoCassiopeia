@@ -57,6 +57,7 @@ $params_googlesitekey      = $this->params->get('googlesitekey', null);
 $params_custom_head_start  = $this->params->get('custom_head_start', null);
 $params_custom_head_end    = $this->params->get('custom_head_end', null);
 $params_developmentmode = $this->params->get('developmentmode', false);
+$params_favicon_source     = (string) $this->params->get('favicon_source', '');
 
 // Theme params
 $params_theme_enabled      = $this->params->get('theme_enabled', 1);
@@ -77,6 +78,19 @@ $pageclass = $menu !== null ? $menu->getParams()->get('pageclass_sfx', '') : '';
 
 // Template/Media path
 $templatePath = 'media/templates/site/mokocassiopeia';
+
+// Favicon generation
+$faviconHeadTags = '';
+if ($params_favicon_source) {
+    require_once __DIR__ . '/helper/favicon.php';
+    $faviconSourceAbs = JPATH_ROOT . '/' . ltrim($params_favicon_source, '/');
+    $faviconOutputDir = JPATH_ROOT . '/images/favicons';
+    $faviconUrlBase   = Uri::root(true) . '/images/favicons';
+
+    if (MokoFaviconHelper::generate($faviconSourceAbs, $faviconOutputDir)) {
+        $faviconHeadTags = MokoFaviconHelper::getHeadTags($faviconUrlBase);
+    }
+}
 
 // Core template CSS
 $wa->useStyle('template.base');   // css/template.css
@@ -246,6 +260,9 @@ $wa->useScript('user.js');         // js/user.js
 <head>
 	<?php if (trim($params_custom_head_start)) : ?><?php echo $params_custom_head_start; ?><?php endif; ?>
 	<jdoc:include type="head" />
+	<?php if ($faviconHeadTags) : ?>
+	<?php echo $faviconHeadTags; ?>
+	<?php endif; ?>
 
 	<?php if ($params_theme_enabled) : ?>
 	<script>
