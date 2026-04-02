@@ -14562,6 +14562,147 @@ iframe {
 	position: relative;
 }
 
+/* ── MODULE TITLES ── */
+/* Shared styles for module titles rendered by MokoCassiopeia overrides */
+[class*="__title"] {
+	margin-top: 0;
+	margin-bottom: .75rem;
+	font-weight: 600;
+	color: var(--body-color, #212529);
+	line-height: 1.3;
+}
+
+/* Article list modules */
+.mod-articles-latest__list,
+.mod-articles-popular__list,
+.mod-articles-category__list,
+.mod-related-items__list,
+.mod-tags-similar__list {
+	list-style: none;
+	padding-left: 0;
+	margin-bottom: 0;
+}
+
+.mod-articles-latest__item,
+.mod-articles-popular__item,
+.mod-articles-category__item,
+.mod-related-items__item,
+.mod-tags-similar__item {
+	padding: .4rem 0;
+	border-bottom: 1px solid var(--border-color, #dee2e6);
+}
+
+.mod-articles-latest__item:last-child,
+.mod-articles-popular__item:last-child,
+.mod-articles-category__item:last-child,
+.mod-related-items__item:last-child,
+.mod-tags-similar__item:last-child {
+	border-bottom: 0;
+}
+
+.mod-articles-latest__item a,
+.mod-articles-popular__item a,
+.mod-articles-category__link,
+.mod-related-items__item a,
+.mod-tags-similar__item a {
+	text-decoration: none;
+	color: var(--link-color, #0d6efd);
+}
+
+.mod-articles-latest__item a:hover,
+.mod-articles-popular__item a:hover,
+.mod-articles-category__link:hover,
+.mod-related-items__item a:hover,
+.mod-tags-similar__item a:hover {
+	color: var(--link-hover-color, #0a58ca);
+	text-decoration: underline;
+}
+
+/* Article category module extras */
+.mod-articles-category__date,
+.mod-related-items__date {
+	display: block;
+	font-size: .85em;
+	color: var(--secondary-color, #6c757d);
+}
+
+.mod-articles-category__author {
+	font-size: .85em;
+	color: var(--secondary-color, #6c757d);
+}
+
+.mod-articles-category__intro,
+.mod-articles-news__intro {
+	margin-top: .25rem;
+	font-size: .9em;
+	color: var(--body-color, #212529);
+}
+
+.mod-articles-category__readmore,
+.mod-articles-news__readmore {
+	display: inline-block;
+	margin-top: .25rem;
+	font-size: .85em;
+	font-weight: 600;
+}
+
+/* Newsflash module */
+.mod-articles-news__item {
+	padding: .75rem 0;
+	border-bottom: 1px solid var(--border-color, #dee2e6);
+}
+
+.mod-articles-news__item:last-child {
+	border-bottom: 0;
+}
+
+.mod-articles-news__item-title {
+	margin-bottom: .25rem;
+	font-size: 1.1em;
+}
+
+/* Tags module */
+.mod-tags-popular__tag {
+	font-size: .85rem;
+	transition: background-color .15s ease;
+}
+
+.mod-tags-popular__tag:hover {
+	filter: brightness(1.15);
+}
+
+/* Search / Finder module */
+.mod-finder__form .input-group {
+	border-radius: var(--border-radius, .25rem);
+}
+
+/* Login module */
+.mod-login__greeting {
+	margin-bottom: 1rem;
+	font-weight: 500;
+}
+
+.mod-login__options {
+	margin-top: .5rem;
+}
+
+.mod-login__options li + li {
+	margin-top: .25rem;
+}
+
+/* Breadcrumbs module */
+.mod-breadcrumbs .breadcrumb {
+	background: transparent;
+	padding: 0;
+	margin-bottom: 0;
+}
+
+/* Footer module */
+.mod-footer__content {
+	font-size: .9em;
+	color: var(--secondary-color, #6c757d);
+}
+
 /* HERO CONTAINER */
 .hero-overlay {
   position: relative;

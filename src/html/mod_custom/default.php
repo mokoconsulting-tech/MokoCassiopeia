@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright (C) 2025 Moko Consulting <hello@mokoconsulting.tech>
  *
@@ -9,8 +8,8 @@
  */
 
 /**
- * Template override for mod_custom adding banner-overlay wrapper pattern.
- * Based on Cassiopeia's banner layout approach.
+ * Default layout override for mod_custom.
+ * Adds showtitle support and respects all module settings.
  */
 
 defined('_JEXEC') or die;
@@ -32,11 +31,9 @@ if ($params->get('backgroundimage')) {
     );
 }
 ?>
-<div class="mod-custom custom banner-overlay custom-hero<?php echo $suffix ? ' ' . $suffix : ''; ?>" id="<?php echo $modId; ?>">
-    <div class="overlay">
-        <?php if ($module->showtitle) : ?>
-            <<?php echo $headerTag; ?> class="mod-custom__title<?php echo $headerClass ? ' ' . $headerClass : ''; ?>"><?php echo $module->title; ?></<?php echo $headerTag; ?>>
-        <?php endif; ?>
-        <?php echo $module->content; ?>
-    </div>
+<div class="mod-custom custom<?php echo $suffix ? ' ' . $suffix : ''; ?>" id="<?php echo $modId; ?>">
+    <?php if ($module->showtitle) : ?>
+        <<?php echo $headerTag; ?> class="mod-custom__title<?php echo $headerClass ? ' ' . $headerClass : ''; ?>"><?php echo $module->title; ?></<?php echo $headerTag; ?>>
+    <?php endif; ?>
+    <?php echo $module->content; ?>
 </div>
