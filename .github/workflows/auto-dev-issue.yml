@@ -8,7 +8,7 @@
 # DEFGROUP: GitHub.Workflow
 # INGROUP: MokoStandards.Automation
 # REPO: https://github.com/mokoconsulting-tech/MokoStandards
-# PATH: /templates/workflows/shared/auto-dev-issue.yml.template
+# PATH: /templates/workflows/shared/auto-dev-issue.yml
 # VERSION: 04.04.01
 # BRIEF: Auto-create tracking issue when a dev/** or rc/** branch is pushed
 # NOTE: Synced via bulk-repo-sync to .github/workflows/auto-dev-issue.yml in all governed repos.
