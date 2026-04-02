@@ -21,8 +21,8 @@
 # DEFGROUP: GitHub.Workflow
 # INGROUP: MokoStandards.Deploy
 # REPO: https://github.com/mokoconsulting-tech/MokoStandards
-# PATH: /templates/workflows/shared/deploy-demo.yml
-# VERSION: 04.01.00
+# PATH: /templates/workflows/shared/deploy-demo.yml.template
+# VERSION: 04.04.01
 # BRIEF: SFTP deployment workflow for demo server — synced to all governed repos
 # NOTE: Synced via bulk-repo-sync to .github/workflows/deploy-demo.yml in all governed repos.
 #       Port is resolved in order: DEMO_FTP_PORT variable → :port suffix in DEMO_FTP_HOST → 22.
@@ -51,6 +51,7 @@ on:
       - master
     paths:
       - 'src/**'
+      - 'htdocs/**'
   pull_request:
     types: [opened, synchronize, reopened, closed]
     branches:
@@ -58,6 +59,7 @@ on:
       - master
     paths:
       - 'src/**'
+      - 'htdocs/**'
   workflow_dispatch:
     inputs:
       clear_remote:
@@ -69,6 +71,9 @@ on:
 permissions:
   contents: read
   pull-requests: write
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   check-permission:
@@ -170,16 +175,20 @@ jobs:
       - name: Resolve source directory
         id: source
         run: |
-          SRC="src"
-          if [ ! -d "$SRC" ]; then
-            echo "⚠️ No src/ directory found — skipping deployment"
-            echo "skip=true" >> "$GITHUB_OUTPUT"
+          # Resolve source directory: src/ preferred, htdocs/ as fallback
+          if [ -d "src" ]; then
+            SRC="src"
+          elif [ -d "htdocs" ]; then
+            SRC="htdocs"
           else
-            COUNT=$(find "$SRC" -maxdepth 0 -type d > /dev/null && find "$SRC" -type f | wc -l)
-            echo "✅ Source: src/ (${COUNT} file(s))"
-            echo "skip=false" >> "$GITHUB_OUTPUT"
-            echo "dir=${SRC}"  >> "$GITHUB_OUTPUT"
+            echo "⚠️ No src/ or htdocs/ directory found — skipping deployment"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
           fi
+          COUNT=$(find "$SRC" -type f | wc -l)
+          echo "✅ Source: ${SRC}/ (${COUNT} file(s))"
+          echo "skip=false" >> "$GITHUB_OUTPUT"
+          echo "dir=${SRC}"  >> "$GITHUB_OUTPUT"
 
       - name: Preview files to deploy
         if: steps.source.outputs.skip == 'false'
@@ -241,7 +250,6 @@ jobs:
               fi
             done
             $SKIP && continue
-            if [ -f ".gitignore" ]; then
             if [ -f ".gitignore" ]; then
               git check-ignore -q "$rel" 2>/dev/null && {
                 IGNORED_FILES+=("$rel | .gitignore")
@@ -345,8 +353,8 @@ jobs:
 
           # ── Platform-specific path safety guards ──────────────────────────────
           PLATFORM=""
-          if [ -f ".moko-standards" ]; then
-            PLATFORM=$(grep -E '^platform:' .moko-standards | sed 's/.*:[[:space:]]*//' | tr -d '"')
+          MOKO_FILE=".github/.mokostandards"; [ ! -f "$MOKO_FILE" ] && MOKO_FILE=".mokostandards"; if [ -f "$MOKO_FILE" ]; then
+            PLATFORM=$(grep -E '^platform:' "$MOKO_FILE" | sed 's/.*:[[:space:]]*//' | tr -d '"')
           fi
 
           if [ "$PLATFORM" = "crm-module" ]; then
@@ -407,7 +415,7 @@ jobs:
 
       - name: Setup PHP
         if: steps.source.outputs.skip == 'false' && steps.remote.outputs.skip != 'true'
-        uses: shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1 # v2.31.0
+        uses: shivammathur/setup-php@fcafdd6392932010c2bd5094439b8e33be2a8a09 # v2.37.0
         with:
           php-version: '8.1'
           tools: composer
@@ -418,14 +426,17 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN || github.token }}
           COMPOSER_AUTH: '{"github-oauth":{"github.com":"${{ secrets.GH_TOKEN || github.token }}"}}'
         run: |
-          git clone --depth 1 --quiet \
+          git clone --depth 1 --branch version/04.04 --quiet \
             "https://x-access-token:${GH_TOKEN}@github.com/mokoconsulting-tech/MokoStandards.git" \
             /tmp/mokostandards
           cd /tmp/mokostandards
           composer install --no-dev --no-interaction --quiet
 
-      - name: Clear remote destination folder
-        if: steps.source.outputs.skip == 'false' && steps.remote.outputs.skip != 'true'
+      - name: Clear remote destination folder (manual only)
+        if: >-
+          steps.source.outputs.skip == 'false' &&
+          steps.remote.outputs.skip != 'true' &&
+          inputs.clear_remote == true
         env:
           SFTP_HOST:      ${{ steps.conn.outputs.host }}
           SFTP_PORT:      ${{ steps.conn.outputs.port }}
@@ -566,6 +577,60 @@ jobs:
               > /tmp/sftp-config.json
           fi
 
+          # ── Write update files (demo = stable) ─────────────────────────────
+          PLATFORM=$(php /tmp/mokostandards/api/cli/platform_detect.php --path . 2>/dev/null || true)
+          VERSION=$(php /tmp/mokostandards/api/cli/version_read.php --path . 2>/dev/null || echo "unknown")
+          REPO="${{ github.repository }}"
+
+          if [ "$PLATFORM" = "crm-module" ]; then
+            printf '%s' "$VERSION" > update.txt
+          fi
+
+          if [ "$PLATFORM" = "waas-component" ]; then
+            MANIFEST=$(find . -maxdepth 2 -name "*.xml" -exec grep -l '<extension' {} \; 2>/dev/null | head -1 || true)
+            if [ -n "$MANIFEST" ]; then
+              EXT_NAME=$(grep -oP '<name>\K[^<]+' "$MANIFEST" 2>/dev/null | head -1 || echo "${{ github.event.repository.name }}")
+              EXT_TYPE=$(grep -oP '<extension[^>]+type="\K[^"]+' "$MANIFEST" 2>/dev/null || echo "component")
+              EXT_ELEMENT=$(grep -oP '<element>\K[^<]+' "$MANIFEST" 2>/dev/null | head -1 || basename "$MANIFEST" .xml)
+              EXT_CLIENT=$(grep -oP '<extension[^>]+client="\K[^"]+' "$MANIFEST" 2>/dev/null || echo "")
+              EXT_FOLDER=$(grep -oP '<extension[^>]+group="\K[^"]+' "$MANIFEST" 2>/dev/null || echo "")
+              TARGET_PLATFORM=$(grep -oP '<targetplatform[^/]*/' "$MANIFEST" 2>/dev/null | head -1 || true)
+              [ -n "$TARGET_PLATFORM" ] && TARGET_PLATFORM="${TARGET_PLATFORM}>"
+              [ -z "$TARGET_PLATFORM" ] && TARGET_PLATFORM=$(printf '<targetplatform name="joomla" version="5.*" %s>' "/")
+
+              CLIENT_TAG=""
+              if [ -n "$EXT_CLIENT" ]; then CLIENT_TAG="<client>${EXT_CLIENT}</client>"; elif [ "$EXT_TYPE" = "module" ] || [ "$EXT_TYPE" = "plugin" ]; then CLIENT_TAG="<client>site</client>"; fi
+              FOLDER_TAG=""
+              if [ -n "$EXT_FOLDER" ] && [ "$EXT_TYPE" = "plugin" ]; then FOLDER_TAG="<folder>${EXT_FOLDER}</folder>"; fi
+
+              DOWNLOAD_URL="https://github.com/${REPO}/releases/download/v${VERSION}/${EXT_ELEMENT}-${VERSION}.zip"
+              {
+                printf '%s\n' '<?xml version="1.0" encoding="utf-8"?>'
+                printf '%s\n' '<updates>'
+                printf '%s\n' '  <update>'
+                printf '%s\n' "    <name>${EXT_NAME}</name>"
+                printf '%s\n' "    <description>${EXT_NAME} update</description>"
+                printf '%s\n' "    <element>${EXT_ELEMENT}</element>"
+                printf '%s\n' "    <type>${EXT_TYPE}</type>"
+                printf '%s\n' "    <version>${VERSION}</version>"
+                [ -n "$CLIENT_TAG" ] && printf '%s\n' "    ${CLIENT_TAG}"
+                [ -n "$FOLDER_TAG" ] && printf '%s\n' "    ${FOLDER_TAG}"
+                printf '%s\n' '    <tags>'
+                printf '%s\n' '      <tag>stable</tag>'
+                printf '%s\n' '    </tags>'
+                printf '%s\n' "    <infourl title=\"${EXT_NAME}\">https://github.com/${REPO}</infourl>"
+                printf '%s\n' '    <downloads>'
+                printf '%s\n' "      <downloadurl type=\"full\" format=\"zip\">${DOWNLOAD_URL}</downloadurl>"
+                printf '%s\n' '    </downloads>'
+                printf '%s\n' "    ${TARGET_PLATFORM}"
+                printf '%s\n' '    <maintainer>Moko Consulting</maintainer>'
+                printf '%s\n' '    <maintainerurl>https://mokoconsulting.tech</maintainerurl>'
+                printf '%s\n' '  </update>'
+                printf '%s\n' '</updates>'
+              } > update.xml
+            fi
+          fi
+
           # ── Run deploy-sftp.php from MokoStandards ────────────────────────────
           DEPLOY_ARGS=(--path . --src-dir "$SOURCE_DIR" --config /tmp/sftp-config.json)
           if [ "$USE_PASSPHRASE" = "true" ]; then
@@ -578,7 +643,7 @@ jobs:
           rm -f /tmp/deploy_key /tmp/sftp-config.json
 
       - name: Create or update failure issue
-        if: failure()
+        if: failure() && steps.remote.outputs.skip != 'true'
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN || github.token }}
         run: |
@@ -620,7 +685,7 @@ jobs:
             --force 2>/dev/null || true
 
           # Look for an existing open deploy-failure issue
-          EXISTING=$(gh api "repos/${REPO}/issues?labels=${LABEL}&state=open&per_page=1" \
+          EXISTING=$(gh api "repos/${REPO}/issues?labels=${LABEL}&state=all&per_page=1&sort=created&direction=desc" \
             --jq '.[0].number' 2>/dev/null)
 
           if [ -n "$EXISTING" ] && [ "$EXISTING" != "null" ]; then
@@ -628,14 +693,16 @@ jobs:
               -X PATCH \
               -f title="$TITLE" \
               -f body="$BODY" \
+              -f state="open" \
               --silent
-            echo "📋 Failure issue #${EXISTING} updated: ${REPO}" >> "$GITHUB_STEP_SUMMARY"
+            echo "📋 Failure issue #${EXISTING} updated/reopened: ${REPO}" >> "$GITHUB_STEP_SUMMARY"
           else
             gh issue create \
               --repo "$REPO" \
               --title "$TITLE" \
               --body "$BODY" \
               --label "$LABEL" \
+              --assignee "jmiller-moko" \
               | tee -a "$GITHUB_STEP_SUMMARY"
           fi
 
