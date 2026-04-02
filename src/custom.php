@@ -1,19 +1,9 @@
 <?php
-/* Copyright (C) 2026 Moko Consulting <hello@mokoconsulting.tech>
+/* Copyright (C) 2025 Moko Consulting <hello@mokoconsulting.tech>
 
  This file is part of a Moko Consulting project.
 
  SPDX-License-Identifier: GPL-3.0-or-later
-
-
-
- # FILE INFORMATION
- DEFGROUP: Joomla.Template.Site
- INGROUP: MokoCassiopeia
- REPO: https://github.com/mokoconsulting-tech/MokoCassiopeia
- PATH: ./templates/mokocassiopeia/custom.php
- VERSION: 03.09.02
- BRIEF: MokoCassiopeia with user-defined overrides
  */
 
 	function console_log($output, $with_script_tags = true) {
