@@ -3,24 +3,6 @@
  This file is part of a Moko Consulting project.
 
  SPDX-License-Identifier: GPL-3.0-or-later
-
-
-
- # FILE INFORMATION
- DEFGROUP: Joomla Template
- FILE: media/templates/site/moko-cassiopeia/js/gtm.js
- HEADER VERSION: 1.0
- VERSION: 2.0
- BRIEF: Safe, configurable Google Tag Manager loader for MokoCassiopeia.
- PATH: ./media/templates/site/moko-cassiopeia/js/gtm.js
- NOTE: Place the <noscript> fallback iframe in your HTML template (index.php). A JS file
-			 cannot provide a true no-JS fallback by definition.
- VARIABLES:
-	 - window.MOKO_GTM_ID (string)            // Optional global GTM container ID (e.g., "GTM-XXXXXXX")
-	 - window.MOKO_GTM_OPTIONS (object)       // Optional global options (see JSDoc below)
-	 - data- attributes on the script tag or <html>/<body>:
-			 data-gtm-id, data-data-layer, data-debug, data-ignore-dnt,
-			 data-env-auth, data-env-preview, data-block-on-dev
  */
 
 /* global window, document, navigator */

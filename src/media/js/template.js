@@ -3,15 +3,6 @@
  This file is part of a Moko Consulting project.
 
  SPDX-License-Identifier: GPL-3.0-or-later
-
-
-
- # FILE INFORMATION
- DEFGROUP: Joomla.Template.Site
- INGROUP: MokoCassiopeia
- PATH: ./media/templates/site/moko-cassiopeia/js/template.js
- VERSION: 03.09.02
- BRIEF: Consolidated JavaScript for MokoCassiopeia template including theme and utilities
  */
 
 (function (win, doc) {

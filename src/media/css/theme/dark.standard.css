@@ -5,16 +5,6 @@
 
  SPDX-License-Identifier: GPL-3.0-or-later
 
-
-
- # FILE INFORMATION
- DEFGROUP: Joomla.Template.Site
- INGROUP: MokoCassiopeia
- PATH: ./media/templates/site/mokocassiopeia/css/global/dark/colors_standard.css
- VERSION: 03.09.02
- BRIEF: Standard dark mode color definitions for MokoCassiopeia template
- */
-
 /* -----------------------------------------------
  * DARK THEME
  * --------------------------------------------- */
@@ -526,6 +516,8 @@ color-scheme: dark;
 --hero-bg-size: cover;
 --hero-border-bottom: solid var(--accent-color-secondary);
 --hero-overlay-bg: hsla(0, 0%, 0%, 0.3);
+--hero-overlay-bg-position: center;
+--hero-overlay-bg-size: cover;
 --hero-overlay-padding: 1em;
 --hero-overlay-text-align: center;
 --hero-overlay-text-color: var(--body-color);
@@ -540,6 +532,25 @@ color-scheme: dark;
 --hero-secondary-bg-color: #080f1e;
 --hero-secondary-overlay: linear-gradient(rgba(8, 15, 30, .80), rgba(8, 15, 30, .80));
 --hero-secondary-color: #f1f5f9;
+
+/* ===== HERO CARD (inner .hero element) ===== */
+/* Default card — uses primary variant values */
+--hero-card-bg: var(--hero-primary-bg-color);
+--hero-card-color: var(--hero-primary-color);
+--hero-card-overlay: var(--hero-primary-overlay);
+--hero-card-border-radius: .5rem;
+--hero-card-padding-x: 2rem;
+--hero-card-padding-y: 3rem;
+--hero-card-max-width: 600px;
+
+/* Alternative card — uses secondary variant values */
+--hero-alt-card-bg: var(--hero-secondary-bg-color);
+--hero-alt-card-color: var(--hero-secondary-color);
+--hero-alt-card-overlay: var(--hero-secondary-overlay);
+--hero-alt-card-border-radius: .5rem;
+--hero-alt-card-padding-x: 2rem;
+--hero-alt-card-padding-y: 3rem;
+--hero-alt-card-max-width: 600px;
 
 /* ===== BLOCK COLORS (top-a / top-b / bottom-a / bottom-b) ===== */
 --block-color-1: var(--secondary-bg);
@@ -820,7 +831,7 @@ color-scheme: dark;
 	--btn-font-weight: 400;
 	--btn-line-height: 1.5;
 	--btn-color: var(--white);
-	--btn-bg: transparent;
+	--btn-bg: var(--body-bg);
 	--btn-border-width: 1px;
 	--btn-border-color: transparent;
 	--btn-border-radius: 0.25rem;

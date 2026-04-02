@@ -1,17 +1,17 @@
 <?php
 /**
- * @package     Joomla.Site
- * @subpackage  Templates.MokoCassiopeia
+ * Copyright (C) 2025 Moko Consulting <hello@mokoconsulting.tech>
  *
- * @copyright   (C) 2026 Moko Consulting <hello@mokoconsulting.tech>
- * @license     GNU General Public License version 2 or later; see LICENSE.txt
+ * This file is part of a Moko Consulting project.
  *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+/**
  * Template install/update/uninstall script.
- *
  * Joomla calls the methods in this class automatically during template
  * install, update, and uninstall via the <scriptfile> element in
  * templateDetails.xml.
- *
  * Joomla 5 and 6 compatible — uses the InstallerScriptInterface when
  * available, falls back to the legacy class-based approach otherwise.
  */

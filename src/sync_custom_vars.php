@@ -1,24 +1,22 @@
 <?php
 /**
- * @package     Joomla.Site
- * @subpackage  Templates.MokoCassiopeia
+ * Copyright (C) 2025 Moko Consulting <hello@mokoconsulting.tech>
  *
- * @copyright   (C) 2026 Moko Consulting <hello@mokoconsulting.tech>
- * @license     GNU General Public License version 2 or later; see LICENSE.txt
+ * This file is part of a Moko Consulting project.
  *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+/**
  * CSS Variable Sync Utility
- *
  * Compares a user's custom palette file against the template starter file and
  * injects any missing CSS variable declarations.  Existing user values are
  * never overwritten — only genuinely new variables are added.
- *
  * Usage (CLI):
- *   php sync_custom_vars.php
- *
+ * php sync_custom_vars.php
  * Usage (from Joomla script.php or plugin):
- *   require_once __DIR__ . '/sync_custom_vars.php';
- *   MokoCssVarSync::run();
- *
+ * require_once __DIR__ . '/sync_custom_vars.php';
+ * MokoCssVarSync::run();
  * The script auto-detects Joomla's root by walking up from __DIR__.
  */
 

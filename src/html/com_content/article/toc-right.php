@@ -1,17 +1,10 @@
 <?php
 /**
- * @package     Joomla.Site
- * @subpackage  Templates.MokoCassiopeia
+ * Copyright (C) 2025 Moko Consulting <hello@mokoconsulting.tech>
  *
- * @copyright   (C) 2026 Moko Consulting <hello@mokoconsulting.tech>
- * @license     GNU General Public License version 3 or later; see LICENSE.txt
- * 
- * FILE INFORMATION
- * DEFGROUP: Joomla.Template.Site
- * INGROUP: MokoCassiopeia
- * PATH: ./templates/mokocassiopeia/html/com_content/article/toc-right.php
- * VERSION: 03.09.02
- * BRIEF: Article layout with table of contents on the right side using Bootstrap TOC
+ * This file is part of a Moko Consulting project.
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 defined('_JEXEC') or die;

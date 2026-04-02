@@ -1,11 +1,13 @@
 <?php
 /**
- * @package     Joomla.Site
- * @subpackage  mod_menu
+ * Copyright (C) 2025 Moko Consulting <hello@mokoconsulting.tech>
  *
- * @copyright   (C) 2025 Moko Consulting <hello@mokoconsulting.tech>
- * @license     GNU General Public License version 2 or later; see LICENSE.txt
+ * This file is part of a Moko Consulting project.
  *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+/**
  * Main Menu - URL item layout
  */
 

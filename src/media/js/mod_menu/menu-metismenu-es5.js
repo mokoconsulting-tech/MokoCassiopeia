@@ -3,15 +3,6 @@
  This file is part of a Moko Consulting project.
 
  SPDX-License-Identifier: GPL-3.0-or-later
-
-
-
- # FILE INFORMATION
- DEFGROUP: Joomla.Template.Site
- INGROUP: MokoCassiopeia
- PATH: ./media/templates/site/moko-cassiopeia/js/mod_menu/menu-metismenu-es5.js
- VERSION: 03.09.02
- BRIEF: ES5-compatible MetisMenu script for Joomla mod_menu in MokoCassiopeia
  */
 
 (function () {
