@@ -1,0 +1,521 @@
+# Copyright (C) 2026 Moko Consulting <hello@mokoconsulting.tech>
+#
+# This file is part of a Moko Consulting project.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# FILE INFORMATION
+# DEFGROUP: GitHub.Workflow
+# INGROUP: MokoStandards.Maintenance
+# REPO: https://github.com/mokoconsulting-tech/MokoStandards
+# PATH: /templates/workflows/shared/repository-cleanup.yml.template
+# VERSION: 04.04.01
+# BRIEF: Recurring repository maintenance — labels, branches, workflows, logs, doc indexes
+# NOTE: Synced via bulk-repo-sync to .github/workflows/repository-cleanup.yml in all governed repos.
+#       Runs on the 1st and 15th of each month at 6:00 AM UTC, and on manual dispatch.
+
+name: Repository Cleanup
+
+on:
+  schedule:
+    - cron: '0 6 1,15 * *'
+  workflow_dispatch:
+    inputs:
+      reset_labels:
+        description: 'Delete ALL existing labels and recreate the standard set'
+        type: boolean
+        default: false
+      clean_branches:
+        description: 'Delete old chore/sync-mokostandards-* branches'
+        type: boolean
+        default: true
+      clean_workflows:
+        description: 'Delete orphaned workflow runs (cancelled, stale)'
+        type: boolean
+        default: true
+      clean_logs:
+        description: 'Delete workflow run logs older than 30 days'
+        type: boolean
+        default: true
+      fix_templates:
+        description: 'Strip copyright comment blocks from issue templates'
+        type: boolean
+        default: true
+      rebuild_indexes:
+        description: 'Rebuild docs/ index files'
+        type: boolean
+        default: true
+      delete_closed_issues:
+        description: 'Delete issues that have been closed for more than 30 days'
+        type: boolean
+        default: false
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+permissions:
+  contents: write
+  issues: write
+  actions: write
+
+jobs:
+  cleanup:
+    name: Repository Maintenance
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          token: ${{ secrets.GH_TOKEN || github.token }}
+          fetch-depth: 0
+
+      - name: Check actor permission
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN || github.token }}
+        run: |
+          ACTOR="${{ github.actor }}"
+          # Schedule triggers use github-actions[bot]
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            echo "✅ Scheduled run — authorized"
+            exit 0
+          fi
+          AUTHORIZED_USERS="jmiller-moko github-actions[bot]"
+          for user in $AUTHORIZED_USERS; do
+            if [ "$ACTOR" = "$user" ]; then
+              echo "✅ ${ACTOR} authorized"
+              exit 0
+            fi
+          done
+          PERMISSION=$(gh api "repos/${{ github.repository }}/collaborators/${ACTOR}/permission" \
+            --jq '.permission' 2>/dev/null)
+          case "$PERMISSION" in
+            admin|maintain) echo "✅ ${ACTOR} has ${PERMISSION}" ;;
+            *) echo "❌ Admin or maintain required"; exit 1 ;;
+          esac
+
+      # ── Determine which tasks to run ─────────────────────────────────────
+      # On schedule: run all tasks with safe defaults (labels NOT reset)
+      # On dispatch: use input toggles
+      - name: Set task flags
+        id: tasks
+        run: |
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            echo "reset_labels=false" >> $GITHUB_OUTPUT
+            echo "clean_branches=true" >> $GITHUB_OUTPUT
+            echo "clean_workflows=true" >> $GITHUB_OUTPUT
+            echo "clean_logs=true" >> $GITHUB_OUTPUT
+            echo "fix_templates=true" >> $GITHUB_OUTPUT
+            echo "rebuild_indexes=true" >> $GITHUB_OUTPUT
+            echo "delete_closed_issues=false" >> $GITHUB_OUTPUT
+          else
+            echo "reset_labels=${{ inputs.reset_labels }}" >> $GITHUB_OUTPUT
+            echo "clean_branches=${{ inputs.clean_branches }}" >> $GITHUB_OUTPUT
+            echo "clean_workflows=${{ inputs.clean_workflows }}" >> $GITHUB_OUTPUT
+            echo "clean_logs=${{ inputs.clean_logs }}" >> $GITHUB_OUTPUT
+            echo "fix_templates=${{ inputs.fix_templates }}" >> $GITHUB_OUTPUT
+            echo "rebuild_indexes=${{ inputs.rebuild_indexes }}" >> $GITHUB_OUTPUT
+            echo "delete_closed_issues=${{ inputs.delete_closed_issues }}" >> $GITHUB_OUTPUT
+          fi
+
+      # ── DELETE RETIRED WORKFLOWS (always runs) ────────────────────────────
+      - name: Delete retired workflow files
+        run: |
+          echo "## 🗑️ Retired Workflow Cleanup" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          RETIRED=(
+            ".github/workflows/build.yml"
+            ".github/workflows/code-quality.yml"
+            ".github/workflows/release-cycle.yml"
+            ".github/workflows/release-pipeline.yml"
+            ".github/workflows/branch-cleanup.yml"
+            ".github/workflows/auto-update-changelog.yml"
+            ".github/workflows/enterprise-issue-manager.yml"
+            ".github/workflows/flush-actions-cache.yml"
+            ".github/workflows/mokostandards-script-runner.yml"
+            ".github/workflows/unified-ci.yml"
+            ".github/workflows/unified-platform-testing.yml"
+            ".github/workflows/reusable-build.yml"
+            ".github/workflows/reusable-ci-validation.yml"
+            ".github/workflows/reusable-deploy.yml"
+            ".github/workflows/reusable-php-quality.yml"
+            ".github/workflows/reusable-platform-testing.yml"
+            ".github/workflows/reusable-project-detector.yml"
+            ".github/workflows/reusable-release.yml"
+            ".github/workflows/reusable-script-executor.yml"
+            ".github/workflows/rebuild-docs-indexes.yml"
+            ".github/workflows/setup-project-v2.yml"
+            ".github/workflows/sync-docs-to-project.yml"
+            ".github/workflows/release.yml"
+            ".github/workflows/sync-changelogs.yml"
+            ".github/workflows/version_branch.yml"
+            "update.json"
+            ".github/workflows/auto-version-branch.yml"
+            ".github/workflows/publish-to-mokodolibarr.yml"
+            ".github/workflows/ci.yml"
+          )
+
+          DELETED=0
+          for wf in "${RETIRED[@]}"; do
+            if [ -f "$wf" ]; then
+              git rm "$wf" 2>/dev/null || rm -f "$wf"
+              echo "  Deleted: \`$(basename $wf)\`" >> $GITHUB_STEP_SUMMARY
+              DELETED=$((DELETED+1))
+            fi
+          done
+
+          if [ "$DELETED" -gt 0 ]; then
+            git config --local user.email "github-actions[bot]@users.noreply.github.com"
+            git config --local user.name "github-actions[bot]"
+            git add -A
+            git commit -m "chore: delete ${DELETED} retired workflow file(s) [skip ci]" \
+              --author="github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
+            git push
+            echo "✅ ${DELETED} retired workflow(s) deleted" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ No retired workflows found" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      # ── LABEL RESET ──────────────────────────────────────────────────────
+      - name: Reset labels to standard set
+        if: steps.tasks.outputs.reset_labels == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN || github.token }}
+        run: |
+          REPO="${{ github.repository }}"
+          echo "## 🏷️ Label Reset" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          gh api "repos/${REPO}/labels?per_page=100" --paginate --jq '.[].name' | while read -r label; do
+            ENCODED=$(python3 -c "import urllib.parse; print(urllib.parse.quote('$label', safe=''))")
+            gh api -X DELETE "repos/${REPO}/labels/${ENCODED}" --silent 2>/dev/null || true
+          done
+
+          while IFS='|' read -r name color description; do
+            [ -z "$name" ] && continue
+            gh api "repos/${REPO}/labels" \
+              -f name="$name" -f color="$color" -f description="$description" \
+              --silent 2>/dev/null || true
+          done << 'LABELS'
+          joomla|7F52FF|Joomla extension or component
+          dolibarr|FF6B6B|Dolibarr module or extension
+          generic|808080|Generic project or library
+          php|4F5D95|PHP code changes
+          javascript|F7DF1E|JavaScript code changes
+          typescript|3178C6|TypeScript code changes
+          python|3776AB|Python code changes
+          css|1572B6|CSS/styling changes
+          html|E34F26|HTML template changes
+          documentation|0075CA|Documentation changes
+          ci-cd|000000|CI/CD pipeline changes
+          docker|2496ED|Docker configuration changes
+          tests|00FF00|Test suite changes
+          security|FF0000|Security-related changes
+          dependencies|0366D6|Dependency updates
+          config|F9D0C4|Configuration file changes
+          build|FFA500|Build system changes
+          automation|8B4513|Automated processes or scripts
+          mokostandards|B60205|MokoStandards compliance
+          needs-review|FBCA04|Awaiting code review
+          work-in-progress|D93F0B|Work in progress, not ready for merge
+          breaking-change|D73A4A|Breaking API or functionality change
+          priority: critical|B60205|Critical priority, must be addressed immediately
+          priority: high|D93F0B|High priority
+          priority: medium|FBCA04|Medium priority
+          priority: low|0E8A16|Low priority
+          type: bug|D73A4A|Something isn't working
+          type: feature|A2EEEF|New feature or request
+          type: enhancement|84B6EB|Enhancement to existing feature
+          type: refactor|F9D0C4|Code refactoring
+          type: chore|FEF2C0|Maintenance tasks
+          type: version|0E8A16|Version-related change
+          status: pending|FBCA04|Pending action or decision
+          status: in-progress|0E8A16|Currently being worked on
+          status: blocked|B60205|Blocked by another issue or dependency
+          status: on-hold|D4C5F9|Temporarily on hold
+          status: wontfix|FFFFFF|This will not be worked on
+          size/xs|C5DEF5|Extra small change (1-10 lines)
+          size/s|6FD1E2|Small change (11-30 lines)
+          size/m|F9DD72|Medium change (31-100 lines)
+          size/l|FFA07A|Large change (101-300 lines)
+          size/xl|FF6B6B|Extra large change (301-1000 lines)
+          size/xxl|B60205|Extremely large change (1000+ lines)
+          health: excellent|0E8A16|Health score 90-100
+          health: good|FBCA04|Health score 70-89
+          health: fair|FFA500|Health score 50-69
+          health: poor|FF6B6B|Health score below 50
+          standards-update|B60205|MokoStandards sync update
+          standards-drift|FBCA04|Repository drifted from MokoStandards
+          sync-report|0075CA|Bulk sync run report
+          sync-failure|D73A4A|Bulk sync failure requiring attention
+          push-failure|D73A4A|File push failure requiring attention
+          health-check|0E8A16|Repository health check results
+          version-drift|FFA500|Version mismatch detected
+          deploy-failure|CC0000|Automated deploy failure tracking
+          template-validation-failure|D73A4A|Template workflow validation failure
+          version|0E8A16|Version bump or release
+          LABELS
+
+          echo "✅ Standard labels created" >> $GITHUB_STEP_SUMMARY
+
+      # ── BRANCH CLEANUP ───────────────────────────────────────────────────
+      - name: Delete old sync branches
+        if: steps.tasks.outputs.clean_branches == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN || github.token }}
+        run: |
+          REPO="${{ github.repository }}"
+          CURRENT="chore/sync-mokostandards-v04.04"
+          echo "## 🌿 Branch Cleanup" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          FOUND=false
+          gh api "repos/${REPO}/branches?per_page=100" --jq '.[].name' | \
+            grep "^chore/sync-mokostandards" | \
+            grep -v "^${CURRENT}$" | while read -r branch; do
+              gh pr list --repo "$REPO" --head "$branch" --state open --json number --jq '.[].number' 2>/dev/null | while read -r pr; do
+                gh pr close "$pr" --repo "$REPO" --comment "Superseded by \`${CURRENT}\`" 2>/dev/null || true
+                echo "  Closed PR #${pr}" >> $GITHUB_STEP_SUMMARY
+              done
+              gh api -X DELETE "repos/${REPO}/git/refs/heads/${branch}" --silent 2>/dev/null || true
+              echo "  Deleted: \`${branch}\`" >> $GITHUB_STEP_SUMMARY
+              FOUND=true
+          done
+
+          if [ "$FOUND" != "true" ]; then
+            echo "✅ No old sync branches found" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      # ── WORKFLOW RUN CLEANUP ─────────────────────────────────────────────
+      - name: Clean up workflow runs
+        if: steps.tasks.outputs.clean_workflows == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN || github.token }}
+        run: |
+          REPO="${{ github.repository }}"
+          echo "## 🔄 Workflow Run Cleanup" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          DELETED=0
+          # Delete cancelled and stale workflow runs
+          for status in cancelled stale; do
+            gh api "repos/${REPO}/actions/runs?status=${status}&per_page=100" \
+              --jq '.workflow_runs[].id' 2>/dev/null | while read -r run_id; do
+                gh api -X DELETE "repos/${REPO}/actions/runs/${run_id}" --silent 2>/dev/null || true
+                DELETED=$((DELETED+1))
+            done
+          done
+
+          echo "✅ Cleaned cancelled/stale workflow runs" >> $GITHUB_STEP_SUMMARY
+
+      # ── LOG CLEANUP ──────────────────────────────────────────────────────
+      - name: Delete old workflow run logs
+        if: steps.tasks.outputs.clean_logs == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN || github.token }}
+        run: |
+          REPO="${{ github.repository }}"
+          CUTOFF=$(date -u -d '30 days ago' +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || date -u -v-30d +%Y-%m-%dT%H:%M:%SZ)
+          echo "## 📋 Log Cleanup" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Deleting logs older than: ${CUTOFF}" >> $GITHUB_STEP_SUMMARY
+
+          DELETED=0
+          gh api "repos/${REPO}/actions/runs?created=<${CUTOFF}&per_page=100" \
+            --jq '.workflow_runs[].id' 2>/dev/null | while read -r run_id; do
+              gh api -X DELETE "repos/${REPO}/actions/runs/${run_id}/logs" --silent 2>/dev/null || true
+              DELETED=$((DELETED+1))
+          done
+
+          echo "✅ Cleaned old workflow run logs" >> $GITHUB_STEP_SUMMARY
+
+      # ── ISSUE TEMPLATE FIX ──────────────────────────────────────────────
+      - name: Strip copyright headers from issue templates
+        if: steps.tasks.outputs.fix_templates == 'true'
+        run: |
+          echo "## 📋 Issue Template Cleanup" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          FIXED=0
+          for f in .github/ISSUE_TEMPLATE/*.md; do
+            [ -f "$f" ] || continue
+            if grep -q '^<!--$' "$f"; then
+              sed -i '/^<!--$/,/^-->$/d' "$f"
+              echo "  Cleaned: \`$(basename $f)\`" >> $GITHUB_STEP_SUMMARY
+              FIXED=$((FIXED+1))
+            fi
+          done
+
+          if [ "$FIXED" -gt 0 ]; then
+            git config --local user.email "github-actions[bot]@users.noreply.github.com"
+            git config --local user.name "github-actions[bot]"
+            git add .github/ISSUE_TEMPLATE/
+            git commit -m "fix: strip copyright comment blocks from issue templates [skip ci]" \
+              --author="github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
+            git push
+            echo "✅ ${FIXED} template(s) cleaned and committed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ No templates need cleaning" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      # ── REBUILD DOC INDEXES ─────────────────────────────────────────────
+      - name: Rebuild docs/ index files
+        if: steps.tasks.outputs.rebuild_indexes == 'true'
+        run: |
+          echo "## 📚 Documentation Index Rebuild" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ ! -d "docs" ]; then
+            echo "⏭️ No docs/ directory — skipping" >> $GITHUB_STEP_SUMMARY
+            exit 0
+          fi
+
+          UPDATED=0
+          # Generate index.md for each docs/ subdirectory
+          find docs -type d | while read -r dir; do
+            INDEX="${dir}/index.md"
+            FILES=$(find "$dir" -maxdepth 1 -name "*.md" ! -name "index.md" -printf "- [%f](./%f)\n" 2>/dev/null | sort)
+            if [ -z "$FILES" ]; then
+              continue
+            fi
+
+            cat > "$INDEX" << INDEXEOF
+            # $(basename "$dir")
+
+            ## Documents
+
+            ${FILES}
+
+            ---
+            *Auto-generated by repository-cleanup workflow*
+          INDEXEOF
+            # Dedent
+            sed -i 's/^            //' "$INDEX"
+            UPDATED=$((UPDATED+1))
+          done
+
+          if [ "$UPDATED" -gt 0 ]; then
+            git config --local user.email "github-actions[bot]@users.noreply.github.com"
+            git config --local user.name "github-actions[bot]"
+            git add docs/
+            if ! git diff --cached --quiet; then
+              git commit -m "docs: rebuild documentation indexes [skip ci]" \
+                --author="github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
+              git push
+              echo "✅ ${UPDATED} index file(s) rebuilt and committed" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "✅ All indexes already up to date" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "✅ No indexes to rebuild" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      # ── VERSION DRIFT DETECTION ──────────────────────────────────────────
+      - name: Check for version drift
+        run: |
+          echo "## 📦 Version Drift Check" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ ! -f "README.md" ]; then
+            echo "⏭️ No README.md — skipping" >> $GITHUB_STEP_SUMMARY
+            exit 0
+          fi
+
+          README_VERSION=$(grep -oP '^\s*VERSION:\s*\K[0-9]{2}\.[0-9]{2}\.[0-9]{2}' README.md 2>/dev/null | head -1)
+          if [ -z "$README_VERSION" ]; then
+            echo "⚠️ No VERSION found in README.md FILE INFORMATION block" >> $GITHUB_STEP_SUMMARY
+            exit 0
+          fi
+
+          echo "**README version:** \`${README_VERSION}\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          DRIFT=0
+          CHECKED=0
+
+          # Check all files with FILE INFORMATION blocks
+          while IFS= read -r -d '' file; do
+            FILE_VERSION=$(grep -oP '^\s*\*?\s*VERSION:\s*\K[0-9]{2}\.[0-9]{2}\.[0-9]{2}' "$file" 2>/dev/null | head -1)
+            [ -z "$FILE_VERSION" ] && continue
+            CHECKED=$((CHECKED+1))
+            if [ "$FILE_VERSION" != "$README_VERSION" ]; then
+              echo "  ⚠️ \`${file}\`: \`${FILE_VERSION}\` (expected \`${README_VERSION}\`)" >> $GITHUB_STEP_SUMMARY
+              DRIFT=$((DRIFT+1))
+            fi
+          done < <(find . -maxdepth 4 -type f \( -name "*.php" -o -name "*.md" -o -name "*.yml" \) ! -path "./.git/*" ! -path "./vendor/*" ! -path "./node_modules/*" -print0 2>/dev/null)
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ "$DRIFT" -gt 0 ]; then
+            echo "⚠️ **${DRIFT}** file(s) out of ${CHECKED} have version drift" >> $GITHUB_STEP_SUMMARY
+            echo "Run \`sync-version-on-merge\` workflow or update manually" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ All ${CHECKED} file(s) match README version \`${README_VERSION}\`" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      # ── PROTECT CUSTOM WORKFLOWS ────────────────────────────────────────
+      - name: Ensure custom workflow directory exists
+        run: |
+          echo "## 🔧 Custom Workflows" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ ! -d ".github/workflows/custom" ]; then
+            mkdir -p .github/workflows/custom
+            cat > .github/workflows/custom/README.md << 'CWEOF'
+          # Custom Workflows
+
+          Place repo-specific workflows here. Files in this directory are:
+          - **Never overwritten** by MokoStandards bulk sync
+          - **Never deleted** by the repository-cleanup workflow
+          - Safe for custom CI, notifications, or repo-specific automation
+
+          Synced workflows live in `.github/workflows/` (parent directory).
+          CWEOF
+            sed -i 's/^          //' .github/workflows/custom/README.md
+            git config --local user.email "github-actions[bot]@users.noreply.github.com"
+            git config --local user.name "github-actions[bot]"
+            git add .github/workflows/custom/
+            if ! git diff --cached --quiet; then
+              git commit -m "chore: create .github/workflows/custom/ for repo-specific workflows [skip ci]" \
+                --author="github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
+              git push
+              echo "✅ Created \`.github/workflows/custom/\` directory" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            CUSTOM_COUNT=$(find .github/workflows/custom -name "*.yml" -o -name "*.yaml" 2>/dev/null | wc -l)
+            echo "✅ Custom workflow directory exists (${CUSTOM_COUNT} workflow(s))" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      # ── DELETE CLOSED ISSUES ──────────────────────────────────────────────
+      - name: Delete old closed issues
+        if: steps.tasks.outputs.delete_closed_issues == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN || github.token }}
+        run: |
+          REPO="${{ github.repository }}"
+          CUTOFF=$(date -u -d '30 days ago' +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || date -u -v-30d +%Y-%m-%dT%H:%M:%SZ)
+          echo "## 🗑️ Closed Issue Cleanup" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Deleting issues closed before: ${CUTOFF}" >> $GITHUB_STEP_SUMMARY
+
+          DELETED=0
+          gh api "repos/${REPO}/issues?state=closed&since=1970-01-01T00:00:00Z&per_page=100&sort=updated&direction=asc" \
+            --jq ".[] | select(.closed_at < \"${CUTOFF}\") | .number" 2>/dev/null | while read -r num; do
+              # Lock and close with "not_planned" to mark as cleaned up
+              gh api "repos/${REPO}/issues/${num}/lock" -X PUT -f lock_reason="resolved" --silent 2>/dev/null || true
+              echo "  Locked issue #${num}" >> $GITHUB_STEP_SUMMARY
+              DELETED=$((DELETED+1))
+          done
+
+          if [ "$DELETED" -eq 0 ] 2>/dev/null; then
+            echo "✅ No old closed issues found" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ Locked ${DELETED} old closed issue(s)" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "*Run by @${{ github.actor }} — trigger: ${{ github.event_name }}*" >> $GITHUB_STEP_SUMMARY
