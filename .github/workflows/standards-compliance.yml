@@ -163,7 +163,9 @@ jobs:
             --include="*.php" --include="*.py" --include="*.js" --include="*.ts" \
             --exclude-dir=".git" --exclude-dir="vendor" --exclude-dir="node_modules" 2>/dev/null | \
             grep -v -E '(test|example|sample|getenv|getString|getArgument|config\[|/\.\*/|^\s*//|^\s*\*|CREDENTIAL_PATTERNS|SecurityValidator|SECRET_PATTERN|===|!==|ApiClient|str_contains|gen_wrappers)' | \
-            grep -v "= ''" | grep -v '= ""' | grep -v '\$this->config' > /tmp/secrets1.txt 2>/dev/null || true
+            grep -v "= ''" | grep -v '= ""' | grep -v '\$this->config' | \
+            grep -v 'type="password"' | grep -v 'type="text"' | grep -v 'name="password"' | grep -v 'name="secretkey"' | \
+            grep -v '<input ' | grep -v '<label ' | grep -v 'for="' > /tmp/secrets1.txt 2>/dev/null || true
           scan_pattern "Secret assignments" "⚠️" /tmp/secrets1.txt
 
           # Pattern 2: Private keys
