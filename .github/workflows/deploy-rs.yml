@@ -21,8 +21,8 @@
 # DEFGROUP: GitHub.Workflow
 # INGROUP: MokoStandards.Deploy
 # REPO: https://github.com/mokoconsulting-tech/MokoStandards
-# PATH: /templates/workflows/shared/deploy-rs.yml
-# VERSION: 04.04.01
+# PATH: /templates/workflows/shared/deploy-rs.yml.template
+# VERSION: 04.05.00
 # BRIEF: SFTP deployment workflow for release staging server — synced to all governed repos
 # NOTE: Synced via bulk-repo-sync to .github/workflows/deploy-rs.yml in all governed repos.
 #       Port is resolved in order: RS_FTP_PORT variable → :port suffix in RS_FTP_HOST → 22.

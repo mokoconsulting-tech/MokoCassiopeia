@@ -8,8 +8,8 @@
 # DEFGROUP: GitHub.Workflow
 # INGROUP: MokoStandards.Maintenance
 # REPO: https://github.com/mokoconsulting-tech/MokoStandards
-# PATH: /templates/workflows/shared/repository-cleanup.yml
-# VERSION: 04.04.01
+# PATH: /templates/workflows/shared/repository-cleanup.yml.template
+# VERSION: 04.05.00
 # BRIEF: Recurring repository maintenance — labels, branches, workflows, logs, doc indexes
 # NOTE: Synced via bulk-repo-sync to .github/workflows/repository-cleanup.yml in all governed repos.
 #       Runs on the 1st and 15th of each month at 6:00 AM UTC, and on manual dispatch.
@@ -266,7 +266,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN || github.token }}
         run: |
           REPO="${{ github.repository }}"
-          CURRENT="chore/sync-mokostandards-v04.04"
+          CURRENT="chore/sync-mokostandards-v04.05"
           echo "## 🌿 Branch Cleanup" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 

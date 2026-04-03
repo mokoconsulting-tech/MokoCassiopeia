@@ -21,8 +21,8 @@
 # DEFGROUP: GitHub.Workflow
 # INGROUP: MokoStandards.Deploy
 # REPO: https://github.com/mokoconsulting-tech/MokoStandards
-# PATH: /templates/workflows/shared/deploy-dev.yml
-# VERSION: 04.04.01
+# PATH: /templates/workflows/shared/deploy-dev.yml.template
+# VERSION: 04.05.00
 # BRIEF: SFTP deployment workflow for development server — synced to all governed repos
 # NOTE: Synced via bulk-repo-sync to .github/workflows/deploy-dev.yml in all governed repos.
 #       Port is resolved in order: DEV_FTP_PORT variable → :port suffix in DEV_FTP_HOST → 22.
@@ -667,69 +667,8 @@ jobs:
           # Remove temp files that should never be left behind
           rm -f /tmp/deploy_key /tmp/sftp-config.json
 
-      - name: Create or update failure issue
-        if: failure()
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN || github.token }}
-        run: |
-          REPO="${{ github.repository }}"
-          RUN_URL="${{ github.server_url }}/${REPO}/actions/runs/${{ github.run_id }}"
-          ACTOR="${{ github.actor }}"
-          BRANCH="${{ github.ref_name }}"
-          EVENT="${{ github.event_name }}"
-          NOW=$(date -u '+%Y-%m-%d %H:%M:%S UTC')
-          LABEL="deploy-failure"
-
-          TITLE="fix: Dev deployment failed — ${REPO}"
-          BODY="## Dev Deployment Failed
-
-          A deployment to the dev server failed and requires attention.
-
-          | Field | Value |
-          |-------|-------|
-          | **Repository** | \`${REPO}\` |
-          | **Branch** | \`${BRANCH}\` |
-          | **Trigger** | ${EVENT} |
-          | **Actor** | @${ACTOR} |
-          | **Failed at** | ${NOW} |
-          | **Run** | [View workflow run](${RUN_URL}) |
-
-          ### Next steps
-          1. Review the [workflow run log](${RUN_URL}) for the specific error.
-          2. Fix the underlying issue (credentials, SFTP connectivity, permissions).
-          3. Re-trigger the deployment via **Actions → Deploy to Dev Server → Run workflow**.
-
-          ---
-          *Auto-created by deploy-dev.yml — close this issue once the deployment is resolved.*"
-
-          # Ensure the label exists (idempotent — no-op if already present)
-          gh label create "$LABEL" \
-            --repo "$REPO" \
-            --color "CC0000" \
-            --description "Automated deploy failure tracking" \
-            --force 2>/dev/null || true
-
-          # Look for an existing open deploy-failure issue
-          EXISTING=$(gh api "repos/${REPO}/issues?labels=${LABEL}&state=all&per_page=1&sort=created&direction=desc" \
-            --jq '.[0].number' 2>/dev/null)
-
-          if [ -n "$EXISTING" ] && [ "$EXISTING" != "null" ]; then
-            gh api "repos/${REPO}/issues/${EXISTING}" \
-              -X PATCH \
-              -f title="$TITLE" \
-              -f body="$BODY" \
-              -f state="open" \
-              --silent
-            echo "📋 Failure issue #${EXISTING} updated/reopened: ${REPO}" >> "$GITHUB_STEP_SUMMARY"
-          else
-            gh issue create \
-              --repo "$REPO" \
-              --title "$TITLE" \
-              --body "$BODY" \
-              --label "$LABEL" \
-              --assignee "jmiller-moko" \
-              | tee -a "$GITHUB_STEP_SUMMARY"
-          fi
+      # Dev deploys fail silently — no issue creation.
+      # Demo and RS deploys create failure issues (production-facing).
 
       - name: Deployment summary
         if: always()
