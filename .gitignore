@@ -1,4 +1,9 @@
 # ============================================================
+# Local task tracking (not version controlled)
+# ============================================================
+TODO.md
+
+# ============================================================
 # Environment and secrets
 # ============================================================
 .env
@@ -6,9 +11,13 @@
 .env.*.local
 *.local.php
 *.secret.php
+configuration.php
+configuration.*.php
+configuration.local.php
+conf/conf.php
+conf/conf*.php
 secrets/
 *.secrets.*
-sftp-config*
 
 # ============================================================
 # Logs, dumps and databases
@@ -18,13 +27,115 @@ sftp-config*
 *.dump
 *.log
 *.pid
-*.sql
-*.sql.gz
-*.sqlite
-*.sqlite3
+*.seed
+
 
 # ============================================================
-# Node / build tooling
+# OS / Editor / IDE cruft
+# ============================================================
+.DS_Store
+Thumbs.db
+desktop.ini
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+$RECYCLE.BIN/
+System Volume Information/
+*.lnk
+Icon?
+.idea/
+.settings/
+.claude/
+.vscode/*
+!.vscode/tasks.json
+!.vscode/settings.json.example
+!.vscode/extensions.json
+*.code-workspace
+*.sublime*
+.project
+.buildpath
+.classpath
+*.bak
+*.swp
+*.swo
+*.tmp
+*.old
+*.orig
+
+# ============================================================
+# Dev scripts and scratch
+# ============================================================
+TODO.md
+todo*
+*ffs*
+
+# ============================================================
+# SFTP / sync tools
+# ============================================================
+sftp-config*.json
+sftp-config.json.template
+sftp-settings.json
+
+# ============================================================
+# Sublime SFTP / FTP sync
+# ============================================================
+*.sublime-project
+*.sublime-workspace
+*.sublime-settings
+.libsass.json
+*.ffs*
+
+# ============================================================
+# Replit / cloud IDE
+# ============================================================
+.replit
+replit.md
+
+# ============================================================
+# Archives / release artifacts
+# ============================================================
+*.7z
+*.rar
+*.tar
+*.tar.gz
+*.tgz
+*.zip
+artifacts/
+release/
+releases/
+
+# ============================================================
+# Build outputs and site generators
+# ============================================================
+.mkdocs-build/
+.cache/
+.parcel-cache/
+build/
+dist/
+out/
+site/
+*.map
+*.css.map
+*.js.map
+*.tsbuildinfo
+
+# ============================================================
+# CI / test artifacts
+# ============================================================
+.coverage
+.coverage.*
+coverage/
+coverage.xml
+htmlcov/
+junit.xml
+reports/
+test-results/
+tests/_output/
+.github/local/
+.github/workflows/*.log
+
+# ============================================================
+# Node / JavaScript
 # ============================================================
 node_modules/
 npm-debug.log*
@@ -38,33 +149,13 @@ pnpm-debug.log*
 package-lock.json
 
 # ============================================================
-# Claude Code local settings
-# ============================================================
-.claude
-
-# ============================================================
-# OS / Editor / IDE cruft
-# ============================================================
-.DS_Store
-Thumbs.db
-desktop.ini
-ehthumbs.db
-*.swp
-*.swo
-*~
-\#*\#
-.#*
-.idea/
-.vscode/
-*.sublime-workspace
-*.sublime-project
-*.code-workspace
-
-# ============================================================
 # PHP / Composer tooling
 # ============================================================
+vendor/
+!src/media/vendor/
 composer.lock
 *.phar
+codeception.phar
 .phpunit.result.cache
 .php_cs.cache
 .php-cs-fixer.cache
@@ -75,32 +166,37 @@ phpmd-cache/
 .rector/
 
 # ============================================================
-# Python (utility scripts)
+# Python
 # ============================================================
-*.py
 __pycache__/
 *.py[cod]
 *.pyc
 *$py.class
+*.so
 .Python
 .eggs/
 *.egg
+*.egg-info/
+.installed.cfg
+MANIFEST
+develop-eggs/
+downloads/
+eggs/
+parts/
+sdist/
+var/
+wheels/
+ENV/
+env/
+.venv/
+venv/
 .pytest_cache/
+.mypy_cache/
+.ruff_cache/
 .pyright/
+.tox/
+.nox/
+*.cover
+*.coverage
+hypothesis/
 
-# ============================================================
-# Template customisation files (site-specific, not tracked)
-# ============================================================
-src/media/css/theme/light.custom.css
-src/media/css/theme/dark.custom.css
-src/media/css/user.css
-src/media/js/user.js
-
-# ============================================================
-# Build artefacts
-# ============================================================
-dist/
-build/
-*.zip
-*.tar.gz
-coverage/
