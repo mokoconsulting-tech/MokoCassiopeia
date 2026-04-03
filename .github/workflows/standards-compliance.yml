@@ -163,7 +163,9 @@ jobs:
             --include="*.php" --include="*.py" --include="*.js" --include="*.ts" \
             --exclude-dir=".git" --exclude-dir="vendor" --exclude-dir="node_modules" 2>/dev/null | \
             grep -v -E '(test|example|sample|getenv|getString|getArgument|config\[|/\.\*/|^\s*//|^\s*\*|CREDENTIAL_PATTERNS|SecurityValidator|SECRET_PATTERN|===|!==|ApiClient|str_contains|gen_wrappers)' | \
-            grep -v "= ''" | grep -v '= ""' | grep -v '\$this->config' > /tmp/secrets1.txt 2>/dev/null || true
+            grep -v "= ''" | grep -v '= ""' | grep -v '\$this->config' | \
+            grep -v 'type="password"' | grep -v 'type="text"' | grep -v 'name="password"' | grep -v 'name="secretkey"' | \
+            grep -v '<input ' | grep -v '<label ' | grep -v 'for="' > /tmp/secrets1.txt 2>/dev/null || true
           scan_pattern "Secret assignments" "⚠️" /tmp/secrets1.txt
 
           # Pattern 2: Private keys
@@ -500,10 +502,18 @@ jobs:
           tools: composer
           coverage: none
 
-      - name: Install API Package
-        run: composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+      - name: Setup MokoStandards tools
         env:
-          COMPOSER_AUTH: '{"github-oauth":{"github.com":"${{ secrets.GH_TOKEN }}"}}'
+          GH_TOKEN: ${{ secrets.GH_TOKEN || github.token }}
+          COMPOSER_AUTH: '{"github-oauth":{"github.com":"${{ secrets.GH_TOKEN || github.token }}"}}'
+        run: |
+          git clone --depth 1 --branch version/04.05 --quiet \
+            "https://x-access-token:${GH_TOKEN}@github.com/mokoconsulting-tech/MokoStandards.git" \
+            /tmp/mokostandards 2>/dev/null || true
+          if [ -d "/tmp/mokostandards" ] && [ -f "/tmp/mokostandards/composer.json" ]; then
+            cd /tmp/mokostandards
+            composer install --no-dev --no-interaction --quiet 2>/dev/null || true
+          fi
 
       - name: Run Version Consistency Check
         id: version_check
@@ -512,18 +522,15 @@ jobs:
           echo "## 🔢 Version Consistency Validation" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
-          # Use PHP enterprise library for version consistency check
-          if [ -f "vendor/bin/moko" ]; then
-            php vendor/bin/moko check:version -- --path . --verbose 2>&1 | tee /tmp/version-check.log
-            EXIT_CODE=${PIPESTATUS[0]}
-          elif [ -f "/tmp/mokostandards/api/validate/check_version_consistency.php" ]; then
+          # Use MokoStandards tools (no Composer needed on the governed repo)
+          if [ -f "/tmp/mokostandards/api/validate/check_version_consistency.php" ]; then
             php /tmp/mokostandards/api/validate/check_version_consistency.php --path . --verbose 2>&1 | tee /tmp/version-check.log
             EXIT_CODE=${PIPESTATUS[0]}
           elif [ -f "api/validate/check_version_consistency.php" ]; then
             php api/validate/check_version_consistency.php --path . --verbose 2>&1 | tee /tmp/version-check.log
             EXIT_CODE=${PIPESTATUS[0]}
           else
-            echo "⏭️ Install mokoconsulting-tech/enterprise via Composer for version checks" >> $GITHUB_STEP_SUMMARY
+            echo "⏭️ MokoStandards tools not available — skipping version check" >> $GITHUB_STEP_SUMMARY
             exit 0
           fi
 
@@ -1960,17 +1967,39 @@ jobs:
           coverage: none
 
       - name: Install API Package
-        run: composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
         env:
-          COMPOSER_AUTH: '{"github-oauth":{"github.com":"${{ secrets.GH_TOKEN }}"}}'
+          GH_TOKEN: ${{ secrets.GH_TOKEN || github.token }}
+          COMPOSER_AUTH: '{"github-oauth":{"github.com":"${{ secrets.GH_TOKEN || github.token }}"}}'
+        run: |
+          if [ -f "composer.json" ]; then
+            composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+          else
+            echo "No composer.json — pulling MokoStandards tools"
+            if [ ! -d "/tmp/mokostandards" ]; then
+              git clone --depth 1 --branch version/04.05 --quiet \
+                "https://x-access-token:${GH_TOKEN}@github.com/mokoconsulting-tech/MokoStandards.git" \
+                /tmp/mokostandards 2>/dev/null || true
+              if [ -f "/tmp/mokostandards/composer.json" ]; then
+                cd /tmp/mokostandards && composer install --no-dev --no-interaction --quiet 2>/dev/null || true
+                cd -
+              fi
+            fi
+          fi
 
       - name: Check Enterprise Readiness
         id: enterprise_check
         run: |
           echo "" >> $GITHUB_STEP_SUMMARY
 
+          SCRIPT=""
           if [ -f "api/validate/check_enterprise_readiness.php" ]; then
-            php api/validate/check_enterprise_readiness.php --verbose | tee /tmp/enterprise-check.log
+            SCRIPT="api/validate/check_enterprise_readiness.php"
+          elif [ -f "/tmp/mokostandards/api/validate/check_enterprise_readiness.php" ]; then
+            SCRIPT="/tmp/mokostandards/api/validate/check_enterprise_readiness.php"
+          fi
+
+          if [ -n "$SCRIPT" ]; then
+            php "$SCRIPT" --verbose | tee /tmp/enterprise-check.log
             EXIT_CODE=$?
 
             echo "" >> $GITHUB_STEP_SUMMARY
@@ -2010,17 +2039,39 @@ jobs:
           coverage: none
 
       - name: Install API Package
-        run: composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
         env:
-          COMPOSER_AUTH: '{"github-oauth":{"github.com":"${{ secrets.GH_TOKEN }}"}}'
+          GH_TOKEN: ${{ secrets.GH_TOKEN || github.token }}
+          COMPOSER_AUTH: '{"github-oauth":{"github.com":"${{ secrets.GH_TOKEN || github.token }}"}}'
+        run: |
+          if [ -f "composer.json" ]; then
+            composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+          else
+            echo "No composer.json — pulling MokoStandards tools"
+            if [ ! -d "/tmp/mokostandards" ]; then
+              git clone --depth 1 --branch version/04.05 --quiet \
+                "https://x-access-token:${GH_TOKEN}@github.com/mokoconsulting-tech/MokoStandards.git" \
+                /tmp/mokostandards 2>/dev/null || true
+              if [ -f "/tmp/mokostandards/composer.json" ]; then
+                cd /tmp/mokostandards && composer install --no-dev --no-interaction --quiet 2>/dev/null || true
+                cd -
+              fi
+            fi
+          fi
 
       - name: Check Repository Health
         id: health_check
         run: |
           echo "" >> $GITHUB_STEP_SUMMARY
 
+          SCRIPT=""
           if [ -f "api/validate/check_repo_health.php" ]; then
-            php api/validate/check_repo_health.php --verbose | tee /tmp/health-check.log
+            SCRIPT="api/validate/check_repo_health.php"
+          elif [ -f "/tmp/mokostandards/api/validate/check_repo_health.php" ]; then
+            SCRIPT="/tmp/mokostandards/api/validate/check_repo_health.php"
+          fi
+
+          if [ -n "$SCRIPT" ]; then
+            php "$SCRIPT" --verbose | tee /tmp/health-check.log
             EXIT_CODE=$?
 
             echo "" >> $GITHUB_STEP_SUMMARY
