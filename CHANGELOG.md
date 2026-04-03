@@ -19,6 +19,41 @@ All notable changes to the MokoCassiopeia Joomla template are documented in this
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased] - 2026-04-02
+
+### Added
+
+- **Favicon configuration** — New "Favicon" tab in template config; upload a PNG and all favicon sizes are auto-generated via PHP GD (ICO, Apple Touch Icon 180px, Android Chrome 192/512px, site.webmanifest)
+- **Module overrides** — 11 new `default.php` layout overrides for Joomla core modules: `mod_custom`, `mod_articles_latest`, `mod_articles_popular`, `mod_articles_news`, `mod_articles_category`, `mod_breadcrumbs`, `mod_footer`, `mod_login`, `mod_finder`, `mod_tags_popular`, `mod_tags_similar`, `mod_related_items`
+- **Module title support** — All module overrides respect `$module->showtitle`, `header_tag`, `header_class`, and `moduleclass_sfx` parameters
+- **Module CSS** — BEM-scoped styles for module titles, article lists, tag badges, search forms, login forms, breadcrumbs, and footer content
+- **Hero card variables** — Full variable-driven hero system: `--hero-card-bg`, `--hero-card-color`, `--hero-card-overlay`, `--hero-card-border-radius`, `--hero-card-padding-x/y`, `--hero-card-max-width`, plus `--hero-alt-card-*` for secondary variant
+- **Hero mobile breakpoint** — Photo background hidden on mobile (≤767.98px), hero card becomes full-bleed (100dvh, no border-radius)
+- **CSS fallback values** — 1365 `var()` calls in template.css now include inline fallback values
+- **Card border-radius** — `.card` now has `.25rem` fallback on `var(--card-border-radius)`
+- **Usage section in README** — Added missing "Usage" section required by MokoStandards
+
+### Changed
+
+- **Button backgrounds** — `--btn-bg: transparent` changed to `var(--body-bg)` in dark and light themes
+- **Offcanvas close button** — `.offcanvas-header .btn-close` now gets `background-color` from `--offcanvas-bg`
+- **Custom template sync** — Both `dark.custom.css` and `light.custom.css` now contain all variables from their standard counterparts (was missing 223 variables)
+- **Overlay layer** — Added `--hero-overlay-bg-position` and `--hero-overlay-bg-size` variables
+- **Legacy CSS cleanup** — Removed vendor prefixes (`-webkit-box`, `-ms-flexbox`) from `.overlay` rules, replaced with modern flexbox
+
+### Removed
+
+- **FILE INFORMATION headers** — Stripped DEFGROUP/INGROUP/PATH/VERSION/BRIEF metadata from all PHP, CSS, JS, INI, and HTML files (kept in XML and README per policy)
+- **Mobile overrides** — Deleted 26 `mobile.php` layout files and their empty parent directories
+- **Joomla-specific gitignore entries** — Removed ~700 lines of Joomla CMS core paths from `.gitignore` (not applicable to a template repository)
+
+### Fixed
+
+- **CI: composer install** — Workflow `standards-compliance.yml` now conditionally runs `composer install` only when `composer.json` exists
+- **CI: YAML syntax** — Fixed invalid YAML in `auto-update-sha.yml` caused by multiline commit message in run block
+
+---
+
 ## [03.09.02] - 2026-03-26
 
 ### Added - Hero Variant System & Block Color System

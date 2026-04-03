@@ -146,6 +146,20 @@ The template includes a dark mode toggle. Test it by:
 
 ---
 
+## Usage
+
+Once installed and set as the default site template, MokoCassiopeia works out of the box with Joomla's standard content and module system. Key usage points:
+
+- **Template Options** — Configure via **System → Site Templates → MokoCassiopeia** (theme colours, layout, analytics, favicon, drawers)
+- **Custom Colour Schemes** — Copy `templates/mokocassiopeia/templates/light.custom.css` or `dark.custom.css` to `media/templates/site/mokocassiopeia/css/theme/` and select "Custom" in the Theme tab
+- **Custom CSS/JS** — Create `media/templates/site/mokocassiopeia/css/user.css` or `js/user.js` for site-specific overrides that survive template updates
+- **Module Overrides** — The template includes overrides for common Joomla modules with consistent title rendering, Bootstrap 5 styling, and Font Awesome 7 icons
+- **Dark Mode** — Enabled by default with a floating toggle button; respects system preference and persists via localStorage
+
+See [Configuration](#️-configuration) below for detailed parameter reference.
+
+---
+
 ## ⚙️ Configuration
 
 ### Global Parameters
