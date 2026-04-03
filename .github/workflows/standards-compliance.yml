@@ -501,6 +501,7 @@ jobs:
           coverage: none
 
       - name: Install API Package
+        if: hashFiles('composer.json') != ''
         run: composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
         env:
           COMPOSER_AUTH: '{"github-oauth":{"github.com":"${{ secrets.GH_TOKEN }}"}}'
@@ -1960,6 +1961,7 @@ jobs:
           coverage: none
 
       - name: Install API Package
+        if: hashFiles('composer.json') != ''
         run: composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
         env:
           COMPOSER_AUTH: '{"github-oauth":{"github.com":"${{ secrets.GH_TOKEN }}"}}'
@@ -2010,6 +2012,7 @@ jobs:
           coverage: none
 
       - name: Install API Package
+        if: hashFiles('composer.json') != ''
         run: composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
         env:
           COMPOSER_AUTH: '{"github-oauth":{"github.com":"${{ secrets.GH_TOKEN }}"}}'
