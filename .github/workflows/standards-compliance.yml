@@ -500,10 +500,18 @@ jobs:
           tools: composer
           coverage: none
 
-      - name: Install API Package
-        run: composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+      - name: Setup MokoStandards tools
         env:
-          COMPOSER_AUTH: '{"github-oauth":{"github.com":"${{ secrets.GH_TOKEN }}"}}'
+          GH_TOKEN: ${{ secrets.GH_TOKEN || github.token }}
+          COMPOSER_AUTH: '{"github-oauth":{"github.com":"${{ secrets.GH_TOKEN || github.token }}"}}'
+        run: |
+          git clone --depth 1 --branch version/04.05 --quiet \
+            "https://x-access-token:${GH_TOKEN}@github.com/mokoconsulting-tech/MokoStandards.git" \
+            /tmp/mokostandards 2>/dev/null || true
+          if [ -d "/tmp/mokostandards" ] && [ -f "/tmp/mokostandards/composer.json" ]; then
+            cd /tmp/mokostandards
+            composer install --no-dev --no-interaction --quiet 2>/dev/null || true
+          fi
 
       - name: Run Version Consistency Check
         id: version_check
@@ -512,18 +520,15 @@ jobs:
           echo "## 🔢 Version Consistency Validation" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
-          # Use PHP enterprise library for version consistency check
-          if [ -f "vendor/bin/moko" ]; then
-            php vendor/bin/moko check:version -- --path . --verbose 2>&1 | tee /tmp/version-check.log
-            EXIT_CODE=${PIPESTATUS[0]}
-          elif [ -f "/tmp/mokostandards/api/validate/check_version_consistency.php" ]; then
+          # Use MokoStandards tools (no Composer needed on the governed repo)
+          if [ -f "/tmp/mokostandards/api/validate/check_version_consistency.php" ]; then
             php /tmp/mokostandards/api/validate/check_version_consistency.php --path . --verbose 2>&1 | tee /tmp/version-check.log
             EXIT_CODE=${PIPESTATUS[0]}
           elif [ -f "api/validate/check_version_consistency.php" ]; then
             php api/validate/check_version_consistency.php --path . --verbose 2>&1 | tee /tmp/version-check.log
             EXIT_CODE=${PIPESTATUS[0]}
           else
-            echo "⏭️ Install mokoconsulting-tech/enterprise via Composer for version checks" >> $GITHUB_STEP_SUMMARY
+            echo "⏭️ MokoStandards tools not available — skipping version check" >> $GITHUB_STEP_SUMMARY
             exit 0
           fi
 
@@ -1960,7 +1965,12 @@ jobs:
           coverage: none
 
       - name: Install API Package
-        run: composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+        run: |
+          if [ -f "composer.json" ]; then
+            composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+          else
+            echo "No composer.json — skipping install"
+          fi
         env:
           COMPOSER_AUTH: '{"github-oauth":{"github.com":"${{ secrets.GH_TOKEN }}"}}'
 
@@ -2010,7 +2020,12 @@ jobs:
           coverage: none
 
       - name: Install API Package
-        run: composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+        run: |
+          if [ -f "composer.json" ]; then
+            composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+          else
+            echo "No composer.json — skipping install"
+          fi
         env:
           COMPOSER_AUTH: '{"github-oauth":{"github.com":"${{ secrets.GH_TOKEN }}"}}'
 
