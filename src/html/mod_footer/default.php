@@ -24,7 +24,6 @@ $headerClass = htmlspecialchars($params->get('header_class', ''), ENT_COMPAT, 'U
     <?php if ($module->showtitle) : ?>
         <<?php echo $headerTag; ?> class="mod-footer__title<?php echo $headerClass ? ' ' . $headerClass : ''; ?>"><?php echo $module->title; ?></<?php echo $headerTag; ?>>
     <?php endif; ?>
-    <div class="mod-footer__content">
-        <?php echo $module->content; ?>
-    </div>
+    <div class="mod-footer__line1"><?php echo $lineone; ?></div>
+    <div class="mod-footer__line2"><?php echo Text::_('MOD_FOOTER_LINE2'); ?></div>
 </div>
