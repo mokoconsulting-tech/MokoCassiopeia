@@ -62,8 +62,6 @@ ehthumbs.db
 # ============================================================
 # PHP / Composer tooling
 # ============================================================
-vendor/
-!src/media/vendor/
 composer.lock
 *.phar
 .phpunit.result.cache
