@@ -200,3 +200,9 @@ venv/
 *.coverage
 hypothesis/
 
+
+# ============================================================
+# Cassiopeia custom theme overrides
+# ============================================================
+/media/css/theme/dark.custom.css
+/media/css/theme/light.custom.css
