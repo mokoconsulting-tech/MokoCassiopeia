@@ -70,6 +70,10 @@ if ($params_favicon_source) {
     }
 }
 
+// Minification: dev mode ON → delete .min files; OFF → regenerate if stale
+require_once __DIR__ . '/helper/minify.php';
+MokoMinifyHelper::sync(JPATH_ROOT . '/' . $templatePath, (bool) $params_developmentmode);
+
 // Core template CSS + JS — use minified when not in development mode
 if ($params_developmentmode) {
 	$wa->useStyle('template.base');       // css/template.css
