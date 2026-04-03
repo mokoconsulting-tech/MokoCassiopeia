@@ -184,39 +184,19 @@ if (!empty($params_googlesitekey)) {
 	$this->setMetaData('google-site-verification', htmlspecialchars($params_googlesitekey, ENT_QUOTES, 'UTF-8'));
 }
 
-if ($this->params->get('fA6KitCode')) {
-	$faKit = "https://kit.fontawesome.com/" . $this->params->get('fA6KitCode') . ".js";
-	HTMLHelper::_('script', $faKit, ['crossorigin' => 'anonymous']);
+// Font Awesome 7 — Kit (CDN) or local files
+$faKitCode = trim((string) $this->params->get('fA6KitCode', ''));
+if ($faKitCode !== '') {
+	HTMLHelper::_('script', 'https://kit.fontawesome.com/' . $faKitCode . '.js', ['crossorigin' => 'anonymous']);
 } else {
-		try {
-			if($params_developmentmode){
-				$wa->useStyle('vendor.fa7free.all');
-				$wa->useStyle('vendor.fa7free.brands');
-				$wa->useStyle('vendor.fa7free.fontawesome');
-				$wa->useStyle('vendor.fa7free.regular');
-				$wa->useStyle('vendor.fa7free.solid');
-			} else {
-				$wa->useStyle('vendor.fa7free.all.min');
-				$wa->useStyle('vendor.fa7free.brands.min');
-				$wa->useStyle('vendor.fa7free.fontawesome.min');
-				$wa->useStyle('vendor.fa7free.regular.min');
-				$wa->useStyle('vendor.fa7free.solid.min');
-			}
+	// Load local FA7 Free — all.css includes brands, solid, regular, fontawesome
+	$faAsset = $params_developmentmode ? 'vendor.fa7free.all' : 'vendor.fa7free.all.min';
+	try {
+		$wa->useStyle($faAsset);
 	} catch (\Throwable $e) {
-		if($params_developmentmode){
-			$wa->registerAndUseStyle('vendor.fa7free.all.dynamic', $templatePath . '/vendor/fa7free/css/all.css');
-			$wa->registerAndUseStyle('vendor.fa7free.brands.dynamic', $templatePath . '/vendor/fa7free/css/brands.css');
-			$wa->registerAndUseStyle('vendor.fa7free.fontawesome.dynamic', $templatePath . '/vendor/fa7free/css/fontawesome.css');
-			$wa->registerAndUseStyle('vendor.fa7free.regular.dynamic', $templatePath . '/vendor/fa7free/css/regular.css');
-			$wa->registerAndUseStyle('vendor.fa7free.solid.dynamic', $templatePath . '/vendor/fa7free/css/solid.css');
-		} else {
-			$wa->registerAndUseStyle('vendor.fa7free.all.min.dynamic', $templatePath . '/vendor/fa7free/css/all.min.css');
-				$wa->registerAndUseStyle('vendor.fa7free.brands.min.dynamic', $templatePath . '/vendor/fa7free/css/brands.min.css');
-				$wa->registerAndUseStyle('vendor.fa7free.fontawesome.min.dynamic', $templatePath . '/vendor/fa7free/css/fontawesome.min.css');
-				$wa->registerAndUseStyle('vendor.fa7free.regular.min.dynamic', $templatePath . '/vendor/fa7free/css/regular.min.css');
-				$wa->registerAndUseStyle('vendor.fa7free.solid.min.dynamic', $templatePath . '/vendor/fa7free/css/solid.min.css');
-		}
-
+		// Fallback: register dynamically if asset not in registry
+		$faCss = $params_developmentmode ? 'vendor/fa7free/css/all.css' : 'vendor/fa7free/css/all.min.css';
+		$wa->registerAndUseStyle('vendor.fa7free.all.dynamic', $templatePath . '/' . $faCss);
 	}
 }
 $params_leftIcon           = htmlspecialchars($this->params->get('drawerLeftIcon', 'fa-solid fa-chevron-left'), ENT_COMPAT, 'UTF-8');
