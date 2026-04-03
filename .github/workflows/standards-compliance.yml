@@ -5,7 +5,7 @@
 # INGROUP: MokoStandards.Compliance
 # REPO: https://github.com/mokoconsulting-tech/MokoStandards
 # PATH: /.github/workflows/standards-compliance.yml
-# VERSION: 04.04.01
+# VERSION: 04.05.00
 # BRIEF: MokoStandards compliance validation workflow
 # NOTE: Validates repository structure, documentation, and coding standards
 
@@ -501,7 +501,6 @@ jobs:
           coverage: none
 
       - name: Install API Package
-        if: hashFiles('composer.json') != ''
         run: composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
         env:
           COMPOSER_AUTH: '{"github-oauth":{"github.com":"${{ secrets.GH_TOKEN }}"}}'
@@ -1961,7 +1960,6 @@ jobs:
           coverage: none
 
       - name: Install API Package
-        if: hashFiles('composer.json') != ''
         run: composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
         env:
           COMPOSER_AUTH: '{"github-oauth":{"github.com":"${{ secrets.GH_TOKEN }}"}}'
@@ -2012,7 +2010,6 @@ jobs:
           coverage: none
 
       - name: Install API Package
-        if: hashFiles('composer.json') != ''
         run: composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
         env:
           COMPOSER_AUTH: '{"github-oauth":{"github.com":"${{ secrets.GH_TOKEN }}"}}'
