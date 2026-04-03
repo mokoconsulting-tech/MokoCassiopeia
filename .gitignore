@@ -204,5 +204,5 @@ hypothesis/
 # ============================================================
 # Cassiopeia custom theme overrides
 # ============================================================
-/media/css/theme/dark.custom.css
-/media/css/theme/light.custom.css
+/src/media/css/theme/dark.custom.css
+/src/media/css/theme/light.custom.css
