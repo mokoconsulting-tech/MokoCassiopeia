@@ -541,7 +541,11 @@ color-scheme: dark;
 --hero-card-border-radius: .5rem;
 --hero-card-padding-x: 2rem;
 --hero-card-padding-y: 3rem;
+<<<<<<< Updated upstream
 --hero-card-max-width: 600px;
+=======
+--hero-card-max-width: 800px;
+>>>>>>> Stashed changes
 
 /* Alternative card — uses secondary variant values */
 --hero-alt-card-bg: var(--hero-secondary-bg-color);
