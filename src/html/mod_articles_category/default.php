@@ -14,8 +14,11 @@
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+
+Factory::getApplication()->getLanguage()->load('mod_articles_category', JPATH_SITE);
 
 if (empty($list)) {
     return;
