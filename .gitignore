@@ -930,7 +930,6 @@ src/media/js/user.js
 /tmp/*
 /configuration.php
 /htaccess.txt
-/index.php
 /joomla.xml
 /LICENSE.txt
 /README.txt
@@ -941,5 +940,4 @@ src/media/js/user.js
 # Keep-empty folders helper
 # ============================================================
 !.gitkeep
-.claude/settings.local.json
-.claude/worktrees/
+.claude/
