@@ -9,7 +9,7 @@
 # INGROUP: MokoStandards.Automation
 # REPO: https://github.com/mokoconsulting-tech/MokoStandards
 # PATH: /templates/workflows/shared/sync-version-on-merge.yml.template
-# VERSION: 04.04.01
+# VERSION: 04.05.00
 # BRIEF: Auto-bump patch version on every push to main and propagate to all file headers
 # NOTE: Synced via bulk-repo-sync to .github/workflows/sync-version-on-merge.yml in all governed repos.
 #       README.md is the single source of truth for the repository version.

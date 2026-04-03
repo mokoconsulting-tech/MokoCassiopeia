@@ -9,7 +9,7 @@
 # INGROUP: MokoStandards.Security
 # REPO: https://github.com/mokoconsulting-tech/MokoStandards
 # PATH: /templates/workflows/generic/codeql-analysis.yml.template
-# VERSION: 04.04.01
+# VERSION: 04.05.00
 # BRIEF: CodeQL security scanning workflow (generic — all repo types)
 # NOTE: Deployed to .github/workflows/codeql-analysis.yml in governed repos.
 #       CodeQL does not support PHP directly; JavaScript scans JSON/YAML/shell.
