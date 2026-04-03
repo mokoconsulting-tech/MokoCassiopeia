@@ -70,11 +70,14 @@ if ($params_favicon_source) {
     }
 }
 
-// Core template CSS
-$wa->useStyle('template.base');   // css/template.css
-
-// Scripts
-$wa->useScript('template.js');
+// Core template CSS + JS — use minified when not in development mode
+if ($params_developmentmode) {
+	$wa->useStyle('template.base');       // css/template.css
+	$wa->useScript('template.js');        // js/template.js
+} else {
+	$wa->useStyle('template.base.min');   // css/template.min.css
+	$wa->useScript('template.js.min');    // js/template.min.js
+}
 
 // Load Osaka font for site title
 $wa->useStyle('template.font.osaka');
@@ -215,18 +218,19 @@ if ($this->params->get('fA6KitCode')) {
 $params_leftIcon           = htmlspecialchars($this->params->get('drawerLeftIcon', 'fa-solid fa-chevron-left'), ENT_COMPAT, 'UTF-8');
 $params_rightIcon          = htmlspecialchars($this->params->get('drawerRightIcon', 'fa-solid fa-chevron-right'), ENT_COMPAT, 'UTF-8');
 
-// Load theme palette stylesheets based on configuration
-$wa->useStyle('template.light.standard');      // css/theme/light.standard.css
-$wa->useStyle('template.dark.standard');       // css/theme/dark.standard.css
+// Load theme palette stylesheets — minified when not in development mode
+$suffix = $params_developmentmode ? '' : '.min';
+$wa->useStyle('template.light.standard' . $suffix);
+$wa->useStyle('template.dark.standard' . $suffix);
 
 // Load custom palettes only if selected in template configuration AND files exist
 if ($params_LightColorName === 'custom' && file_exists(JPATH_ROOT . '/media/templates/site/mokocassiopeia/css/theme/light.custom.css'))
 {
-	$wa->useStyle('template.light.custom');
+	$wa->useStyle('template.light.custom' . $suffix);
 }
 if ($params_DarkColorName === 'custom' && file_exists(JPATH_ROOT . '/media/templates/site/mokocassiopeia/css/theme/dark.custom.css'))
 {
-	$wa->useStyle('template.dark.custom');
+	$wa->useStyle('template.dark.custom' . $suffix);
 }
 
 // Load user assets last (after all other styles and scripts)
