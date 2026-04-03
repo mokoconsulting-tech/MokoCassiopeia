@@ -13982,8 +13982,9 @@ meter {
 
 .footer {
 	margin-top: 1em;
-	color: var(--body-color, #e6ebf1);
+	color: var(--body-bg, #e6ebf1);
 	background-color: var(--nav-bg-color);
+	padding-left: 100px;
 }
 
 .footer .grid-child {
