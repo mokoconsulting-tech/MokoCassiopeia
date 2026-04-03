@@ -149,6 +149,7 @@ package-lock.json
 # PHP / Composer tooling
 # ============================================================
 vendor/
+!src/media/vendor/
 composer.lock
 *.phar
 codeception.phar
@@ -791,7 +792,6 @@ src/media/js/user.js
 /media/plg_system_stats/*
 /media/plg_twofactorauth_totp/*
 /media/system/*
-/media/index.html
 /modules/mod_articles_archive/*
 /modules/mod_articles_categories/*
 /modules/mod_articles_category/*
