@@ -200,3 +200,5 @@ venv/
 *.coverage
 hypothesis/
 
+src/media/css/theme/dark.custom.css
+src/media/css/theme/light.custom.css
