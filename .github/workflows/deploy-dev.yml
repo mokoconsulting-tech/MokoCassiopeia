@@ -582,6 +582,10 @@ jobs:
               > /tmp/sftp-config.json
           fi
 
+          # Dev deploys skip minified files — use unminified sources for debugging
+          echo "*.min.js" >> .ftp_ignore
+          echo "*.min.css" >> .ftp_ignore
+
           # ── Run deploy-sftp.php from MokoStandards ────────────────────────────
           DEPLOY_ARGS=(--path . --src-dir "$SOURCE_DIR" --config /tmp/sftp-config.json)
           if [ "$USE_PASSPHRASE" = "true" ]; then
