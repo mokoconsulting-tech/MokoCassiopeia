@@ -6,7 +6,7 @@
 # DEFGROUP: GitHub.Workflow
 # INGROUP: MokoStandards.Release
 # REPO: https://github.com/mokoconsulting-tech/MokoStandards
-# PATH: /templates/workflows/shared/auto-release.yml.template
+# PATH: /templates/workflows/shared/auto-release.yml
 # VERSION: 04.04.01
 # BRIEF: Unified build & release pipeline — version branch, platform version, badges, tag, release
 #

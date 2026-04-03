@@ -21,7 +21,7 @@
 # DEFGROUP: GitHub.Workflow
 # INGROUP: MokoStandards.Deploy
 # REPO: https://github.com/mokoconsulting-tech/MokoStandards
-# PATH: /templates/workflows/shared/deploy-demo.yml.template
+# PATH: /templates/workflows/shared/deploy-demo.yml
 # VERSION: 04.04.01
 # BRIEF: SFTP deployment workflow for demo server — synced to all governed repos
 # NOTE: Synced via bulk-repo-sync to .github/workflows/deploy-demo.yml in all governed repos.

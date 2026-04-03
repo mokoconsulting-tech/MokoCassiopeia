@@ -8,7 +8,7 @@
 # DEFGROUP: GitHub.Workflow
 # INGROUP: MokoStandards.Maintenance
 # REPO: https://github.com/mokoconsulting-tech/MokoStandards
-# PATH: /templates/workflows/shared/repository-cleanup.yml.template
+# PATH: /templates/workflows/shared/repository-cleanup.yml
 # VERSION: 04.04.01
 # BRIEF: Recurring repository maintenance — labels, branches, workflows, logs, doc indexes
 # NOTE: Synced via bulk-repo-sync to .github/workflows/repository-cleanup.yml in all governed repos.

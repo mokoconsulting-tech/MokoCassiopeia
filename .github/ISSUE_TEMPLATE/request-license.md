@@ -3,7 +3,7 @@ name: License Request
 about: Request an organization license for Sublime Text
 title: '[LICENSE REQUEST] Sublime Text - [Your Name]'
 labels: ['license-request', 'admin']
-assignees: []
+assignees: ['jmiller-moko']
 ---
 
 
