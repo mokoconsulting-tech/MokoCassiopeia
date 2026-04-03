@@ -460,12 +460,20 @@ $wa->useScript('user.js');         // js/user.js
 
 	<div class="grid-child container-component">
 		<jdoc:include type="modules" name="breadcrumbs" style="none" />
-		<jdoc:include type="modules" name="main-top" style="card" />
+		<?php if ($this->countModules('main-top', true)) : ?>
+		<div class="container-main-top">
+			<jdoc:include type="modules" name="main-top" style="card" />
+		</div>
+		<?php endif; ?>
 		<jdoc:include type="message" />
 		<main id="maincontent" role="main">
 			<jdoc:include type="component" />
 		</main>
-		<jdoc:include type="modules" name="main-bottom" style="card" />
+		<?php if ($this->countModules('main-bottom', true)) : ?>
+		<div class="container-main-bottom">
+			<jdoc:include type="modules" name="main-bottom" style="card" />
+		</div>
+		<?php endif; ?>
 	</div>
 
 	<?php if ($this->countModules('sidebar-right', true)) : ?>
