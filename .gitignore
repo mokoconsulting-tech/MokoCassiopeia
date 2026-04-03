@@ -151,7 +151,7 @@ package-lock.json
 # ============================================================
 # PHP / Composer tooling
 # ============================================================
-vendor/
+/vendor/
 !src/media/vendor/
 composer.lock
 *.phar
