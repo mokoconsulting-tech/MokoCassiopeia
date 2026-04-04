@@ -14224,11 +14224,10 @@ fieldset>* {
 	z-index: 1020;
 }
 
-/* Disable sticky on mobile — full-width header works better as static */
+/* Sticky header on mobile — keep sticky but lower z-index to avoid overlay issues */
 @media (max-width: 991.98px) {
 	.container-header.sticky-top {
-		position: relative;
-		z-index: 100;
+		z-index: 1020;
 	}
 }
 
