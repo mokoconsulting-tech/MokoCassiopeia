@@ -12,6 +12,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Associations;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 
 // Load Bootstrap TOC assets
@@ -36,13 +37,13 @@ $assocParam = (Associations::isEnabled() && $params->get('show_associations'));
         <div class="col-lg-3 col-md-4 order-md-1 mb-4">
             <div class="sticky-top toc-wrapper" style="top: 20px;">
                 <nav id="toc" data-toggle="toc" class="toc-container">
-                    <h5 class="toc-title"><?php echo HTMLHelper::_('string.truncate', $this->item->title, 50); ?></h5>
+                    <h5 class="toc-title"><?php echo Text::_('TPL_MOKOCASSIOPEIA_TOC_TITLE'); ?></h5>
                 </nav>
             </div>
         </div>
 
         <!-- Article Content -->
-        <div class="col-lg-9 col-md-8 order-md-2" data-toc-scope>
+        <div class="col-lg-9 col-md-8 order-md-2">
             <meta itemprop="inLanguage" content="<?php echo ($this->item->language === '*') ? Factory::getApplication()->get('language') : $this->item->language; ?>" />
 
             <?php if ($this->params->get('show_page_heading')) : ?>
@@ -84,7 +85,7 @@ $assocParam = (Associations::isEnabled() && $params->get('show_associations'));
                     <?php echo LayoutHelper::render('joomla.content.tags', $this->item->tags->itemTags); ?>
                 <?php endif; ?>
 
-                <div class="article-content" itemprop="articleBody">
+                <div class="article-content" itemprop="articleBody" data-toc-scope>
                     <?php echo $this->item->text; ?>
                 </div>
 

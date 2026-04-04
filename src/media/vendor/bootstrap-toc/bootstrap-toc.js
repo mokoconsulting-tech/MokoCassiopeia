@@ -178,7 +178,8 @@
   $(function() {
     $('nav[data-toggle="toc"]').each(function(i, el) {
       var $nav = $(el);
-      Toc.init($nav);
+      var $scope = $('[data-toc-scope]');
+      Toc.init({ $nav: $nav, $scope: $scope.length ? $scope : $(document.body) });
     });
   });
 })(jQuery);
