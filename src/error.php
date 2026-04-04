@@ -418,7 +418,7 @@ $wa->useScript('user.js');         // js/user.js
 
 <?php if ($this->params->get('backTop') == 1) : ?>
 	<a href="#top" id="back-top" class="back-to-top-link" aria-label="<?php echo Text::_('TPL_MOKOCASSIOPEIA_BACKTOTOP'); ?>">
-		<span class="icon-arrow-up icon-fw" aria-hidden="true"></span>
+		<span class="fa-solid fa-arrow-up" aria-hidden="true"></span>
 	</a>
 <?php endif; ?>
 
