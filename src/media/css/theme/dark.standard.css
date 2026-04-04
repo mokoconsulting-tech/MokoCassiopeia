@@ -536,7 +536,7 @@ color-scheme: dark;
 /* ===== HERO CARD (inner .hero element) ===== */
 /* Default card — uses primary variant values */
 --hero-card-bg: var(--hero-primary-bg-color);
---hero-card-color: var(--hero-primary-color);
+--hero-card-color: white;
 --hero-card-overlay: var(--hero-primary-overlay);
 --hero-card-border-radius: .5rem;
 --hero-card-padding-x: 2rem;

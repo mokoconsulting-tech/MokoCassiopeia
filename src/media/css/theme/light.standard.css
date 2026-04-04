@@ -535,12 +535,12 @@ color-scheme: light;
 /* ===== HERO CARD (inner .hero element) ===== */
 /* Default card — uses primary variant values */
 --hero-card-bg: var(--hero-primary-bg-color);
---hero-card-color: var(--hero-primary-color);
+--hero-card-color: white;
 --hero-card-overlay: var(--hero-primary-overlay);
 --hero-card-border-radius: .5rem;
 --hero-card-padding-x: 2rem;
 --hero-card-padding-y: 3rem;
---hero-card-max-width: 600px;
+--hero-card-max-width: 800px;
 
 /* Alternative card — uses secondary variant values */
 --hero-alt-card-bg: var(--hero-secondary-bg-color);
