@@ -22744,3 +22744,19 @@ padding: 0.25rem;
 font-size: 0.8125rem;
 }
 }
+
+/* ── Category Blog — image cards ─────────────────────────── */
+.com-content-category-blog .blog-item .item-image {
+  width: 100%;
+  max-height: 250px;
+  overflow: hidden;
+  margin: 0 0 1rem 0;
+  float: none;
+}
+.com-content-category-blog .blog-item .item-image img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+}
