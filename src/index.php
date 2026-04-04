@@ -200,13 +200,23 @@ if ($faKitCode !== '') {
 	HTMLHelper::_('script', 'https://kit.fontawesome.com/' . $faKitCode . '.js', ['crossorigin' => 'anonymous']);
 } else {
 	// Load local FA7 Free — all.css includes brands, solid, regular, fontawesome
-	$faAsset = $params_developmentmode ? 'vendor.fa7free.all' : 'vendor.fa7free.all.min';
-	try {
-		$wa->useStyle($faAsset);
-	} catch (\Throwable $e) {
-		// Fallback: register dynamically if asset not in registry
-		$faCss = $params_developmentmode ? 'vendor/fa7free/css/all.css' : 'vendor/fa7free/css/all.min.css';
-		$wa->registerAndUseStyle('vendor.fa7free.all.dynamic', $templatePath . '/' . $faCss);
+	// Try media path first (proper Joomla install), then template path (SFTP deploy)
+	$faCss = $params_developmentmode ? 'vendor/fa7free/css/all.css' : 'vendor/fa7free/css/all.min.css';
+	$faMediaPath  = $templatePath . '/' . $faCss;
+	$faLocalPath  = 'templates/site/mokocassiopeia/media/' . $faCss;
+
+	if (is_file(JPATH_ROOT . '/' . $faMediaPath)) {
+		$wa->registerAndUseStyle('vendor.fa7free.all', $faMediaPath);
+	} elseif (is_file(JPATH_ROOT . '/' . $faLocalPath)) {
+		$wa->registerAndUseStyle('vendor.fa7free.all', $faLocalPath);
+	} else {
+		// Last resort: try asset registry
+		$faAsset = $params_developmentmode ? 'vendor.fa7free.all' : 'vendor.fa7free.all.min';
+		try {
+			$wa->useStyle($faAsset);
+		} catch (\Throwable $e) {
+			// Silent fail — FA icons will be missing
+		}
 	}
 }
 $params_leftIcon           = htmlspecialchars($this->params->get('drawerLeftIcon', 'fa-solid fa-chevron-left'), ENT_COMPAT, 'UTF-8');
