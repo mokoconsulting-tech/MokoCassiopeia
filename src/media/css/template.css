@@ -14485,6 +14485,13 @@ li.current a {
 
 .container-header .container-search {
 	margin-top: 0.75em;
+	width: 100%;
+}
+
+.container-header .container-search .mod-finder,
+.container-header .container-search .mod-finder__form,
+.container-header .container-search .mod-finder__search {
+	width: 100%;
 }
 
 .container-header .mod-finder, .container-header .mod-finder a, .container-header .mod-finder form {
@@ -18635,8 +18642,8 @@ nav[data-toggle=toc] .nav-link.active+ul{
 	}
 
 	.container-header .container-search {
-		flex: 0 0 auto;
-		min-width: 300px;
+		flex: 1 1 100%;
+		width: 100%;
 		margin-top: 0;
 	}
 }
