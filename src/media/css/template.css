@@ -13992,6 +13992,7 @@ meter {
 	background-color: var(--nav-bg-color);
 	padding-left: 100px;
 	padding-right: 60px;
+	padding-bottom: 60px;
 }
 
 /* Increase footer right padding when floating controls are present */
