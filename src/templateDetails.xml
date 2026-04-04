@@ -36,7 +36,7 @@
 	  </server>
 	</updateservers>
 	<name>MokoCassiopeia</name>
-	<version>03.09.02</version>
+	<version>03.09.01</version>
 	<scriptfile>script.php</scriptfile>
 	<creationDate>2026-03-26</creationDate>
 	<author>Jonathan Miller || Moko Consulting</author>
