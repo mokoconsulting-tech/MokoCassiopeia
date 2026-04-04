@@ -15173,6 +15173,9 @@ iframe {
 .readmore {
 	text-align: right;
 }
+.blog-items .readmore a {
+	width: 100%;
+}
 
 .blog-item {
 	display: -webkit-box;
@@ -15205,6 +15208,7 @@ iframe {
 	overflow: hidden;
 	max-height: 250px;
 }
+
 .blog-item .item-image img{
 	width: 100%;
 }
