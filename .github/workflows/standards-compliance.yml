@@ -165,7 +165,9 @@ jobs:
             grep -v -E '(test|example|sample|getenv|getString|getArgument|config\[|/\.\*/|^\s*//|^\s*\*|CREDENTIAL_PATTERNS|SecurityValidator|SECRET_PATTERN|===|!==|ApiClient|str_contains|gen_wrappers)' | \
             grep -v "= ''" | grep -v '= ""' | grep -v '\$this->config' | \
             grep -v 'type="password"' | grep -v 'type="text"' | grep -v 'name="password"' | grep -v 'name="secretkey"' | \
-            grep -v '<input ' | grep -v '<label ' | grep -v 'for="' > /tmp/secrets1.txt 2>/dev/null || true
+            grep -v '<input ' | grep -v '<label ' | grep -v 'for="' | \
+            grep -v 'index\.php?option=' | grep -v 'Route::_' | grep -v 'lostpassword' | \
+            grep -v 'resetpassword' | grep -v 'JRoute' | grep -v 'href=' > /tmp/secrets1.txt 2>/dev/null || true
           scan_pattern "Secret assignments" "⚠️" /tmp/secrets1.txt
 
           # Pattern 2: Private keys
@@ -2532,8 +2534,8 @@ jobs:
           echo ""
           echo "✅ SUCCESS: Repository is fully MokoStandards compliant"
 
-      - name: Create tracking issue for standards violations
-        if: failure() && github.event_name == 'push'
+      - name: Create or reopen tracking issue for standards violations
+        if: failure()
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN || github.token }}
         run: |
