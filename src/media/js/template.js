@@ -497,87 +497,46 @@
 		var sidebars = doc.querySelectorAll(".container-sidebar-left, .container-sidebar-right");
 		if (!sidebars.length) return;
 
-		var accordionised = false;
+		// Build accordion structure once — works at all breakpoints
+		sidebars.forEach(function (sidebar, si) {
+			var accId = "sidebarAcc-" + si;
+			sidebar.setAttribute("id", accId);
+			sidebar.classList.add("accordion");
 
-		function apply() {
 			var isMobile = win.innerWidth < BREAKPOINT;
+			var cards = sidebar.querySelectorAll(":scope > .card");
 
-			if (isMobile && !accordionised) {
-				sidebars.forEach(function (sidebar, si) {
-					var accId = "sidebarAcc-" + si;
-					sidebar.setAttribute("id", accId);
-					sidebar.classList.add("accordion");
+			cards.forEach(function (card, ci) {
+				var collapseId = accId + "-c" + ci;
+				card.classList.add("accordion-item");
 
-					var cards = sidebar.querySelectorAll(":scope > .card");
-					cards.forEach(function (card, ci) {
-						var collapseId = accId + "-c" + ci;
-						card.classList.add("accordion-item");
+				var header = card.querySelector(".card-header");
+				var body = card.querySelector(".card-body");
+				if (!header || !body) return;
 
-						var header = card.querySelector(".card-header");
-						var body = card.querySelector(".card-body");
-						if (!header || !body) return;
+				// Turn header into accordion button
+				header.classList.add("accordion-header");
+				var btn = doc.createElement("button");
+				btn.className = isMobile ? "accordion-button collapsed" : "accordion-button";
+				btn.type = "button";
+				btn.setAttribute("data-bs-toggle", "collapse");
+				btn.setAttribute("data-bs-target", "#" + collapseId);
+				btn.setAttribute("aria-expanded", isMobile ? "false" : "true");
+				btn.setAttribute("aria-controls", collapseId);
+				btn.textContent = header.textContent;
+				header.textContent = "";
+				header.appendChild(btn);
 
-						// Turn header into accordion button
-						header.classList.add("accordion-header");
-						var btn = doc.createElement("button");
-						btn.className = "accordion-button collapsed";
-						btn.type = "button";
-						btn.setAttribute("data-bs-toggle", "collapse");
-						btn.setAttribute("data-bs-target", "#" + collapseId);
-						btn.setAttribute("aria-expanded", "false");
-						btn.setAttribute("aria-controls", collapseId);
-						btn.textContent = header.textContent;
-						header.textContent = "";
-						header.appendChild(btn);
-						header.setAttribute("data-moko-original-text", btn.textContent);
-
-						// Wrap body in collapse
-						var wrapper = doc.createElement("div");
-						wrapper.id = collapseId;
-						wrapper.className = "accordion-collapse collapse";
-						wrapper.setAttribute("data-bs-parent", "#" + accId);
-						card.insertBefore(wrapper, body);
-						wrapper.appendChild(body);
-						body.classList.add("accordion-body");
-					});
-				});
-				accordionised = true;
-			} else if (!isMobile && accordionised) {
-				// Revert to plain cards
-				sidebars.forEach(function (sidebar) {
-					sidebar.classList.remove("accordion");
-					sidebar.removeAttribute("id");
-
-					var cards = sidebar.querySelectorAll(":scope > .card");
-					cards.forEach(function (card) {
-						card.classList.remove("accordion-item");
-
-						var header = card.querySelector(".card-header");
-						var btn = header ? header.querySelector(".accordion-button") : null;
-						if (header && btn) {
-							var text = header.getAttribute("data-moko-original-text") || btn.textContent;
-							header.removeAttribute("data-moko-original-text");
-							header.classList.remove("accordion-header");
-							header.textContent = text;
-						}
-
-						var wrapper = card.querySelector(".accordion-collapse");
-						if (wrapper) {
-							var body = wrapper.querySelector(".card-body");
-							if (body) {
-								body.classList.remove("accordion-body");
-								card.appendChild(body);
-							}
-							wrapper.parentNode.removeChild(wrapper);
-						}
-					});
-				});
-				accordionised = false;
-			}
-		}
-
-		apply();
-		win.addEventListener("resize", apply);
+				// Wrap body in collapse
+				var wrapper = doc.createElement("div");
+				wrapper.id = collapseId;
+				wrapper.className = isMobile ? "accordion-collapse collapse" : "accordion-collapse collapse show";
+				wrapper.setAttribute("data-bs-parent", "#" + accId);
+				card.insertBefore(wrapper, body);
+				wrapper.appendChild(body);
+				body.classList.add("accordion-body");
+			});
+		});
 	}
 
 	/**
