@@ -280,9 +280,6 @@ $wa->useScript('user.js');         // js/user.js
 	  });
 	</script>
 
-	<?php if ($params_theme_control_type !== 'none') : ?>
-	<style>.footer { padding-right: 300px; }</style>
-	<?php endif; ?>
 
 	<?php if (trim($params_custom_head_end)) : ?><?php echo $params_custom_head_end; ?><?php endif; ?>
 </head>

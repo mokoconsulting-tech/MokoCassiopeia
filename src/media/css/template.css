@@ -13992,18 +13992,27 @@ meter {
 	color: var(--body-bg, #e6ebf1);
 	background-color: var(--nav-bg-color);
 	padding-left: 100px;
+	padding-right: 60px;
+}
+
+/* Increase footer right padding when floating controls are present */
+body[data-theme-fab-enabled="1"] .footer {
+	padding-right: 220px;
+}
+
+body[data-theme-fab-enabled="1"][data-a11y-toolbar="1"] .footer {
+	padding-right: 420px;
 }
 
 .footer .grid-child {
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex;
-	-webkit-box-align: center;
-	-ms-flex-align: center;
-	align-items: center;
-	-webkit-box-pack: justify;
-	-ms-flex-pack: justify;
-	justify-content: space-between;
+	-webkit-box-orient: vertical;
+	-webkit-box-direction: normal;
+	-ms-flex-direction: column;
+	flex-direction: column;
+	width: 100%;
 	padding: 2.5rem 0.5em;
 }
 
@@ -17241,15 +17250,17 @@ html.a11y-pause-animations *::after {
   z-index: 1201;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: flex-end;
   gap: .25rem;
   font-family: inherit;
+  bottom: 1rem;
+  right: 2.5rem;
 }
 
-#mokoA11yToolbar.a11y-pos-tl { top: 1rem; left: 1rem; }
-#mokoA11yToolbar.a11y-pos-tr { top: 1rem; right: 1rem; align-items: flex-end; }
-#mokoA11yToolbar.a11y-pos-bl { bottom: 1rem; left: 1rem; }
-#mokoA11yToolbar.a11y-pos-br { bottom: 1rem; right: 1rem; align-items: flex-end; }
+/* When theme FAB is present, shift a11y toolbar to sit to its right */
+body[data-theme-fab-enabled="1"] #mokoA11yToolbar {
+  right: calc(2.5rem + 200px);
+}
 
 /* Toggle button */
 .a11y-toggle {
