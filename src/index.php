@@ -34,7 +34,7 @@ $params_googleanalyticsid  = $this->params->get('googleanalyticsid', null);
 $params_googlesitekey      = $this->params->get('googlesitekey', null);
 $params_custom_head_start  = $this->params->get('custom_head_start', null);
 $params_custom_head_end    = $this->params->get('custom_head_end', null);
-$params_developmentmode = $this->params->get('developmentmode', false);
+$params_developmentmode = $this->params->get('developmentmode', false) || $app->get('debug', false);
 $params_favicon_source     = (string) $this->params->get('favicon_source', '');
 
 // Theme params
