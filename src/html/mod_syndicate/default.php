@@ -8,28 +8,24 @@
  */
 
 /**
- * Default layout override for mod_stats.
+ * Default layout override for mod_syndicate.
  * Adds showtitle support.
  */
 
 defined('_JEXEC') or die;
 
-if (empty($list)) {
-    return;
-}
+use Joomla\CMS\Language\Text;
 
 $suffix      = htmlspecialchars($params->get('moduleclass_sfx', ''), ENT_COMPAT, 'UTF-8');
 $headerTag   = htmlspecialchars($params->get('header_tag', 'h3'), ENT_COMPAT, 'UTF-8');
 $headerClass = htmlspecialchars($params->get('header_class', ''), ENT_COMPAT, 'UTF-8');
 ?>
-<div class="mod-stats<?php echo $suffix ? ' ' . $suffix : ''; ?>">
+<div class="mod-syndicate<?php echo $suffix ? ' ' . $suffix : ''; ?>">
     <?php if ($module->showtitle) : ?>
-        <<?php echo $headerTag; ?> class="mod-stats__title<?php echo $headerClass ? ' ' . $headerClass : ''; ?>"><?php echo $module->title; ?></<?php echo $headerTag; ?>>
+        <<?php echo $headerTag; ?> class="mod-syndicate__title<?php echo $headerClass ? ' ' . $headerClass : ''; ?>"><?php echo $module->title; ?></<?php echo $headerTag; ?>>
     <?php endif; ?>
-    <dl class="mod-stats__list">
-        <?php foreach ($list as $item) : ?>
-            <dt class="mod-stats__label"><?php echo $item->title; ?></dt>
-            <dd class="mod-stats__data"><?php echo $item->data; ?></dd>
-        <?php endforeach; ?>
-    </dl>
+    <a href="<?php echo $link; ?>" class="mod-syndicate__link">
+        <span class="fa-solid fa-rss" aria-hidden="true"></span>
+        <?php echo htmlspecialchars($text, ENT_COMPAT, 'UTF-8'); ?>
+    </a>
 </div>

@@ -14594,6 +14594,23 @@ iframe {
 	line-height: 1.3;
 }
 
+/* ── MODULE: Statistics ── */
+.mod-stats__list {
+	margin: 0;
+	padding: 0;
+}
+
+.mod-stats__label {
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.mod-stats__data {
+	margin-left: 0;
+	margin-bottom: .5rem;
+	color: var(--body-font-color, #666);
+}
+
 /* Article list modules */
 .mod-articles-latest__list,
 .mod-articles-popular__list,

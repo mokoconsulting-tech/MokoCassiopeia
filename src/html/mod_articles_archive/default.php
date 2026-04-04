@@ -8,7 +8,7 @@
  */
 
 /**
- * Default layout override for mod_stats.
+ * Default layout override for mod_articles_archive.
  * Adds showtitle support.
  */
 
@@ -22,14 +22,15 @@ $suffix      = htmlspecialchars($params->get('moduleclass_sfx', ''), ENT_COMPAT,
 $headerTag   = htmlspecialchars($params->get('header_tag', 'h3'), ENT_COMPAT, 'UTF-8');
 $headerClass = htmlspecialchars($params->get('header_class', ''), ENT_COMPAT, 'UTF-8');
 ?>
-<div class="mod-stats<?php echo $suffix ? ' ' . $suffix : ''; ?>">
+<div class="mod-articles-archive<?php echo $suffix ? ' ' . $suffix : ''; ?>">
     <?php if ($module->showtitle) : ?>
-        <<?php echo $headerTag; ?> class="mod-stats__title<?php echo $headerClass ? ' ' . $headerClass : ''; ?>"><?php echo $module->title; ?></<?php echo $headerTag; ?>>
+        <<?php echo $headerTag; ?> class="mod-articles-archive__title<?php echo $headerClass ? ' ' . $headerClass : ''; ?>"><?php echo $module->title; ?></<?php echo $headerTag; ?>>
     <?php endif; ?>
-    <dl class="mod-stats__list">
+    <ul class="mod-articles-archive__list">
         <?php foreach ($list as $item) : ?>
-            <dt class="mod-stats__label"><?php echo $item->title; ?></dt>
-            <dd class="mod-stats__data"><?php echo $item->data; ?></dd>
+            <li class="mod-articles-archive__item">
+                <a href="<?php echo $item->link; ?>"><?php echo $item->text; ?></a>
+            </li>
         <?php endforeach; ?>
-    </dl>
+    </ul>
 </div>
