@@ -31,7 +31,7 @@ $moduleclass_sfx = htmlspecialchars($params->get('moduleclass_sfx', ''), ENT_COM
     <div class="container-fluid">
         <!-- Hamburger toggle button for mobile -->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainMenuCollapse" aria-controls="mainMenuCollapse" aria-expanded="false" aria-label="Toggle Main Menu">
-            <span class="navbar-toggler-icon"></span>
+            <span class="fa-solid fa-bars" aria-hidden="true"></span>
         </button>
 
         <!-- Collapsible menu content -->

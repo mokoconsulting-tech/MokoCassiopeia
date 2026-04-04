@@ -14477,7 +14477,9 @@ li.current a {
 }
 
 .container-header .navbar-toggler {
-	color: var(--mainmenu-nav-link-color, #e6ebf1);
+	color: var(--mainmenu-nav-link-color, #fff);
+	border-color: var(--mainmenu-nav-link-color, #fff);
+	font-size: 1.25rem;
 	cursor: pointer;
 }
 
