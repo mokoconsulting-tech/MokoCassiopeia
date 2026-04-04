@@ -17276,7 +17276,7 @@ html.a11y-pause-animations *::after {
 
 /* When theme FAB is present, stack a11y toolbar above it */
 body[data-theme-fab-enabled="1"] #mokoA11yToolbar {
-  bottom: 3.5rem;
+  bottom: 5rem;
 }
 
 /* Toggle button */
