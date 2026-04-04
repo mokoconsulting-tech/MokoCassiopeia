@@ -36,10 +36,9 @@ name: Deploy to RS Server (SFTP)
 # Optional org-level variable:   RS_FTP_PORT (auto-detected from host or defaults to 22)
 # Optional org/repo variable:    RS_FTP_SUFFIX — when set, appended to RS_FTP_PATH to form the
 #                                 full remote destination: RS_FTP_PATH/RS_FTP_SUFFIX
-# Ignore rules:                  Place a .ftp_ignore file in the repository root. Each non-empty,
-#                                 non-comment line is a regex pattern tested against the relative path
-#                                 of each file (e.g. "subdir/file.txt"). The .gitignore is also
-#                                 respected automatically.
+# Ignore rules:                  Place a .ftpignore file in the repository root. Each non-empty,
+#                                 non-comment line is a glob pattern tested against the relative path
+#                                 of each file (e.g. "subdir/file.txt"). The .gitignore is NOT used.
 # Required org-level secret:     RS_FTP_KEY (preferred) or RS_FTP_PASSWORD
 #
 # Access control: only users with admin or maintain role on the repository may deploy.
@@ -195,8 +194,8 @@ jobs:
         env:
           SOURCE_DIR: ${{ steps.source.outputs.dir }}
         run: |
-          # ── Convert a gitignore-style glob line to an ERE pattern ──────────────
-          ftp_ignore_to_regex() {
+          # ── Convert a ftpignore-style glob line to an ERE pattern ──────────────
+          ftpignore_to_regex() {
             local line="$1"
             local anchored=false
             # Strip inline comments and whitespace
@@ -226,15 +225,15 @@ jobs:
             fi
           }
 
-          # ── Read .ftp_ignore (gitignore-style globs) ─────────────────────────
+          # ── Read .ftpignore (ftpignore-style globs) ─────────────────────────
           IGNORE_PATTERNS=()
           IGNORE_SOURCES=()
-          if [ -f ".ftp_ignore" ]; then
+          if [ -f ".ftpignore" ]; then
             while IFS= read -r line; do
               [[ "$line" =~ ^[[:space:]]*$ || "$line" =~ ^[[:space:]]*# ]] && continue
-              regex=$(ftp_ignore_to_regex "$line")
+              regex=$(ftpignore_to_regex "$line")
               [ -n "$regex" ] && IGNORE_PATTERNS+=("$regex") && IGNORE_SOURCES+=("$line")
-            done < ".ftp_ignore"
+            done < ".ftpignore"
           fi
 
           # ── Walk src/ and classify every file ────────────────────────────────
@@ -245,17 +244,11 @@ jobs:
             SKIP=false
             for i in "${!IGNORE_PATTERNS[@]}"; do
               if echo "$rel" | grep -qE "${IGNORE_PATTERNS[$i]}" 2>/dev/null; then
-                IGNORED_FILES+=("$rel | .ftp_ignore \`${IGNORE_SOURCES[$i]}\`")
+                IGNORED_FILES+=("$rel | .ftpignore \`${IGNORE_SOURCES[$i]}\`")
                 SKIP=true; break
               fi
             done
             $SKIP && continue
-            if [ -f ".gitignore" ]; then
-              git check-ignore -q "$rel" 2>/dev/null && {
-                IGNORED_FILES+=("$rel | .gitignore")
-                continue
-              } || true
-            fi
             WILL_UPLOAD+=("$rel")
           done < <(find "$SOURCE_DIR" -type f -print0 | sort -z)
 
@@ -407,7 +400,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN || github.token }}
           COMPOSER_AUTH: '{"github-oauth":{"github.com":"${{ secrets.GH_TOKEN || github.token }}"}}'
         run: |
-          git clone --depth 1 --branch version/04.04 --quiet \
+          git clone --depth 1 --branch version/04.05 --quiet \
             "https://x-access-token:${GH_TOKEN}@github.com/mokoconsulting-tech/MokoStandards.git" \
             /tmp/mokostandards
           cd /tmp/mokostandards
@@ -564,8 +557,12 @@ jobs:
             DEPLOY_ARGS+=(--key-passphrase "$SFTP_PASSWORD")
           fi
 
-          php /tmp/mokostandards/api/deploy/deploy-sftp.php "${DEPLOY_ARGS[@]}"
-          # (deploy-sftp.php handles dotfile skipping and .ftp_ignore natively)
+          PLATFORM=$(php /tmp/mokostandards/api/cli/platform_detect.php --path . 2>/dev/null || true)
+          if [ "$PLATFORM" = "waas-component" ] && [ -f "/tmp/mokostandards/api/deploy/deploy-joomla.php" ]; then
+            php /tmp/mokostandards/api/deploy/deploy-joomla.php "${DEPLOY_ARGS[@]}"
+          else
+            php /tmp/mokostandards/api/deploy/deploy-sftp.php "${DEPLOY_ARGS[@]}"
+          fi
           # Remove temp files that should never be left behind
           rm -f /tmp/deploy_key /tmp/sftp-config.json
 
