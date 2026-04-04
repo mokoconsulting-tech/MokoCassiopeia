@@ -199,24 +199,34 @@ $faKitCode = trim((string) $this->params->get('fA6KitCode', ''));
 if ($faKitCode !== '') {
 	HTMLHelper::_('script', 'https://kit.fontawesome.com/' . $faKitCode . '.js', ['crossorigin' => 'anonymous']);
 } else {
-	// Load local FA7 Free — all.css includes brands, solid, regular, fontawesome
-	// Try media path first (proper Joomla install), then template path (SFTP deploy)
-	$faCss = $params_developmentmode ? 'vendor/fa7free/css/all.css' : 'vendor/fa7free/css/all.min.css';
-	$faMediaPath  = $templatePath . '/' . $faCss;
-	$faLocalPath  = 'templates/site/mokocassiopeia/media/' . $faCss;
+	// Load local FA7 Free — all.css via WebAsset
+	// Resolve the actual filesystem path: media dir (Joomla install) or template dir (SFTP deploy)
+	$faCssFile = $params_developmentmode ? 'vendor/fa7free/css/all.css' : 'vendor/fa7free/css/all.min.css';
+	$faCandidates = [
+		$templatePath . '/' . $faCssFile,                                       // media/templates/site/mokocassiopeia/...
+		'templates/site/' . $this->template . '/media/' . $faCssFile,           // templates/site/mokocassiopeia/media/...
+	];
 
-	if (is_file(JPATH_ROOT . '/' . $faMediaPath)) {
-		$wa->registerAndUseStyle('vendor.fa7free.all', $faMediaPath);
-	} elseif (is_file(JPATH_ROOT . '/' . $faLocalPath)) {
-		$wa->registerAndUseStyle('vendor.fa7free.all', $faLocalPath);
-	} else {
-		// Last resort: try asset registry
-		$faAsset = $params_developmentmode ? 'vendor.fa7free.all' : 'vendor.fa7free.all.min';
-		try {
-			$wa->useStyle($faAsset);
-		} catch (\Throwable $e) {
-			// Silent fail — FA icons will be missing
+	// Also check via __DIR__ for edge cases
+	$faFromDir = __DIR__ . '/media/' . $faCssFile;
+	if (is_file($faFromDir)) {
+		$faCandidates[] = ltrim(str_replace('\\', '/', str_replace(JPATH_ROOT, '', $faFromDir)), '/');
+	}
+
+	$faRegistered = false;
+	foreach ($faCandidates as $faPath) {
+		if (is_file(JPATH_ROOT . '/' . $faPath)) {
+			$wa->registerStyle('vendor.fa7free.all', $faPath);
+			$faRegistered = true;
+			break;
 		}
+	}
+
+	// Use the asset — either our dynamic registration or the one from joomla.asset.json
+	try {
+		$wa->useStyle('vendor.fa7free.all');
+	} catch (\Throwable $e) {
+		// All paths exhausted — FA icons will rely on the IcoMoon compat layer
 	}
 }
 $params_leftIcon           = htmlspecialchars($this->params->get('drawerLeftIcon', 'fa-solid fa-chevron-left'), ENT_COMPAT, 'UTF-8');
