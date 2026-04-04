@@ -14487,13 +14487,9 @@ li.current a {
 	margin-top: 0.75em;
 }
 
-.container-header .mod-finder {
-	color: var(--body-color, #e6ebf1);
+.container-header .mod-finder, .container-header .mod-finder a, .container-header .mod-finder form {
+	color: var(--mainmenu-nav-link-color, #e6ebf1);
 	margin-block-end: 0;
-}
-
-.container-header .mod-finder a {
-	color: var(--body-color, #e6ebf1);
 }
 
 .container-header .mod-finder a:active,
