@@ -15203,7 +15203,10 @@ iframe {
 	margin-top: 0.1875rem;
 	margin-bottom: 0.9375rem;
 	overflow: hidden;
-	max-height: 500px;
+	max-height: 250px;
+}
+.blog-item .item-image img{
+	width: 100%;
 }
 
 .boxed .blog-item .item-image {
