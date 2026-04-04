@@ -179,8 +179,8 @@ if ($this->countModules('drawer-left', true))   { $hasClass .= ' has-drawer-left
 if ($this->countModules('drawer-right', true))  { $hasClass .= ' has-drawer-right'; }
 
 // Smart Bootstrap component loading - only load what's needed
+HTMLHelper::_('bootstrap.collapse');
 if ($this->countModules('drawer-left', true) || $this->countModules('drawer-right', true)) {
-	// Load Bootstrap Offcanvas component for drawers
 	HTMLHelper::_('bootstrap.offcanvas');
 }
 
