@@ -1,34 +1,21 @@
-<!--
-  Joomla Extension Update Server XML
-  See: https://docs.joomla.org/Deploying_an_Update_Server
-
-  This file is the update server manifest for {{EXTENSION_NAME}}.
-  The Joomla installer polls this URL to check for new versions.
-
-  The manifest.xml in this repository must reference this file:
-    <updateservers>
-      <server type="extension" priority="1" name="{{EXTENSION_NAME}}">
-        https://github.com/mokoconsulting-tech/MokoCassiopeia/raw/main/update.xml
-      </server>
-    </updateservers>
-
-  When a new release is made, run `make release` or the release workflow to
-  prepend a new <update> entry to this file automatically.
--->
+<?xml version="1.0" encoding="utf-8"?>
 <updates>
-	<update>
-		<name>{{EXTENSION_NAME}}</name>
-		<description>MokoCassiopeia — Moko Consulting Joomla extension</description>
-		<element>{{EXTENSION_ELEMENT}}</element>
-		<type>{{EXTENSION_TYPE}}</type>
-		<version>{{VERSION}}</version>
-		<infourl title="Release Information">https://github.com/mokoconsulting-tech/MokoCassiopeia/releases/tag/{{VERSION}}</infourl>
-		<downloads>
-			<downloadurl type="full" format="zip">{{DOWNLOAD_URL}}</downloadurl>
-		</downloads>
-		<targetplatform name="joomla" version="4\.[0-9]+" />
-		<php_minimum>7.4</php_minimum>
-		<maintainer>Moko Consulting</maintainer>
-		<maintainerurl>{{MAINTAINER_URL}}</maintainerurl>
-	</update>
+  <update>
+    <name>MokoCassiopeia</name>
+    <description>MokoCassiopeia update</description>
+    <element>templateDetails</element>
+    <type>template</type>
+    <version>03.06.12</version>
+    <client>site</client>
+    <tags>
+      <tag>stable</tag>
+    </tags>
+    <infourl title="MokoCassiopeia">https://github.com/mokoconsulting-tech/MokoCassiopeia/releases/tag/v03.06.12</infourl>
+    <downloads>
+      <downloadurl type="full" format="zip">https://github.com/mokoconsulting-tech/MokoCassiopeia/releases/download/v03.06.12/templateDetails-03.06.12.zip</downloadurl>
+    </downloads>
+    <targetplatform name="joomla" version="5.*" />
+    <maintainer>Moko Consulting</maintainer>
+    <maintainerurl>https://mokoconsulting.tech</maintainerurl>
+  </update>
 </updates>
