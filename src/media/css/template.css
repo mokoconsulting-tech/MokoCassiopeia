@@ -14486,7 +14486,7 @@ li.current a {
 }
 
 .container-header .navbar-toggler {
-	color: var(--body-color, #e6ebf1);
+	color: var(--mainmenu-nav-link-color, #e6ebf1);
 	cursor: pointer;
 }
 
