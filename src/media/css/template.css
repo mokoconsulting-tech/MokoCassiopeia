@@ -14360,10 +14360,19 @@ li.current a {
 }
 
 .container-header .mod-menu>li>a,
-.container-header .mod-menu>li>span {
+.container-header .mod-menu>li>span,
+.container-header .nav-link,
+.container-header .mod-menu-main__link {
 	position: relative;
 	color: var(--mainmenu-nav-link-color, #fff);
 	text-decoration: none;
+}
+
+.container-header .nav-link:hover,
+.container-header .nav-link:focus,
+.container-header .mod-menu-main__link:hover,
+.container-header .mod-menu-main__link:focus {
+	color: var(--link-hover-color, #c3d6ff);
 }
 
 @media (min-width: 992px) {
