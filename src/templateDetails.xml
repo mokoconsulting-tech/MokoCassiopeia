@@ -241,6 +241,65 @@
 					<option value="1">JYES</option>
 				</field>
 
+				<!-- Accessibility -->
+				<field name="theme_sep_a11y" type="spacer" label="Accessibility" hr="false" class="text fw-bold" />
+				<field name="a11y_toolbar_enabled" type="radio" default="1"
+							 label="TPL_MOKO_A11Y_TOOLBAR_ENABLED" description="TPL_MOKO_A11Y_TOOLBAR_ENABLED_DESC"
+							 layout="joomla.form.field.radio.switcher" filter="boolean">
+					<option value="0">JNO</option>
+					<option value="1">JYES</option>
+				</field>
+				<field name="a11y_text_resize" type="radio" default="1"
+							 label="TPL_MOKO_A11Y_TEXT_RESIZE" description="TPL_MOKO_A11Y_TEXT_RESIZE_DESC"
+							 layout="joomla.form.field.radio.switcher" filter="boolean"
+							 showon="a11y_toolbar_enabled:1">
+					<option value="0">JNO</option>
+					<option value="1">JYES</option>
+				</field>
+				<field name="a11y_color_inversion" type="radio" default="1"
+							 label="TPL_MOKO_A11Y_COLOR_INVERSION" description="TPL_MOKO_A11Y_COLOR_INVERSION_DESC"
+							 layout="joomla.form.field.radio.switcher" filter="boolean"
+							 showon="a11y_toolbar_enabled:1">
+					<option value="0">JNO</option>
+					<option value="1">JYES</option>
+				</field>
+				<field name="a11y_high_contrast" type="radio" default="1"
+							 label="TPL_MOKO_A11Y_HIGH_CONTRAST" description="TPL_MOKO_A11Y_HIGH_CONTRAST_DESC"
+							 layout="joomla.form.field.radio.switcher" filter="boolean"
+							 showon="a11y_toolbar_enabled:1">
+					<option value="0">JNO</option>
+					<option value="1">JYES</option>
+				</field>
+				<field name="a11y_highlight_links" type="radio" default="1"
+							 label="TPL_MOKO_A11Y_HIGHLIGHT_LINKS" description="TPL_MOKO_A11Y_HIGHLIGHT_LINKS_DESC"
+							 layout="joomla.form.field.radio.switcher" filter="boolean"
+							 showon="a11y_toolbar_enabled:1">
+					<option value="0">JNO</option>
+					<option value="1">JYES</option>
+				</field>
+				<field name="a11y_readable_font" type="radio" default="1"
+							 label="TPL_MOKO_A11Y_READABLE_FONT" description="TPL_MOKO_A11Y_READABLE_FONT_DESC"
+							 layout="joomla.form.field.radio.switcher" filter="boolean"
+							 showon="a11y_toolbar_enabled:1">
+					<option value="0">JNO</option>
+					<option value="1">JYES</option>
+				</field>
+				<field name="a11y_pause_animations" type="radio" default="1"
+							 label="TPL_MOKO_A11Y_PAUSE_ANIMATIONS" description="TPL_MOKO_A11Y_PAUSE_ANIMATIONS_DESC"
+							 layout="joomla.form.field.radio.switcher" filter="boolean"
+							 showon="a11y_toolbar_enabled:1">
+					<option value="0">JNO</option>
+					<option value="1">JYES</option>
+				</field>
+				<field name="a11y_toolbar_pos" type="list" default="tl"
+							 label="TPL_MOKO_A11Y_TOOLBAR_POS" description="TPL_MOKO_A11Y_TOOLBAR_POS_DESC"
+							 showon="a11y_toolbar_enabled:1">
+					<option value="br">Bottom-right</option>
+					<option value="bl">Bottom-left</option>
+					<option value="tr">Top-right</option>
+					<option value="tl">Top-left</option>
+				</field>
+
 				<!-- Toggle UI -->
 				<field name="theme_sep_toggle" type="spacer" label="Theme Toggle UI" hr="false" class="text fw-bold" />
 				<field name="theme_fab_enabled" type="radio" default="1"

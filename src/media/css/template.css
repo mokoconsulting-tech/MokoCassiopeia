@@ -17180,6 +17180,190 @@ button#mokoThemeSwitch {
   outline-offset: 2px;
 }
 
+/* ================================================================
+   ACCESSIBILITY TOOLBAR
+   ================================================================ */
+
+/* Color inversion */
+html.a11y-inverted {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+html.a11y-inverted img,
+html.a11y-inverted video,
+html.a11y-inverted picture,
+html.a11y-inverted svg,
+html.a11y-inverted [style*="background-image"],
+html.a11y-inverted .brand-logo img {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+/* High contrast */
+html.a11y-high-contrast {
+  filter: contrast(1.4);
+}
+
+html.a11y-high-contrast img,
+html.a11y-high-contrast video,
+html.a11y-high-contrast picture {
+  filter: contrast(0.714);
+}
+
+/* Highlight links */
+html.a11y-highlight-links a {
+  outline: 2px solid currentColor !important;
+  outline-offset: 2px !important;
+  text-decoration: underline !important;
+}
+
+/* Readable font — system sans-serif stack for maximum clarity */
+html.a11y-readable-font,
+html.a11y-readable-font * {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+  letter-spacing: 0.02em !important;
+  word-spacing: 0.05em !important;
+}
+
+/* Pause animations */
+html.a11y-pause-animations *,
+html.a11y-pause-animations *::before,
+html.a11y-pause-animations *::after {
+  animation-duration: 0s !important;
+  animation-delay: 0s !important;
+  transition-duration: 0s !important;
+  transition-delay: 0s !important;
+  scroll-behavior: auto !important;
+}
+
+/* Toolbar container */
+#mokoA11yToolbar {
+  position: fixed;
+  z-index: 1201;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: .25rem;
+  font-family: inherit;
+}
+
+#mokoA11yToolbar.a11y-pos-tl { top: 1rem; left: 1rem; }
+#mokoA11yToolbar.a11y-pos-tr { top: 1rem; right: 1rem; align-items: flex-end; }
+#mokoA11yToolbar.a11y-pos-bl { bottom: 1rem; left: 1rem; }
+#mokoA11yToolbar.a11y-pos-br { bottom: 1rem; right: 1rem; align-items: flex-end; }
+
+/* Toggle button */
+.a11y-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 2px solid var(--link-color, #3565e5);
+  background: var(--bs-body-bg, #fff);
+  color: var(--link-color, #3565e5);
+  font-size: 1.25rem;
+  cursor: pointer;
+  transition: background .2s, color .2s, box-shadow .2s;
+  box-shadow: var(--box-shadow, 0 .25rem .5rem rgba(0,0,0,.15));
+}
+
+.a11y-toggle:hover,
+.a11y-toggle:focus-visible {
+  background: var(--link-color, #3565e5);
+  color: #fff;
+}
+
+.a11y-toggle.active {
+  background: var(--link-color, #3565e5);
+  color: #fff;
+}
+
+/* Panel */
+.a11y-panel {
+  background: var(--bs-body-bg, #fff);
+  border: 1px solid var(--border-color, #dee2e6);
+  border-radius: var(--border-radius, .375rem);
+  padding: .75rem;
+  min-width: 200px;
+  box-shadow: var(--box-shadow-lg, 0 1rem 3rem rgba(0,0,0,.175));
+}
+
+.a11y-group {
+  margin-bottom: .5rem;
+}
+
+.a11y-group:last-child {
+  margin-bottom: 0;
+}
+
+.a11y-group-label {
+  display: block;
+  font-size: .75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  margin-bottom: .35rem;
+  color: var(--body-font-color, #444);
+  opacity: .7;
+}
+
+.a11y-btn-row {
+  display: flex;
+  align-items: center;
+  gap: .35rem;
+}
+
+.a11y-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 34px;
+  height: 34px;
+  border: 1px solid var(--border-color, #dee2e6);
+  border-radius: var(--border-radius, .375rem);
+  background: var(--bs-body-bg, #fff);
+  color: var(--body-font-color, #444);
+  font-size: .875rem;
+  cursor: pointer;
+  transition: background .15s, border-color .15s;
+}
+
+.a11y-btn:hover,
+.a11y-btn:focus-visible {
+  border-color: var(--link-color, #3565e5);
+  background: var(--link-color, #3565e5);
+  color: #fff;
+}
+
+.a11y-size-display {
+  font-size: .8rem;
+  font-weight: 600;
+  min-width: 3ch;
+  text-align: center;
+  color: var(--body-font-color, #444);
+}
+
+.a11y-btn-wide {
+  width: 100%;
+  gap: .5rem;
+  padding: .35rem .75rem;
+  justify-content: flex-start;
+}
+
+.a11y-btn-wide.active {
+  background: var(--link-color, #3565e5);
+  border-color: var(--link-color, #3565e5);
+  color: #fff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .a11y-toggle,
+  .a11y-btn {
+    transition: none;
+  }
+}
+
 html.component body{
 	padding-top: 3.125rem;
 }

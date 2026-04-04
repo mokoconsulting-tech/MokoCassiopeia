@@ -161,6 +161,235 @@
 	}
 
 	// ========================================================================
+	// ACCESSIBILITY TOOLBAR
+	// ========================================================================
+	var a11yStorageKey = "moko-a11y";
+	var fontSizeSteps = [85, 90, 100, 110, 120, 130];
+	var defaultStep = 2; // index of 100
+
+	function getA11yPrefs() {
+		try {
+			var raw = localStorage.getItem(a11yStorageKey);
+			if (raw) return JSON.parse(raw);
+		} catch (e) {}
+		return { fontStep: defaultStep, inverted: false, contrast: false, links: false, font: false, paused: false };
+	}
+
+	function saveA11yPrefs(prefs) {
+		try { localStorage.setItem(a11yStorageKey, JSON.stringify(prefs)); } catch (e) {}
+	}
+
+	function applyFontSize(step) {
+		root.style.fontSize = fontSizeSteps[step] + "%";
+	}
+
+	function applyInversion(on) {
+		if (on) {
+			root.classList.add("a11y-inverted");
+		} else {
+			root.classList.remove("a11y-inverted");
+		}
+	}
+
+	function applyContrast(on) {
+		root.classList.toggle("a11y-high-contrast", on);
+	}
+
+	function applyLinks(on) {
+		root.classList.toggle("a11y-highlight-links", on);
+	}
+
+	function applyFont(on) {
+		root.classList.toggle("a11y-readable-font", on);
+	}
+
+	function applyPaused(on) {
+		root.classList.toggle("a11y-pause-animations", on);
+	}
+
+	/** Create a Font Awesome icon element (safe DOM, no innerHTML). */
+	function faIcon(classes) {
+		var span = doc.createElement("span");
+		span.className = classes;
+		span.setAttribute("aria-hidden", "true");
+		return span;
+	}
+
+	function buildA11yToolbar() {
+		if (doc.getElementById("mokoA11yToolbar")) return;
+
+		var body = doc.body;
+		var showResize     = body.getAttribute("data-a11y-resize") === "1";
+		var showInvert     = body.getAttribute("data-a11y-invert") === "1";
+		var showContrast   = body.getAttribute("data-a11y-contrast") === "1";
+		var showLinks      = body.getAttribute("data-a11y-links") === "1";
+		var showFont       = body.getAttribute("data-a11y-font") === "1";
+		var showAnimations = body.getAttribute("data-a11y-animations") === "1";
+		var pos = (body.getAttribute("data-a11y-pos") || "tl").toLowerCase();
+		if (!/^(br|bl|tr|tl)$/.test(pos)) pos = "tl";
+
+		var prefs = getA11yPrefs();
+
+		// Container
+		var toolbar = doc.createElement("div");
+		toolbar.id = "mokoA11yToolbar";
+		toolbar.className = "a11y-pos-" + pos;
+		toolbar.setAttribute("role", "toolbar");
+		toolbar.setAttribute("aria-label", "Accessibility options");
+
+		// Toggle button (accessibility icon)
+		var toggle = doc.createElement("button");
+		toggle.type = "button";
+		toggle.id = "mokoA11yToggle";
+		toggle.className = "a11y-toggle";
+		toggle.setAttribute("aria-label", "Accessibility options");
+		toggle.setAttribute("aria-expanded", "false");
+		toggle.appendChild(faIcon("fa-solid fa-universal-access"));
+
+		// Panel
+		var panel = doc.createElement("div");
+		panel.id = "mokoA11yPanel";
+		panel.className = "a11y-panel";
+		panel.hidden = true;
+
+		// --- Text resize controls ---
+		if (showResize) {
+			var resizeGroup = doc.createElement("div");
+			resizeGroup.className = "a11y-group";
+			resizeGroup.setAttribute("role", "group");
+			resizeGroup.setAttribute("aria-label", "Text size");
+
+			var sizeLabel = doc.createElement("span");
+			sizeLabel.className = "a11y-group-label";
+			sizeLabel.textContent = "Text size";
+			resizeGroup.appendChild(sizeLabel);
+
+			var btnRow = doc.createElement("div");
+			btnRow.className = "a11y-btn-row";
+
+			var btnMinus = doc.createElement("button");
+			btnMinus.type = "button";
+			btnMinus.className = "a11y-btn";
+			btnMinus.setAttribute("aria-label", "Decrease text size");
+			btnMinus.appendChild(faIcon("fa-solid fa-minus"));
+
+			var sizeDisplay = doc.createElement("span");
+			sizeDisplay.className = "a11y-size-display";
+			sizeDisplay.setAttribute("aria-live", "polite");
+			sizeDisplay.textContent = fontSizeSteps[prefs.fontStep] + "%";
+
+			var btnPlus = doc.createElement("button");
+			btnPlus.type = "button";
+			btnPlus.className = "a11y-btn";
+			btnPlus.setAttribute("aria-label", "Increase text size");
+			btnPlus.appendChild(faIcon("fa-solid fa-plus"));
+
+			var btnReset = doc.createElement("button");
+			btnReset.type = "button";
+			btnReset.className = "a11y-btn a11y-btn-reset";
+			btnReset.setAttribute("aria-label", "Reset text size");
+			btnReset.appendChild(faIcon("fa-solid fa-rotate-left"));
+
+			btnMinus.addEventListener("click", function () {
+				if (prefs.fontStep > 0) {
+					prefs.fontStep--;
+					applyFontSize(prefs.fontStep);
+					sizeDisplay.textContent = fontSizeSteps[prefs.fontStep] + "%";
+					saveA11yPrefs(prefs);
+				}
+			});
+
+			btnPlus.addEventListener("click", function () {
+				if (prefs.fontStep < fontSizeSteps.length - 1) {
+					prefs.fontStep++;
+					applyFontSize(prefs.fontStep);
+					sizeDisplay.textContent = fontSizeSteps[prefs.fontStep] + "%";
+					saveA11yPrefs(prefs);
+				}
+			});
+
+			btnReset.addEventListener("click", function () {
+				prefs.fontStep = defaultStep;
+				applyFontSize(prefs.fontStep);
+				sizeDisplay.textContent = fontSizeSteps[prefs.fontStep] + "%";
+				saveA11yPrefs(prefs);
+			});
+
+			btnRow.appendChild(btnMinus);
+			btnRow.appendChild(sizeDisplay);
+			btnRow.appendChild(btnPlus);
+			btnRow.appendChild(btnReset);
+			resizeGroup.appendChild(btnRow);
+			panel.appendChild(resizeGroup);
+		}
+
+		// --- Helper: build a switch-style toggle button ---
+		function addSwitchOption(show, prefKey, icon, label, applyFn) {
+			if (!show) return;
+			var group = doc.createElement("div");
+			group.className = "a11y-group";
+
+			var btn = doc.createElement("button");
+			btn.type = "button";
+			btn.className = "a11y-btn a11y-btn-wide";
+			btn.setAttribute("role", "switch");
+			btn.setAttribute("aria-checked", prefs[prefKey] ? "true" : "false");
+			btn.setAttribute("aria-label", label);
+			btn.appendChild(faIcon(icon));
+			btn.appendChild(doc.createTextNode(" " + label));
+
+			if (prefs[prefKey]) btn.classList.add("active");
+
+			btn.addEventListener("click", function () {
+				prefs[prefKey] = !prefs[prefKey];
+				applyFn(prefs[prefKey]);
+				btn.setAttribute("aria-checked", prefs[prefKey] ? "true" : "false");
+				btn.classList.toggle("active", prefs[prefKey]);
+				saveA11yPrefs(prefs);
+			});
+
+			group.appendChild(btn);
+			panel.appendChild(group);
+		}
+
+		// --- Toggle options ---
+		addSwitchOption(showInvert,     "inverted", "fa-solid fa-circle-half-stroke", "Invert colors",      applyInversion);
+		addSwitchOption(showContrast,   "contrast", "fa-solid fa-adjust",             "High contrast",      applyContrast);
+		addSwitchOption(showLinks,      "links",    "fa-solid fa-link",               "Highlight links",    applyLinks);
+		addSwitchOption(showFont,       "font",     "fa-solid fa-font",               "Readable font",      applyFont);
+		addSwitchOption(showAnimations, "paused",   "fa-solid fa-pause",              "Pause animations",   applyPaused);
+
+		// Toggle panel open/close
+		toggle.addEventListener("click", function () {
+			var isOpen = !panel.hidden;
+			panel.hidden = isOpen;
+			toggle.setAttribute("aria-expanded", isOpen ? "false" : "true");
+			toggle.classList.toggle("active", !isOpen);
+		});
+
+		// Close on outside click
+		doc.addEventListener("click", function (e) {
+			if (!toolbar.contains(e.target) && !panel.hidden) {
+				panel.hidden = true;
+				toggle.setAttribute("aria-expanded", "false");
+				toggle.classList.remove("active");
+			}
+		});
+
+		// Apply saved preferences on load
+		if (prefs.fontStep !== defaultStep) applyFontSize(prefs.fontStep);
+		if (prefs.inverted) applyInversion(true);
+		if (prefs.contrast) applyContrast(true);
+		if (prefs.links)    applyLinks(true);
+		if (prefs.font)     applyFont(true);
+		if (prefs.paused)   applyPaused(true);
+
+		toolbar.appendChild(toggle);
+		toolbar.appendChild(panel);
+		body.appendChild(toolbar);
+	}
+
+	// ========================================================================
 	// TEMPLATE UTILITIES
 	// ========================================================================
 
@@ -269,6 +498,11 @@
 		// Build floating theme toggle if enabled
 		if (shouldEnableThemeFab()) {
 			buildThemeToggle();
+		}
+
+		// Build accessibility toolbar if enabled
+		if (doc.body.getAttribute("data-a11y-toolbar") === "1") {
+			buildA11yToolbar();
 		}
 
 		// Sticky header behavior

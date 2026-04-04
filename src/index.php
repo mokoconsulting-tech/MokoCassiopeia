@@ -43,6 +43,16 @@ $params_theme_control_type = (string) $this->params->get('theme_control_type', '
 $params_theme_fab_enabled  = $this->params->get('theme_fab_enabled', 1);
 $params_theme_fab_pos      = $this->params->get('theme_fab_pos', 'br');
 
+// Accessibility params
+$params_a11y_toolbar    = $this->params->get('a11y_toolbar_enabled', 1);
+$params_a11y_resize     = $this->params->get('a11y_text_resize', 1);
+$params_a11y_invert     = $this->params->get('a11y_color_inversion', 1);
+$params_a11y_contrast   = $this->params->get('a11y_high_contrast', 1);
+$params_a11y_links      = $this->params->get('a11y_highlight_links', 1);
+$params_a11y_font       = $this->params->get('a11y_readable_font', 1);
+$params_a11y_animations = $this->params->get('a11y_pause_animations', 1);
+$params_a11y_pos        = (string) $this->params->get('a11y_toolbar_pos', 'tl');
+
 // Detecting Active Variables
 $option    = $input->getCmd('option', '');
 $view      = $input->getCmd('view', '');
@@ -277,8 +287,16 @@ $wa->useScript('user.js');         // js/user.js
 	<?php if (trim($params_custom_head_end)) : ?><?php echo $params_custom_head_end; ?><?php endif; ?>
 </head>
 <body data-bs-spy="scroll" data-bs-target="#toc" 
-	data-theme-fab-enabled="<?php echo $params_theme_fab_enabled ? '1' : '0'; ?>" 
+	data-theme-fab-enabled="<?php echo $params_theme_fab_enabled ? '1' : '0'; ?>"
 	data-theme-fab-pos="<?php echo htmlspecialchars($params_theme_fab_pos, ENT_QUOTES, 'UTF-8'); ?>"
+	data-a11y-toolbar="<?php echo $params_a11y_toolbar ? '1' : '0'; ?>"
+	data-a11y-resize="<?php echo $params_a11y_resize ? '1' : '0'; ?>"
+	data-a11y-invert="<?php echo $params_a11y_invert ? '1' : '0'; ?>"
+	data-a11y-contrast="<?php echo $params_a11y_contrast ? '1' : '0'; ?>"
+	data-a11y-links="<?php echo $params_a11y_links ? '1' : '0'; ?>"
+	data-a11y-font="<?php echo $params_a11y_font ? '1' : '0'; ?>"
+	data-a11y-animations="<?php echo $params_a11y_animations ? '1' : '0'; ?>"
+	data-a11y-pos="<?php echo htmlspecialchars($params_a11y_pos, ENT_QUOTES, 'UTF-8'); ?>"
 	class="site <?php
 	echo $option . ' ' . $wrapper
 	   . ' view-' . $view

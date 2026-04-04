@@ -71,7 +71,7 @@ $headerClass = htmlspecialchars($params->get('header_class', ''), ENT_COMPAT, 'U
                 </div>
             </div>
 
-            <?php if (count($twofactormethods) > 1) : ?>
+            <?php if (!empty($twofactormethods) && count($twofactormethods) > 1) : ?>
                 <div class="mod-login__field mb-3">
                     <label for="modlgn-secretkey-<?php echo $module->id; ?>" class="form-label visually-hidden"><?php echo Text::_('JGLOBAL_SECRETKEY'); ?></label>
                     <div class="input-group">
